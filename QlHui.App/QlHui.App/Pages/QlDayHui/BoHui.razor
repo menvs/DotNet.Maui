@@ -1,0 +1,65 @@
+﻿@page "/BoHui/{huiVienThamGiaId:int}"
+@inherits NotificationBase;
+@inject DialogService dialogService;
+@inject IQlHuiVienService qlHuiVienService;
+@inject IQlHuiService qlHuiService;
+<div class="container">
+    <RadzenFieldset Text="Số tiền bỏ hụi" Style="font-weight:bold;">
+        <div>
+            <RadzenNumeric Name="SoTienBoHui" style="display: block" @oninput="@(arg=>soTienBoHui = arg.Value.ToString().GetFloatNumber())"
+                           TValue=string TextAlign="TextAlign.Right" Value="@soTienBoHui.GetMoneyFormat()" />
+        </div>
+    </RadzenFieldset>
+</div>
+<div class="container pt-2 row">
+    <div class="col-md-12 text-end">
+        <RadzenButton ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Text="Bỏ hụi" Icon="payments"
+                      Disabled=@(soTienBoHui.HasValue == false || huiVienThamGiaHienTai==null) Click=@NhanBoHui />
+    </div>
+</div>
+@code {
+    [Parameter]
+    public int huiVienThamGiaId { set; get; }
+    float? soTienBoHui = null;
+    HuiVienThamGiaDto huiVienThamGiaHienTai;
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        huiVienThamGiaHienTai = qlHuiVienService.LayThongTinHuiVienThamGia(huiVienThamGiaId);
+
+    }
+    async Task NhanBoHui()
+    {
+        try
+        {
+            if (soTienBoHui.HasValue)
+            {
+                var xacNhanBoHui = await dialogService.Confirm(
+                           $"Bạn có muốn bỏ hụi cho hụi viên này với số tiền {soTienBoHui.Value.GetMoneyFormat()} không ?", $"Hụi Viên {huiVienThamGiaHienTai.TenHuiVien}",
+                           new ConfirmOptions() { OkButtonText = "Có", CancelButtonText = "Không" });
+
+                if (xacNhanBoHui == true)
+                {
+                    var rs = qlHuiService.BoHui(huiVienThamGiaHienTai, soTienBoHui.GetValueOrDefault());
+                    if (rs)
+                    {
+                        ShowSuccessNotification("Bỏ hụi thành công");
+                        dialogService.Close(true);
+                    }
+                    else
+                    {
+                        ShowErrorNotification("Có lỗi khi thực hiện thao tác.");
+                    }
+                }
+            }
+            else
+            {
+                ShowErrorNotification("Vui lòng nhập số tiền bỏ hụi.");
+            }
+        }catch(Exception ex)
+        {
+            ShowErrorNotification(ex.GetError());
+        }
+        
+    }
+}

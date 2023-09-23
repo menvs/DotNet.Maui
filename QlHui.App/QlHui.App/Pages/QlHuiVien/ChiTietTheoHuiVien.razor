@@ -1,0 +1,326 @@
+﻿@page "/ChiTietTheoHuiVien/{huiVienId:int}"
+@using QlHui.App.Pages.QlDayHui;
+@inject NavigationManager navManager;
+@inject IQlHuiVienService huiVienService;
+@inject ILsDongHuiService lsDongHuiservice;
+@implements IDisposable;
+@inject DialogService dialogService;
+@inherits NotificationBase;
+
+<div class="row">
+    <div class="col">
+        <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="arrow_back_ios" Variant="Variant.Flat" Size="ButtonSize.Small"
+                      Text="Trở lại" Click=@(args=> navManager.NavigateTo("/TimKiemHuiVien")) />
+    </div>
+</div>
+<div class="pt-2">
+    <RadzenFieldset Text="Chi tiết tính tiền theo hụi viên">
+        <div class="row">
+            <div class="col-4 row">
+                <RadzenText TextStyle="TextStyle.Body1" class="col-5" Style="font-weight: bold;">Mã hụi viên: </RadzenText>
+                <RadzenText class="col-7">@huiVien.MaHuiVien</RadzenText>
+            </div>
+            <div class="col-4 row">
+                <RadzenText TextStyle="TextStyle.Body1" class="col-4" Style="font-weight: bold;">Tên hụi viên: </RadzenText>
+                <RadzenText class="col-8">@huiVien.TenHuiVien</RadzenText>
+            </div>
+            <div class="col-4 row">
+                <RadzenText TextStyle="TextStyle.Body1" class="col-5" Style="font-weight: bold;">Tổng Lời/Lỗ: </RadzenText>
+                <RadzenText class="col-7">@(tongLoiLo.GetMoneyFormat())</RadzenText>
+                </div>
+            </div>
+        </RadzenFieldset>
+    </div>
+    <div class="pt-2">
+        <RadzenDataGrid TItem="TinhTienTheoHuiVienDto" Data=@danhSachTinhTien Style="max-height:350px" AllowSorting="true" Density="Density.Compact"
+                    IsLoading=@isSearchLoadingShow PagerHorizontalAlign="HorizontalAlign.Center" AllowAlternatingRows="false" RowStyle="my-hover-class">
+            <EmptyTemplate>
+                <p style="color: lightgrey; font-size: 24px; text-align: center; margin: 2rem;">@Const.EmptyTable</p>
+            </EmptyTemplate>
+            <Columns>
+                <RadzenDataGridColumn TItem="TinhTienTheoHuiVienDto" Title="Stt" TextAlign="TextAlign.Center" Width="60px">
+                    <Template>
+                        @(danhSachTinhTien.IndexOf(context) + 1)
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="TinhTienTheoHuiVienDto" Property="MaDayHui" Title="Mã dây hụi" Width="220px" />
+            <RadzenDataGridColumn TItem="TinhTienTheoHuiVienDto" Property="NgayKhui" Title="Ngày khui" Type=typeof(DateTime?) FormatString={0:dd/MM/yyyy} TextAlign="TextAlign.Right" />
+            <RadzenDataGridColumn TItem="TinhTienTheoHuiVienDto" Property="Ky" Title="Kỳ" TextAlign="TextAlign.Center" />
+            <RadzenDataGridColumn TItem="TinhTienTheoHuiVienDto" Property="Tien1C" Title="Tiền 1 C" Type=typeof(float?) TextAlign="TextAlign.Right">
+                <Template Context="data">
+                    <span>@(data.Tien1C.GetMoneyFormat())</span>
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="TinhTienTheoHuiVienDto" Property="SoCSong" Title="C Sống/Chết" Type=typeof(int) TextAlign="TextAlign.Center">
+                <Template Context="data">
+                    <span>@(data.SoCSong >0 ? "S" : "C")</span>
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="TinhTienTheoHuiVienDto" Property="TienPhaiThu" Type=typeof(float?) TextAlign="TextAlign.Right">
+                <HeaderTemplate>
+                    <span>Tiền đóng</span><br />
+                    <span>(Phải thu)</span>
+                </HeaderTemplate>
+                <Template Context="data">
+                    <span>@(data.TienPhaiThu.GetMoneyFormat())</span>
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="TinhTienTheoHuiVienDto" Property="TienPhaiTra" Type=typeof(float?) TextAlign="TextAlign.Right">
+                <HeaderTemplate>
+                    <span>Tiền hốt</span><br />
+                    <span>(Phải trả)</span>
+                </HeaderTemplate>
+                <Template Context="data">
+                    <span>@(data.TienPhaiTra.GetMoneyFormat())</span>
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="TinhTienTheoHuiVienDto" Title="Thao tác" Width="180px" TextAlign="TextAlign.Center">
+                <Template Context="data">
+                    <RadzenButton ButtonStyle="ButtonStyle.Warning" Variant="Variant.Flat" Text="Đã thu" Size="ButtonSize.ExtraSmall" Click=@(arg=>ThuTien(data))
+                                  Visible="@(data.TrangThai==TrangThaiDongHui.CHUA_THU.GetHashCode() && data.TienPhaiThu.GetValueOrDefault()>0)">
+                    </RadzenButton>
+                    <RadzenButton ButtonStyle="ButtonStyle.Warning" Variant="Variant.Flat" Text="Đã trả" Size="ButtonSize.ExtraSmall" Click="@(arg=>TraTien(data))"
+                                  Visible="@(data.TrangThai==TrangThaiDongHui.CHUA_TRA.GetHashCode() && data.TienPhaiTra.GetValueOrDefault()>0)">
+                    </RadzenButton>
+                    <RadzenButton ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Shade="Shade.Lighter" Text="Ls đóng hụi"
+                                  Size="ButtonSize.ExtraSmall" Click="@(args => HienThiChiTietLichSuDongHui(data))" />
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+</div>
+<div class="pt-2 row">
+    <div class="col"></div>
+    <div class="col">
+        <div class="row">
+            <RadzenText class="col-9" Style="@summaryStyle">Tổng T đóng (Phải thu Hụi Viên): </RadzenText>
+            <RadzenText class="col-3" TextAlign="TextAlign.Right" Style="@summaryStyle"> @(tongPhaiThu.GetMoneyFormat())</RadzenText>
+            </div>
+            <div class="row border-top-1">
+                <RadzenText class="col-9" Style="@summaryStyle">Tổng T hốt (Phải trả Hụi Viên): </RadzenText>
+                <RadzenText class="col-3" TextAlign="TextAlign.Right" Style="@summaryStyle">@(tongPhaiTra.GetMoneyFormat())</RadzenText>
+            </div>
+            <div class="row border-top-1">
+                <RadzenText class="col-9 text-danger" Style="@summaryStyle">Chủ hụi phải @(tongPhaiThanhToan.GetValueOrDefault() >= 0 ? "TRẢ tiền cho" : "THU tiền của")  hụi viên: </RadzenText>
+            <RadzenText class="col-3 text-danger" TextAlign="TextAlign.Right" Style="@summaryStyle">@(tongPhaiThanhToan.GetValueOrDefault() >= 0 ? tongPhaiThanhToan.GetMoneyFormat() : (-tongPhaiThanhToan).GetMoneyFormat()) </RadzenText>
+        </div>
+        <div class="row">
+            <div class="col"></div>
+            <RadzenButton ButtonStyle="ButtonStyle.Danger" Variant="Variant.Flat" Text="Tất toán tất cả" Size="ButtonSize.Medium" class="col"
+                          Visible=@(tongPhaiThanhToan!=null) Click="@TatToan">
+              
+            </RadzenButton>
+        </div>
+    </div>
+</div>
+@code {
+    [Parameter]
+    public int huiVienId { get; set; }
+
+    bool isSearchLoadingShow = false;
+    string summaryStyle = "font-weight: bold; font-size: 18px;";
+    float? tongLoiLo = null;
+    float? tongPhaiThu = null;
+    float? tongPhaiTra = null;
+    float? tongPhaiThanhToan = null;
+
+    IList<TinhTienTheoHuiVienDto> danhSachTinhTien = new List<TinhTienTheoHuiVienDto>();
+    HuiVienDto huiVien = new HuiVienDto();
+
+    protected override void OnParametersSet()
+    {
+        LoadData();
+        dialogService.OnOpen += OnOpenDialog;
+        dialogService.OnClose += OnCloseDialog;
+        base.OnParametersSet();
+    }
+    void LoadData()
+    {
+        huiVien = huiVienService.LayThongTinHuiVien(huiVienId);
+        var tempData = huiVienService.LayDanhSachTinhTienTheoHuiVien(huiVienId);
+        if (tempData.Any())
+        {
+            danhSachTinhTien = tempData.ToList();
+            tongLoiLo = danhSachTinhTien.Sum(item => item.TienLoi.GetValueOrDefault());
+            tongPhaiThu = danhSachTinhTien.Sum(item => item.TienPhaiThu.GetValueOrDefault());
+            tongPhaiTra = danhSachTinhTien.Sum(item => item.TienPhaiTra.GetValueOrDefault());
+            tongPhaiThanhToan = tongPhaiTra - tongPhaiThu;
+        }
+        else
+        {
+            //tongLoiLo = null;
+            //tongPhaiThu = null;
+            //tongPhaiTra = null;
+            //tongPhaiThanhToan = null;
+            navManager.NavigateTo($"/TimKiemHuiVien");
+        }
+    }
+    async Task TraTien(TinhTienTheoHuiVienDto rowItem)
+    {
+        try
+        {
+            if (rowItem != null && rowItem.HuiVienThamGiaId > 0)
+            {
+                var xacNhan = await dialogService.Confirm(
+                         $"Xác nhận trả Hụi viên: {huiVien.TenHuiVien} Dây {rowItem.MaDayHui}", $"TRẢ {(rowItem.TienPhaiTra.GetValueOrDefault() - rowItem.TienPhaiThu.GetValueOrDefault()).GetMoneyFormat()}?",
+                         new ConfirmOptions() { OkButtonText = "Có", CancelButtonText = "Không" });
+                if (xacNhan == true)
+                {
+                    var huiVienThamGia = huiVienService.LayThongTinHuiVienThamGia(rowItem.HuiVienThamGiaId);
+                    if (huiVienThamGia != null)
+                    {
+                        var updateHvThamGia = huiVienThamGia.TraTien();
+                        var updateRs = huiVienService.CapNhatHuiVienThamGia(updateHvThamGia);
+                        if (updateRs)
+                        {
+                            _ = int.TryParse(rowItem.Ky.Split("/").First(), out int kyBoParse);
+                            var lichSuDongHui = new LichSuDongHuiDto().LayLsTraTien(updateHvThamGia, kyBoParse);
+                            _ = lsDongHuiservice.Insert(lichSuDongHui);
+                            ShowSuccessNotification("Trả tiền thành công!");
+                            LoadData();
+                        }
+                        else
+                        {
+                            ShowErrorNotification("Xảy ra lỗi khi cập nhật!");
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+
+            ShowErrorNotification(ex.GetError());
+        }
+
+    }
+    void OnOpenDialog(string title, Type type, Dictionary<string, object> parameters, DialogOptions options)
+    {
+        Console.WriteLine("Dialog opened");
+    }
+
+    void OnCloseDialog(dynamic result)
+    {
+        if (result == true)
+        {
+            LoadData();
+        }
+        dialogService.Dispose();
+    }
+    //async Task ThuTien(TinhTienTheoHuiVienDto rowItem)
+    //{
+    //    try
+    //    {
+    //        if (rowItem != null && rowItem.HuiVienThamGiaId > 0)
+    //        {
+    //            var xacNhan = await dialogService.Confirm(
+    //                     $"Hụi viên: {huiVien.TenHuiVien} Dây {rowItem.MaDayHui}", $"Bạn có xác nhận là đã thu tiền không?",
+    //                     new ConfirmOptions() { OkButtonText = "Có", CancelButtonText = "Không" });
+    //            if (xacNhan == true)
+    //            {
+    //                var huiVienThamGia = huiVienService.LayThongTinHuiVienThamGia(rowItem.HuiVienThamGiaId);
+    //                if (huiVienThamGia != null)
+    //                {
+    //                    var updateHvThamGia = huiVienThamGia.ThuTien();
+
+    //                    var updateRs = huiVienService.CapNhatHuiVienThamGia(updateHvThamGia);
+    //                    if (updateRs)
+    //                    {
+    //                        _ = int.TryParse(rowItem.Ky.Split("/").First(), out int kyBoParse);
+    //                        var lichSuDongHui = new LichSuDongHuiDto().LayLsThuTien(updateHvThamGia, kyBoParse, updateHvThamGia.KyHienTaiPhaiThu);
+    //                        _ = lsDongHuiservice.Insert(lichSuDongHui);
+    //                        ShowSuccessNotification("Thu tiền thành công!");
+    //                        LoadData();
+    //                    }
+    //                    else
+    //                    {
+    //                        ShowErrorNotification("Xảy ra lỗi khi cập nhật!");
+    //                    }
+    //                }
+    //            }
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+
+    //        ShowErrorNotification(ex.GetError());
+    //    }
+    //}
+
+    async Task TatToan()
+    {
+        try
+        {
+            if (huiVienId > 0)
+            {
+                string tempText = tongPhaiThanhToan.GetValueOrDefault() >= 0 ? $"TRẢ {tongPhaiThanhToan.GetMoneyFormat()}" : $"THU {(-tongPhaiThanhToan).GetMoneyFormat()}";
+                var xacNhan = await dialogService.Confirm(
+                                       $"Xác nhận tất toán Hụi viên: {huiVien.TenHuiVien}", $"Tất toán? {tempText}",
+                                 new ConfirmOptions() { OkButtonText = "Có", CancelButtonText = "Không" });
+                if (xacNhan == true)
+                {
+                    var tatToanRs = huiVienService.TatToanTatCa(danhSachTinhTien);
+                    if (tatToanRs)
+                    {
+                        ShowSuccessNotification("Tất toán thành công");
+                        navManager.NavigateTo($"/TimKiemHuiVien");
+                    }
+                    else
+                    {
+                        ShowErrorNotification("Tất toán thất bại");
+                    }
+
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+
+            ShowErrorNotification(ex.GetError());
+        }
+
+    }
+    async Task HienThiChiTietLichSuDongHui(TinhTienTheoHuiVienDto rowItem)
+    {
+        if (rowItem != null)
+        {
+            try
+            {
+                await dialogService.OpenAsync<LichSuDongHui>($"Lịch sử đóng hụi - Hụi viên : {huiVien.TenHuiVien}-{huiVien.MaHuiVien}",
+                new Dictionary<string, object>()
+                     {
+                        {"huiVienThamGiaId", rowItem.HuiVienThamGiaId}
+                     },
+                 new DialogOptions() { Width = "85%", Height = "80%", Resizable = true });
+            }
+            catch (Exception ex)
+            {
+                ShowErrorNotification(ex.GetError());
+            }
+        }
+    }
+    async Task ThuTien(TinhTienTheoHuiVienDto rowItem)
+    {
+        if (rowItem != null && rowItem.HuiVienThamGiaId > 0)
+        {
+            try
+            {
+                await dialogService.OpenAsync<ThuTien>($"Thu tiền - Hụi viên : {huiVien.TenHuiVien}-{huiVien.MaHuiVien}",
+                new Dictionary<string, object>()
+                                                                       {
+                        {"huiVienThamGiaId", rowItem.HuiVienThamGiaId}
+                                                                       },
+                 new DialogOptions() { Width = "480px", Height = "300px", Resizable = true });
+            }
+            catch (Exception ex)
+            {
+                ShowErrorNotification(ex.GetError());
+            }
+        }
+    }
+    public void Dispose()
+    {
+        dialogService.OnOpen -= OnOpenDialog;
+        dialogService.OnClose -= OnCloseDialog;
+    }
+}

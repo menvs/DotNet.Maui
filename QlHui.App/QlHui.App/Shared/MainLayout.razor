@@ -1,0 +1,48 @@
+﻿@inherits LayoutComponentBase
+<RadzenDialog />
+<RadzenNotification />
+<RadzenContextMenu />
+@*<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <div class="top-row px-4 rz-background-color-success-lighter">
+            <h5><b>Chủ hụi: Bích Trâm - SDT: 0707 626267</b></h5>
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>*@
+<RadzenLayout class="rz-shadow-3">
+    <RadzenHeader>
+        <div class="row">
+            <div class="col-8 d-flex align-items-center">
+                <RadzenSidebarToggle Click="@(() => sidebarExpanded = !sidebarExpanded)" />
+                <label class="col">Quản lý hụi</label>
+            </div>
+            <div class="col-4 px-4 d-flex align-items-center">
+                <h5><label>Chủ hụi: XXXXX - SDT: 000 000 000</label></h5>
+            </div>
+        </div>
+
+    </RadzenHeader>
+    <RadzenSidebar @bind-Expanded="@sidebarExpanded" Style="width:180px">
+        <RadzenPanelMenu>
+            <RadzenPanelMenuItem Text="QL Dây Hụi" Icon="view_list" Path="/TimKiemDayHui" />
+            <RadzenPanelMenuItem Text="QL Hụi Viên" Icon="group" Path="/TimKiemHuiVien" />
+        </RadzenPanelMenu>
+    </RadzenSidebar>
+    <RadzenBody>
+        @Body
+    </RadzenBody>
+    <RadzenFooter></RadzenFooter>
+</RadzenLayout>
+
+@code {
+    bool sidebarExpanded = false;
+   
+}

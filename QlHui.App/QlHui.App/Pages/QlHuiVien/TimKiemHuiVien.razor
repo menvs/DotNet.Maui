@@ -1,0 +1,123 @@
+﻿@page "/TimKiemHuiVien"
+@inherits NotificationBase;
+@inject DialogService dialogService;
+@inject IQlHuiVienService service;
+@inject NavigationManager navManager;
+<div class="pt-2">
+    <RadzenFieldset Text="Tìm kiếm">
+        <div class="row">
+            <div class="col-md-4 col-lg-4 pt-2 row">
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2" class="col-5">Mã hụi viên</RadzenText>
+                <RadzenTextBox @bind-Value=@searchCriteria.MaHuiVien Class="col-7" />
+            </div>
+            <div class="col-md-4 col-lg-4 pt-2 row">
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2" class="col-5">Tên hụi viên</RadzenText>
+                <RadzenTextBox @bind-Value=@searchCriteria.TenHuiVien Class="col-7" />
+            </div>
+            <div class="col-md-2 col-lg-2 pt-2">
+                <RadzenLabel Text="Cần thu tiền" Component="cbCanThu" Style="margin-left: 8px; vertical-align: middle;" />
+                <RadzenCheckBox @bind-Value=@searchCriteria.CanThuTien Name="cbCanThu" TValue="bool" />
+            </div>
+            <div class="col-md-2 col-lg-2 pt-2">
+                <RadzenLabel Text="Cần trả tiền" Component="cbCanThu" Style="margin-left: 8px; vertical-align: middle;" />
+                <RadzenCheckBox @bind-Value=@searchCriteria.CanTraTien Name="cbCanTra" TValue="bool" />
+            </div>
+        </div>
+        <div class="row position-relative pt-2">
+            <div class="d-grid gap-3 d-md-flex justify-content-md-end">
+                <RadzenButton Text="Tìm kiếm" ButtonStyle="ButtonStyle.Success" Icon="search" Click=@OnClickSearchData />
+            </div>
+        </div>
+    </RadzenFieldset>
+</div>
+<div class="pt-2">
+    <RadzenDataGrid TItem="HuiVienKetQuaTimKiemDto" Data=@listSearchData AllowSorting="true" IsLoading=@isSearchLoadingShow Density="Density.Compact">
+        <EmptyTemplate>
+            <p style="color: lightgrey; font-size: 24px; text-align: center; margin: 2rem;">@Const.EmptyTable</p>
+        </EmptyTemplate>
+        <Columns>
+            <RadzenDataGridColumn TItem="HuiVienKetQuaTimKiemDto" Property="Index" Title="Stt" Width="10%" TextAlign="TextAlign.Center">
+                
+                <Template>
+                    @(listSearchData.IndexOf(context) + 1)
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="HuiVienKetQuaTimKiemDto" Property="MaHuiVien" Title="Mã hụi viên" />
+            <RadzenDataGridColumn TItem="HuiVienKetQuaTimKiemDto" Property="TenHuiVien" Title="Tên hụi viên" />
+            <RadzenDataGridColumn TItem="HuiVienKetQuaTimKiemDto" Property="TongPhaiThu" Title="Tổng phải thu" TextAlign="TextAlign.Right">
+                <Template Context="data">
+                    <span>@(data.TongPhaiThu.GetMoneyFormat())</span>
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="HuiVienKetQuaTimKiemDto" Property="TongPhaiTra" Title="Tổng phải trả" TextAlign="TextAlign.Right" >
+                <Template Context="data">
+                    <span>@(data.TongPhaiTra.GetMoneyFormat())</span>
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="HuiVienKetQuaTimKiemDto" Property="TrangThai" Title="Trạng thái" TextAlign="TextAlign.Center">
+                <Template Context="data">
+                    <RadzenLabel Visible=@(data.TrangThai==TrangThaiDongHui.CHUA_THU.GetHashCode()) class="text-danger">Chưa thu</RadzenLabel>
+                    <RadzenLabel Visible=@(data.TrangThai==TrangThaiDongHui.DA_THU.GetHashCode()) class="text-dark">Đã thu</RadzenLabel>
+                    <RadzenLabel Visible=@(data.TrangThai==TrangThaiDongHui.CHUA_TRA.GetHashCode()) class="text-warning">Chưa trả</RadzenLabel>
+                    <RadzenLabel Visible=@(data.TrangThai==TrangThaiDongHui.DA_TRA.GetHashCode()) class="text-success">Đã trả</RadzenLabel>
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="HuiVienKetQuaTimKiemDto" Property="Id" Title="Thao tác" TextAlign="TextAlign.Center">
+                <Template Context="data">
+                    <RadzenButton ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Shade="Shade.Lighter" Visible="@(data.TrangThai != null &&  data.TrangThai != TrangThaiDongHui.DA_THU.GetHashCode())"
+                                  Icon="visibility" Class="m-1" title="Xem chi tiết" Click="@(args=>RedirectToDetailPage(data.HuiVienId))" Size="ButtonSize.Medium"/>
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+    <RadzenPager ShowPagingSummary="true" PagingSummaryFormat="@pagingSummaryFormat" HorizontalAlign="HorizontalAlign.Center"
+                 Count="totalItems" PageSize="@panigation.Take" PageNumbersCount="@(totalItems/panigation.Take)" PageChanged="@PageChanged" />
+</div>
+
+@code {
+    HuiVienTieuChiTimKiemDto searchCriteria = new();
+    IList<HuiVienKetQuaTimKiemDto> listSearchData = new List<HuiVienKetQuaTimKiemDto>();
+    PanigationDto panigation = new PanigationDto();
+    bool isSearchLoadingShow = false;
+    int totalItems = 0;
+    string pagingSummaryFormat = Const.SummaryTable;
+    protected override void OnInitialized()
+    {
+        //dialogService.OnOpen += OpenCreateNewDialog;
+        //dialogService.OnClose += CloseCreateNewDialog;
+        OnClickSearchData();
+    }
+
+    void OnClickSearchData()
+    {
+        try
+        {
+            isSearchLoadingShow = true;
+            var getData = service.TimKiemHuiVien(searchCriteria, panigation);
+            if (getData != null && getData.Data != null && getData.Data.Any())
+            {
+                totalItems = getData.TotalItem;
+                listSearchData = getData.Data.ToList();
+            }
+            else
+            {
+                listSearchData = new List<HuiVienKetQuaTimKiemDto>();
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowErrorNotification(ex.GetError());
+        }
+        isSearchLoadingShow = false;
+    }
+    void PageChanged(PagerEventArgs args)
+    {
+        panigation.Skip = args.Skip;
+        panigation.Take = args.Top;
+        OnClickSearchData();
+    }
+    void RedirectToDetailPage(int id)
+    {
+        navManager.NavigateTo($"/ChiTietTheoHuiVien/{id}");
+    }
+}

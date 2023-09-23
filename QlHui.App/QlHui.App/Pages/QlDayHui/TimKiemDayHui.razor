@@ -1,0 +1,248 @@
+﻿@page "/TimKiemDayHui"
+@using qlhui.app.Data.DataAccess.Entities;
+@using static QlHui.App.Data.Constant.Const;
+@inject DialogService dialogService;
+@inject NavigationManager navManager;
+@inherits NotificationBase;
+@implements IDisposable;
+@inject IQlHuiService service;
+
+
+<div class="pt-2">
+    @*<RadzenButton Text="Delete all data" ButtonStyle="ButtonStyle.Danger" Icon="trash" Click=@DeleteAllData />*@
+    <RadzenFieldset Text="Tìm kiếm">
+        <div class="pt-3">
+            <RadzenCheckBox @bind-Value=@searchCriteria.HienThiTatCaDayHuiCanBoHomNay
+                            Name="cbShowAll" TValue="bool" />
+            <RadzenLabel Text="Hiển thị tất cả các dây cần bỏ hụi ngày hôm nay" Component="cbShowAll" Style="margin-left: 8px; vertical-align: middle; font-weight: bold;" />
+        </div>
+        <div class="row">
+            <div class="col-md-4 col-lg-4 p-3 row">
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2" class="col-4">Ngày khui</RadzenText>
+                <RadzenDatePicker @bind-Value=@searchCriteria.NgayKhui DateFormat=@DateTimeFormat.UIDateFormat Class="col-8" />
+            </div>
+            <div class="col-md-4 col-lg-4 p-3 row">
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2" class="col-4">Mã dây hụi</RadzenText>
+                <RadzenTextBox @bind-Value=@searchCriteria.MaDayHui Class="col-8" />
+            </div>
+            <div class="col-md-4 col-lg-4 p-3 row">
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2" class="col-4">Tiền 1 C</RadzenText>
+                <RadzenNumeric TValue="string" Format=@NumericFormat.MoneyFormat Class="col-8" Style="text-align: right;" Value="@searchCriteria.TienMotChan.GetMoneyFormat()"
+                               @oninput="@(arg=>searchCriteria.TienMotChan = arg.Value.ToString().GetFloatNumber())" />
+            </div>
+        </div>
+        <div class="row position-relative pt-2">
+            <div class="d-grid gap-3 d-md-flex justify-content-md-end">
+                <RadzenButton Text="Tạo mới" ButtonStyle="ButtonStyle.Info" Icon="add" Click=@OpenCreateDialog />
+                <RadzenButton Text="Tìm kiếm" ButtonStyle="ButtonStyle.Success" Icon="search" Click=@OnClickSearchData />
+            </div>
+        </div>
+    </RadzenFieldset>
+</div>
+<div class="pt-2">
+    <RadzenDataGrid @ref="@gridTimKiemDayHui" TItem="DayHuiDto" Data=@listSearchData AllowSorting="true" IsLoading=@isSearchLoadingShow 
+                    ShowPagingSummary="true" PagingSummaryFormat="@pagingSummaryFormat"
+                    Density="Density.Compact" PageSize="@panigation.Take" Count="totalItems" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Center" LoadData="@LoadData">
+        <EmptyTemplate>
+            <p style="color: lightgrey; font-size: 24px; text-align: center; margin: 2rem;">@Const.EmptyTable</p>
+        </EmptyTemplate>
+        <Columns>
+            <RadzenDataGridColumn TItem="DayHuiDto" Property="Index" Title="Stt" Width="10%" TextAlign="TextAlign.Center">
+                <Template>
+                    @(listSearchData.IndexOf(context) + 1 + panigation.Skip)
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="DayHuiDto" Property="MaDayHui" Title="Mã dây hui" Width="20%" />
+            <RadzenDataGridColumn TItem="DayHuiDto" Property="NgayKhui" Title="Ngày khui" Type=typeof(DateTime?) FormatString={0:dd/MM/yyyy} TextAlign="TextAlign.Right" />
+            <RadzenDataGridColumn TItem="DayHuiDto" Property="TienThao" Title="Tiền thảo" Type=typeof(float?) FormatString={0:#,##0} TextAlign="TextAlign.Center" />
+            <RadzenDataGridColumn TItem="DayHuiDto" Property="TienMotChan" Title="Tiền 1C" Type=typeof(float?) FormatString={0:#,##0} TextAlign="TextAlign.Center" />
+            <RadzenDataGridColumn TItem="DayHuiDto" Property="TongSoChan" Title="Số phần" />
+            <RadzenDataGridColumn TItem="DayHuiDto" Property="KyBo" Title="Kỳ" />
+            <RadzenDataGridColumn Width="160px" TItem="DayHuiDto" Property="Id" Title="Thao tác" TextAlign="TextAlign.Center">
+                <Template Context="data">
+                    <RadzenButton ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.Small"
+                                  Icon="visibility" Class="m-1" title="Xem chi tiết"
+                                  Click=@(args => RedirectToDetailPage(data.Id)) />
+                    <RadzenButton ButtonStyle="ButtonStyle.Warning" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.Small"
+                                  Icon="edit" Class="m-1" title="Chỉnh sửa dây hụi" Visible=@(data.DaCoNguoiBoHui!=true)
+                                  Click=@(args => OpenUpdateDialog(data)) />
+                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.Small"
+                                  Icon="delete" Class="m-1" title="Xóa"
+                                  Click=@(args => XoaDayHui(data)) />
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+</div>
+@code {
+
+    #region Global Variables
+    IList<DayHuiDto> listSearchData;
+    DateTime? currentDate = DateTime.Now;
+    QLDayHuiSearchCriteria searchCriteria = new();
+    PanigationDto panigation = new PanigationDto();
+    bool isSearchLoadingShow = false;
+    int totalItems = 0;
+    string pagingSummaryFormat = Const.SummaryTable;
+    RadzenDataGrid<DayHuiDto> gridTimKiemDayHui;
+    #endregion
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        dialogService.OnOpen += OpenCreateNewDialog;
+        dialogService.OnClose += CloseCreateNewDialog;
+
+    }
+
+    void OpenCreateNewDialog(string title, Type type, Dictionary<string, object> parameters, DialogOptions options)
+    {
+        Console.WriteLine("Dialog opened");
+    }
+
+    void CloseCreateNewDialog(dynamic result)
+    {
+        Console.WriteLine($"Dialog closed");
+        OnClickSearchData().GetAwaiter();
+        dialogService.Dispose();
+    }
+    void LoadData(LoadDataArgs args)
+    {
+        panigation.Skip = args.Skip.Value;
+        panigation.Take = args.Top.Value;
+        SearchData();
+    }
+    async Task OnClickSearchData()
+    {
+        //gridTimKiemDayHui.Reset(true);
+       // await gridTimKiemDayHui.FirstPage();
+        //panigation.Skip = 0;
+        SearchData();
+
+    }
+    void SearchData()
+    {
+        try
+        {
+            isSearchLoadingShow = true;
+            var getData = service.Search(searchCriteria, panigation);
+            if (getData != null && getData.Data != null && getData.Data.Any())
+            {
+                totalItems = getData.TotalItem;
+                listSearchData = getData.Data.ToList();
+            }
+            else
+            {
+                totalItems = 0;
+                listSearchData = new List<DayHuiDto>();
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowErrorNotification(ex.GetError());
+        }
+        isSearchLoadingShow = false;
+    }
+    void LoadSearchData(LoadDataArgs args)
+    {
+        try
+        {
+            var getData = service.Search(searchCriteria, new PanigationDto(args.Skip.Value, args.Top.Value));
+            if (getData != null && getData.Data.Any())
+            {
+                totalItems = getData.TotalItem;
+                listSearchData = getData.Data.ToList();
+            }
+            else
+            {
+                listSearchData = new List<DayHuiDto>();
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowErrorNotification($"Lỗi hệ thống. {ex.Message}");
+        }
+    }
+
+    async Task XoaDayHui(DayHuiDto data)
+    {
+        try
+        {
+            var confirmDelete = await dialogService.Confirm(
+                "Bạn có thực sự muốn xóa không?", $"Xóa dây hụi '{data.MaDayHui}'",
+                new ConfirmOptions() { OkButtonText = "Có", CancelButtonText = "Không" });
+            if (confirmDelete.GetValueOrDefault())
+            {
+                //bool coNguoiBoHuiChua = service.DayHuiDaCoNguoiBoChua(data.Id);
+                //if (coNguoiBoHuiChua)
+                //{
+                //    ShowWarningNotification($"Không thể xóa dây hụi '{data.MaDayHui}' vì dây hụi đã có người bỏ.");
+                //    return;
+                //}
+                var deleteRs = service.DeleteDayHuiById(data.Id);
+                if (deleteRs)
+                {
+                    ShowSuccessNotification($"Xóa thành công '{data.MaDayHui}'!");
+                    await OnClickSearchData();
+                }
+                else
+                {
+                    ShowErrorNotification("Xóa thất bại!");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowErrorNotification(ex.GetError());
+        }
+    }
+
+    async Task OpenCreateDialog()
+    {
+        try
+        {
+            await dialogService.OpenAsync<DayHui>($"Tạo mới dây hụi",
+            new Dictionary<string, object>() { },
+            new DialogOptions() { Width = "768px", Height = "480px", Resizable = true, Draggable = true });
+        }
+        catch (Exception ex)
+        {
+            ShowErrorNotification(ex.GetError());
+        }
+    }
+
+    async Task OpenUpdateDialog(DayHuiDto dayHui)
+    {
+        try
+        {
+            await dialogService.OpenAsync<DayHui>($"Chỉnh sửa dây hụi {dayHui.MaDayHui}",
+            new Dictionary<string, object>()
+                        {
+                {"dayHuiId", dayHui.Id}
+                        },
+            new DialogOptions() { Width = "768px", Height = "480px", Resizable = true, Draggable = true });
+        }
+        catch (Exception ex)
+        {
+            ShowErrorNotification(ex.GetError());
+        }
+    }
+
+    void RedirectToDetailPage(int dayHuiId)
+    {
+        navManager.NavigateTo($"/ChiTietDayHui/{dayHuiId}");
+    }
+
+    public void Dispose()
+    {
+        // The DialogService is a singleton so it is advisable to unsubscribe.
+        dialogService.OnOpen -= OpenCreateNewDialog;
+        dialogService.OnClose -= CloseCreateNewDialog;
+    }
+
+    void DeleteAllData()
+    {
+        service.XoaData();
+        SearchData();
+    }
+}

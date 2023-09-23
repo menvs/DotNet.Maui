@@ -1,0 +1,75 @@
+﻿@page "/ThuTien/{huiVienThamGiaId:int}"
+@inherits NotificationBase;
+@inject DialogService dialogService;
+@inject IQlHuiVienService qlHuiVienService;
+@inject IQlHuiService qlHuiService;
+@inject ILsDongHuiService lsDongHuiService;
+<div class="container">
+    <RadzenFieldset Text="Nhập số tiền thu" Style="font-weight:bold;">
+        <div>
+            <RadzenNumeric Name="SoTien" style="display: block" @oninput="@(arg=>soTien = arg.Value.ToString().GetFloatNumber())"
+                           TValue=string TextAlign="TextAlign.Right" Value="@soTien.GetMoneyFormat()" />
+        </div>
+    </RadzenFieldset>
+</div>
+<div class="container pt-2 row">
+    <div class="col-md-12 text-end">
+        <RadzenButton ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Text="Thu tiền" Icon="payments"
+                      Disabled=@(soTien.HasValue == false || huiVienThamGiaHienTai==null) Click=@NhanThuTien />
+    </div>
+</div>
+@code {
+    [Parameter]
+    public int huiVienThamGiaId { set; get; }
+    float? soTien = null;
+    HuiVienThamGiaDto huiVienThamGiaHienTai;
+    DayHuiDto dayHuiHienTai;
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        huiVienThamGiaHienTai = qlHuiVienService.LayThongTinHuiVienThamGia(huiVienThamGiaId);
+        if (huiVienThamGiaHienTai != null)
+        {
+            dayHuiHienTai = qlHuiService.GetById(huiVienThamGiaHienTai.DayHuiId);
+            soTien = huiVienThamGiaHienTai.TongPhaiThu;
+        }
+    }
+    async Task NhanThuTien()
+    {
+        try
+        {
+            if (soTien.HasValue && dayHuiHienTai != null)
+            {
+                var xacNhanBoHui = await dialogService.Confirm(
+                           $"Xác nhận đã thu Hụi Viên {huiVienThamGiaHienTai.TenHuiVien}?",$"THU {soTien.Value.GetMoneyFormat()}", 
+                           new ConfirmOptions() { OkButtonText = "Có", CancelButtonText = "Không" });
+
+                if (xacNhanBoHui == true)
+                {
+                    var updateItem = huiVienThamGiaHienTai.ThuTien(soTien);
+                    var updateRs = qlHuiVienService.CapNhatHuiVienThamGia(updateItem);
+                    if (updateRs)
+                    {
+                        var lichSuDongHui = new LichSuDongHuiDto().LayLsThuTien(updateItem, dayHuiHienTai.KyBo, soTien);
+                        _ = lsDongHuiService.Insert(lichSuDongHui);
+                        ShowSuccessNotification("Thu tiền thành công!");
+                        dialogService.Close(true);
+                    }
+                    else
+                    {
+                        ShowErrorNotification("Có lỗi khi cập nhật!");
+                    }
+                }
+            }
+            else
+            {
+                ShowErrorNotification("Vui lòng nhập số tiền.");
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowErrorNotification(ex.GetError());
+        }
+
+    }
+}

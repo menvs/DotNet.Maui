@@ -1,0 +1,182 @@
+﻿@page "/DoiNguoiThamGia/{huiVienThamGiaId:int}";
+@inject IQlHuiVienService qlHuiVienService;
+@inject IQlHuiService qlHuiService;
+@inherits HuiVienBase;
+@inject DialogService dialogService;
+
+<RadzenTabs TabPosition="TabPosition.Top" RenderMode="TabRenderMode.Client">
+    <Tabs>
+        <RadzenTabsItem Text="Hụi viên đã tồn tại">
+            <RadzenAutoComplete Name="TenHuiVienAutocomplete" style="display: block" class="w-100" Placeholder="Nhập tên để tìm kiếm hụi viên" Change=@(arg=>ChangeData(arg))
+                                Data=@danhSachHuiVien TextProperty="DisplayName" LoadData=@OnLoadHuiVienData />
+            <div class="container pt-2 row">
+                <div class="col-md-12 text-end">
+                    <RadzenButton ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Text="Đổi người" Icon="change_circle" Click=@DoiNguoiDaTonTai Disabled=@(huiVienDoiThanh==null) />
+                </div>
+            </div>
+        </RadzenTabsItem>
+        <RadzenTabsItem Text="Hụi viên mới">
+            <RadzenTextBox Name="TenHuiVienMoi" style="display: block" class="w-100" Placeholder="Nhập tên hụi viên mới" Change=@(arg=>huiVienTimKiem = arg)
+                           TextProperty="DisplayName" />
+            <div class="container pt-2 row">
+                <div class="col-md-12 text-end">
+                    <RadzenButton ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Text="Đổi người" Icon="change_circle" Click=@DoiNguoiMoi Disabled=@(string.IsNullOrEmpty(huiVienTimKiem)) />
+                </div>
+            </div>
+        </RadzenTabsItem>
+    </Tabs>
+</RadzenTabs>
+
+@code {
+    [Parameter]
+    public int huiVienThamGiaId { get; set; }
+
+    HuiVienDto huiVienCanDoi;
+    HuiVienDto huiVienDoiThanh;
+    IList<TimKiemHuiVienAutocompleteDto> danhSachHuiVien = new List<TimKiemHuiVienAutocompleteDto>();
+    IList<HuiVienThamGiaDto> dsHuiVienThamGia = new List<HuiVienThamGiaDto>();
+    string huiVienTimKiem = string.Empty;
+
+    bool isInvalid = false;
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        var thongTinHuiVienThamGia = qlHuiVienService.LayThongTinHuiVienThamGia(huiVienThamGiaId);
+        if (thongTinHuiVienThamGia != null)
+        {
+            var tempData = qlHuiVienService.LayDanhSachHuiVienThamGiaDayHui(thongTinHuiVienThamGia.DayHuiId);
+            if (tempData != null && tempData.Any())
+            {
+                dsHuiVienThamGia = tempData.ToList();
+            }
+            huiVienCanDoi = qlHuiVienService.LayThongTinHuiVien(thongTinHuiVienThamGia.HuiVienId);
+        }
+
+    }
+
+    void OnLoadHuiVienData(LoadDataArgs args)
+    {
+        var getData = qlHuiVienService.LayDanhSachHuiVienTheoTenGanDung(args.Filter);
+        if (getData != null && getData.Any())
+        {
+            danhSachHuiVien = getData.ToList();
+        }
+        else
+        {
+            danhSachHuiVien = new List<TimKiemHuiVienAutocompleteDto>();
+        }
+    }
+    void ChangeData(object value)
+    {
+        if (value != null)
+        {
+            string[] stringValue = value.ToString().Split("-");
+            if (stringValue != null && stringValue.Length == 2 && danhSachHuiVien != null && danhSachHuiVien.Any())
+            {
+                var maHuiVien = stringValue[1];
+                var huiVien = danhSachHuiVien.FirstOrDefault(item => item.MaHuiVien == maHuiVien);
+                if (huiVien != null)
+                {
+                    huiVienDoiThanh = new HuiVienDto();
+                    huiVienDoiThanh.TenHuiVien = huiVien.TenHuiVien;
+                    huiVienDoiThanh.MaHuiVien = huiVien.MaHuiVien;
+                    huiVienDoiThanh.Id = huiVien.HuiVienId;
+                }
+            }
+            else
+            {
+                huiVienDoiThanh = null;
+            }
+        }
+    }
+    void DoiNguoiDaTonTai()
+    {
+        if (huiVienDoiThanh != null)
+        {
+            var validateMessage = KiemTraThongTinNguoiDoi(huiVienDoiThanh);
+            if (string.IsNullOrEmpty(validateMessage))
+            {
+                bool doiThanhCong = qlHuiService.DoiNguoiThamGiaDayHui(huiVienDoiThanh, huiVienThamGiaId);
+                if (doiThanhCong)
+                {
+                    ShowSuccessNotification($"Đổi thông tin sang hụi viên {huiVienDoiThanh.TenHuiVien} thành công!");
+                    dialogService.Close(true);
+                }
+                else
+                {
+                    ShowErrorNotification($"Có lỗi khi đổi thông tin sang hụi viên {huiVienDoiThanh.TenHuiVien} ");
+                }
+            }
+            else
+            {
+                ShowErrorNotification(validateMessage);
+            }
+        }
+        else
+        {
+            ShowErrorNotification("Thông tin hụi viên không hợp lệ");
+        }
+    }
+    async Task DoiNguoiMoi()
+    {
+        string maHuiVien = TaoMaHuiVienTuTen(huiVienTimKiem);
+        if (maHuiVien.IsNotEmpty())
+        {
+            var danhSachMaTonTai = new List<string>();
+            var tonTaiMaHuiVien = qlHuiVienService.DsHuiVienTheoMaGanDung(maHuiVien);
+            if (tonTaiMaHuiVien.Any())
+            {
+                bool tonTaiHuiVienTrungTen = tonTaiMaHuiVien.Any(item => item.TenHuiVien.Equals(huiVienTimKiem, StringComparison.CurrentCultureIgnoreCase));
+                if (tonTaiHuiVienTrungTen)
+                {
+                    var dongYTaoMaMoi = await dialogService.Confirm(
+                       $"Tên hụi viên: {huiVienTimKiem} đã tồn tại", "Bạn có muốn thêm hụi viên với mã mới không",
+                       new ConfirmOptions() { OkButtonText = "Có", CancelButtonText = "Không" });
+                    if (dongYTaoMaMoi == false)
+                    {
+                        return;
+                    }
+                }
+
+                danhSachMaTonTai.AddRange(tonTaiMaHuiVien.Select(item => item.MaHuiVien));
+            }
+            var maHuiVienKTrung = TaoMaHuiVienKhongTrung(maHuiVien, danhSachMaTonTai);
+            var huiVienThemMoi = new HuiVienDto()
+                {
+                    TenHuiVien = huiVienTimKiem,
+                    MaHuiVien = maHuiVienKTrung,
+                    NgayTao = DateTime.Now
+                };
+            var themMoiHuiVien = qlHuiVienService.ThemMoiDanhSachHuiVien(new List<HuiVienDto>() { huiVienThemMoi });
+            if (themMoiHuiVien.Any())
+            {
+                var huiVienDoiThanhMoi = themMoiHuiVien.FirstOrDefault();
+                bool doiThanhCong = qlHuiService.DoiNguoiThamGiaDayHui(huiVienDoiThanhMoi, huiVienThamGiaId);
+                if (doiThanhCong)
+                {
+                    ShowSuccessNotification($"Đổi thông tin sang hụi viên {huiVienDoiThanhMoi.TenHuiVien} thành công!");
+                    dialogService.Close(true);
+                }
+                else
+                {
+                    ShowErrorNotification($"Có lỗi khi đổi thông tin sang hụi viên {huiVienDoiThanhMoi.TenHuiVien} ");
+                }
+            }
+        }
+    }
+    string KiemTraThongTinNguoiDoi(HuiVienDto huiVien)
+    {
+        if (huiVien != null)
+        {
+            if (dsHuiVienThamGia != null && dsHuiVienThamGia.Any(item => item.MaHuiVien == huiVien.MaHuiVien))
+            {
+                return $"Không thể đổi vì hụi viên {huiVien.TenHuiVien} đã tồn tại trong dây hụi.";
+            }
+        }
+        else
+        {
+            return $"Không thể tìm thấy thông tin hụi viên {huiVienTimKiem}";
+        }
+        return string.Empty;
+    }
+}

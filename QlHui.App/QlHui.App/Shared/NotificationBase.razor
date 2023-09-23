@@ -1,0 +1,29 @@
+﻿@inject NotificationService notificationService;
+
+@code {
+    int duration = 5000;
+    public void ShowInfoNotification(string message)
+    {
+        var noti = new NotificationMessage() { Severity = NotificationSeverity.Info, Summary = "Thông tin", Detail = message, Duration = duration };
+        ShowNotification(noti);
+    }
+    public void ShowSuccessNotification(string message)
+    {
+        var noti = new NotificationMessage() { Severity = NotificationSeverity.Success, Summary = "Thành công", Detail = message, Duration = duration };
+        ShowNotification(noti);
+    }
+    public void ShowErrorNotification(string message)
+    {
+        var noti = new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = "Lỗi", Detail = message, Duration = duration };
+        ShowNotification(noti);
+    }
+    public void ShowWarningNotification(string message)
+    {
+        var noti = new NotificationMessage() { Severity = NotificationSeverity.Warning, Summary = "Cảnh báo", Detail = message, Duration = duration };
+        ShowNotification(noti);
+    }
+    private void ShowNotification(NotificationMessage message)
+    {
+        notificationService.Notify(message);
+    }
+}

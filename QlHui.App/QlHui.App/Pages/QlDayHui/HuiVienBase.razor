@@ -1,0 +1,42 @@
+﻿@inherits NotificationBase;
+
+@code {
+    public string TaoMaHuiVienKhongTrung(string maHuiVien, IList<string> dsMaTrung)
+    {
+        int index = 0;
+        string newMaHuiVien = maHuiVien;
+        if (dsMaTrung.Any())
+        {
+
+            while (dsMaTrung.Contains(newMaHuiVien))
+            {
+                index++;
+                newMaHuiVien = $"{maHuiVien}{index}";
+            }
+        }
+        return newMaHuiVien;
+    }
+    public string TaoMaHuiVienTuTen(string tenHuiVien)
+    {
+        string maHuiVien = tenHuiVien;
+        var tempSplitArray = tenHuiVien.Split(" ");
+        if (tempSplitArray.Any())
+        {
+            var tempMa = Enumerable.Empty<string>();
+            for (int i = 0; i < tempSplitArray.Length; i++)
+            {
+                var tempValue = tempSplitArray[i];
+                if (tempValue != null)
+                {
+                    var tempFirstChar = tempValue.ToArray().FirstOrDefault().ToString()?.ToUpperInvariant();
+                    tempMa = tempMa.Append(tempFirstChar);
+                }
+            }
+            if (tempMa.Count() > 0)
+            {
+                maHuiVien = string.Join("", tempMa);
+            }
+        }
+        return maHuiVien;
+    }
+}

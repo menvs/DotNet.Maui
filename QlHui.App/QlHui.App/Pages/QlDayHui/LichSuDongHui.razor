@@ -1,0 +1,46 @@
+﻿@page "/LichSuDongHui/{huiVienThamGiaId:int}"
+@inherits NotificationBase;
+@inject ILsDongHuiService service;
+
+<RadzenDataGrid TItem="LichSuDongHuiDto" Data=@dsLichSuDongHui Style="height:400px" Density=Density.Compact
+                AllowSorting="true" IsLoading=@isLoadingShow PagerHorizontalAlign="HorizontalAlign.Center" AllowAlternatingRows="false">
+    <EmptyTemplate>
+        <p style="color: lightgrey; font-size: 24px; text-align: center; margin: 2rem;">@Const.EmptyTable</p>
+    </EmptyTemplate>
+    <Columns>
+        <RadzenDataGridColumn TItem="LichSuDongHuiDto" Property="KyBo" Title="Kỳ bỏ" Width="80px" TextAlign="TextAlign.Center" />
+        <RadzenDataGridColumn TItem="LichSuDongHuiDto" Property="NgayDongHui" Title="Ngày đóng hụi" Width="150px" Type=typeof(DateTime?) FormatString={0:dd/MM/yyyy} TextAlign="TextAlign.Right" />
+        <RadzenDataGridColumn TItem="LichSuDongHuiDto" Property="SoChanSong" Title="C Sống/Chết" Width="130px" Type=typeof(int) TextAlign="TextAlign.Center">
+            <Template Context="data">
+                <span>@(data.SoChanSong > 0 ? "S" : "C")</span>
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="LichSuDongHuiDto" Property="TienPhaiThu" Title="Tiền đã thu" Type=typeof(float?) Width="150px" TextAlign="TextAlign.Center" FormatString="{0:#,##0}" />
+        <RadzenDataGridColumn TItem="LichSuDongHuiDto" Property="TienPhaiTra" Title="Tiền đã trả" Type=typeof(float?) Width="150px" TextAlign="TextAlign.Center" FormatString="{0:#,##0}" />
+        <RadzenDataGridColumn TItem="LichSuDongHuiDto" Property="TrangThai" Title="Trạng thái" Type=typeof(int) Width="120px">
+            <Template Context="data">
+                <RadzenLabel Visible=@(data.TrangThai==TrangThaiDongHui.CHUA_THU.GetHashCode()) class="text-danger">Chưa thu</RadzenLabel>
+                <RadzenLabel Visible=@(data.TrangThai==TrangThaiDongHui.DA_THU.GetHashCode()) class="text-dark">Đã thu</RadzenLabel>
+                <RadzenLabel Visible=@(data.TrangThai==TrangThaiDongHui.CHUA_TRA.GetHashCode()) class="text-warning">Chưa trả</RadzenLabel>
+                <RadzenLabel Visible=@(data.TrangThai==TrangThaiDongHui.DA_TRA.GetHashCode()) class="text-success">Đã trả</RadzenLabel>
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="LichSuDongHuiDto" Property="GhiChu" Title="Ghi chú"></RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
+@code {
+    [Parameter]
+    public int huiVienThamGiaId { get; set; }
+
+    IList<LichSuDongHuiDto> dsLichSuDongHui;
+    bool isLoadingShow = false;
+
+    protected override void OnParametersSet()
+    {
+        isLoadingShow = true;
+        dsLichSuDongHui = service.LayDanhSachLichSuDongHui(huiVienThamGiaId).ToList();
+        isLoadingShow = false;
+        base.OnParametersSet();
+
+    }
+}

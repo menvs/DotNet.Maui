@@ -1,0 +1,303 @@
+﻿@page "/ThemHuiVienMoiVaoDayHui/{dayHuiId:int}/{themHuiVienDaTonTai:bool}"
+
+@using static QlHui.App.Data.Constant.Const;
+@inject Radzen.DialogService dialogService
+@inject IQlHuiService qlHuiService;
+@inject IQlHuiVienService qlHuiVienService;
+@inherits HuiVienBase;
+<div>
+    <RadzenTemplateForm TItem="HuiVienThamGiaDto" Data=@huiVienHienTai Submit=@ThemVaoDanhSachHuiVien>
+
+        <div class="row">
+            <div class="col-7 p-3 row">
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2" class="col-5">Tên hụi viên tham gia</RadzenText>
+                <div class="col-7">
+                    <RadzenTextBox @bind-Value=@huiVienHienTai.TenHuiVien Name="TenHuiVien"
+                                   style="display: block" class="w-100" Visible=@themHuiVienMoi />
+                    <RadzenRequiredValidator Component="TenHuiVien" Text="Yêu cầu nhập tên hụi viên"
+                                             Popup=@isInvalid Style="position: absolute" Visible=@themHuiVienMoi />
+
+                    <RadzenAutoComplete Name="TenHuiVienAutocomplete" style="display: block" class="w-100" Change="@(arg=>ChonHuiVienDaTonTai(arg))"
+                                        Visible=@themHuiVienDaTonTai Data=@danhSachHuiVien TextProperty="DisplayName" LoadData=@OnLoadHuiVienData />
+                    <RadzenRequiredValidator Component="TenHuiVienAutocomplete" Text="Yêu cầu chọn tên hụi viên"
+                                             Popup=@isInvalid Style="position: absolute" Visible=@themHuiVienDaTonTai />
+
+                </div>
+            </div>
+            <div class="col-3 p-3 row">
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2" class="col-7">Số C tham gia</RadzenText>
+                <div class="col-5">
+                    <RadzenNumeric TValue="int" class="col" Style="text-align: right;" @bind-Value=@huiVienHienTai.SoCThamGia Name="SoCThamGia" />
+                    <RadzenRequiredValidator Component="SoCThamGia" Text="Yêu cầu nhập số C tham gia" Popup=@isInvalid Style="position: absolute" />
+                </div>
+            </div>
+            <div class="col-1 p-3">
+                <RadzenButton Variant="Variant.Flat" Icon="add" Text="Thêm" ButtonType="ButtonType.Submit" />
+            </div>
+        </div>
+    </RadzenTemplateForm>
+</div>
+<div class="pt-2 row">
+    <div class="col-md-12 text-end">
+        <RadzenButton ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Text="Hoàn tất" Click="@HoanTatThemHuiVien" />
+    </div>
+</div>
+<div class="pt-2">
+    <RadzenDataGrid TItem="HuiVienThamGiaDto" Data=@danhSachHuiVienThamGia PagerPosition=@pagerPosition Count=@totalItems Density="Density.Compact"
+                    AllowPaging="true" AllowSorting="true" PageSize="10" ShowPagingSummary="true" Style="max-height:350px">
+        <EmptyTemplate>
+            <p style="color: lightgrey; font-size: 24px; text-align: center; margin: 2rem;">@Const.EmptyTable</p>
+        </EmptyTemplate>
+        <Columns>
+            <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Property="Index" Title="Stt" TextAlign="TextAlign.Center">
+                <Template>
+                    @(danhSachHuiVienThamGia.ToList().IndexOf(context) + 1)
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Property="MaHuiVien" Title="Mã hụi viên" />
+            <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Property="TenHuiVien" Title="Tên hụi viên" />
+            <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Property="SoCThamGia" Title="Số C tham gia" Type=typeof(int) />
+            <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Title="Thao tác" TextAlign="TextAlign.Center">
+                <Template Context="data">
+                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Variant="Variant.Flat" Shade="Shade.Lighter" Icon="delete" Class="m-1" title="Xóa" Size="ButtonSize.Small"
+                                  Click=@(args => XoaHuiVienDaChon(data)) />
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+</div>
+@code {
+    [Parameter]
+    public int dayHuiId { get; set; }
+    [Parameter]
+    public bool themHuiVienDaTonTai { get; set; }
+
+    private bool themHuiVienMoi
+    {
+        get
+        {
+            return themHuiVienDaTonTai == false;
+        }
+    }
+    int totalItems = 0;
+    bool isSearchLoadingShow = false;
+    bool isInvalid = false;
+
+
+    PagerPosition pagerPosition = PagerPosition.Bottom;
+    HuiVienThamGiaDto huiVienHienTai = new();
+    IEnumerable<HuiVienThamGiaDto> danhSachHuiVienThamGia = Enumerable.Empty<HuiVienThamGiaDto>();
+    IEnumerable<TimKiemHuiVienAutocompleteDto> danhSachHuiVien = Enumerable.Empty<TimKiemHuiVienAutocompleteDto>();
+
+    async Task XoaHuiVienDaChon(HuiVienThamGiaDto data)
+    {
+        var dongYXoa = await dialogService.Confirm(
+                $"Hụi viên: {data.TenHuiVien}", "Bạn có muốn xóa khỏi danh sách tham gia hụi không?",
+                new ConfirmOptions() { OkButtonText = "Có", CancelButtonText = "Không" });
+        if (dongYXoa == true)
+        {
+            danhSachHuiVienThamGia = danhSachHuiVienThamGia.Where(item => item.MaHuiVien != data.MaHuiVien);
+        }
+    }
+    void ThemVaoDanhSachHuiVien()
+    {
+        try
+        {
+            if (huiVienHienTai.TenHuiVien.IsNotEmpty())
+            {
+                //Kiểm tra hụi viên đã được thêm chưa
+                if (danhSachHuiVienThamGia == null)
+                {
+                    danhSachHuiVienThamGia = new List<HuiVienThamGiaDto>();
+                }
+                else
+                {
+                    bool daThemTruocDoChua = danhSachHuiVienThamGia.Any(hv => hv.TenHuiVien.ToLower() == huiVienHienTai.TenHuiVien.ToLower());
+                    if (daThemTruocDoChua)
+                    {
+                        ShowWarningNotification($"Hụi viên: {huiVienHienTai.TenHuiVien} đã được thêm trước đó, vui lòng xóa trước và thêm lại sau.");
+                        return;
+                    }
+                }
+
+                var huiVienThamGia = huiVienHienTai;
+
+                if (themHuiVienDaTonTai)
+                {
+                    if (huiVienThamGia.HuiVienId > 0)
+                    {
+                        var danhSachHuiVienDaThamGia = qlHuiVienService.LayDanhSachHuiVienThamGiaDayHui(dayHuiId);
+                        if (danhSachHuiVienDaThamGia.Any())
+                        {
+                            bool daThamGia = danhSachHuiVienDaThamGia.Any(item => item.HuiVienId == huiVienThamGia.HuiVienId);
+                            if (daThamGia)
+                            {
+                                ShowWarningNotification("Hụi viên này đã tham gia dây hụi");
+                                return;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        ShowWarningNotification("Không tìm thấy hụi viên với thông tin đã nhập");
+                        return;
+                    }
+                }
+                else
+                {
+                    //Kiểm tra hụi viên mới có trùng tên không
+                    var maHuiVien = TaoMaHuiVienTuTen(huiVienHienTai.TenHuiVien);
+                    if (maHuiVien.IsNotEmpty())
+                    {
+                        var dsMaDaTonTai = new List<string>();
+                        var dsHuiVienCoMaGanDung = qlHuiVienService.DsHuiVienTheoMaGanDung(maHuiVien);
+
+                        bool trungTen = dsHuiVienCoMaGanDung.Any(item => item.TenHuiVien.Equals(huiVienHienTai.TenHuiVien, StringComparison.CurrentCultureIgnoreCase));
+                        if (trungTen)
+                        {
+                            //var dongYTaoMaMoi = await dialogService.Confirm(
+                            //$"Tên hụi viên: {huiVienHienTai.TenHuiVien} đã tồn tại", "Bạn có muốn thêm hụi viên với mã mới không",
+                            //new ConfirmOptions() { OkButtonText = "Có", CancelButtonText = "Không" });
+                            ShowWarningNotification($"Hụi viên {huiVienHienTai.TenHuiVien} đã tồn tại");
+                            return;
+                            //if (dongYTaoMaMoi != false)
+                            //{
+                            //    return;
+                            //}
+                        }
+                        if (dsHuiVienCoMaGanDung.Any())
+                        {
+                            dsMaDaTonTai.AddRange(dsHuiVienCoMaGanDung.Select(item => item.MaHuiVien));
+                        }
+                        if (danhSachHuiVienThamGia != null && danhSachHuiVienThamGia.Any())
+                        {
+                            dsMaDaTonTai.AddRange(danhSachHuiVienThamGia.Select(item => item.MaHuiVien));
+                        }
+                        string maHVKhongTrung = TaoMaHuiVienKhongTrung(maHuiVien, dsMaDaTonTai);
+                        huiVienThamGia.MaHuiVien = maHVKhongTrung;
+
+                    }
+                }
+                huiVienThamGia.DayHuiId = dayHuiId;
+                huiVienThamGia.NgayTao = DateTime.Now;
+                huiVienThamGia.SoCChet = 0;
+                huiVienThamGia.SoCSong = huiVienThamGia.SoCThamGia;
+                danhSachHuiVienThamGia = danhSachHuiVienThamGia.Prepend(huiVienThamGia);
+                totalItems = danhSachHuiVienThamGia.Count();
+                huiVienHienTai = new();
+            }
+
+        }
+        catch (Exception ex)
+        {
+            ShowErrorNotification(ex.GetError());
+        }
+    }
+    async Task HoanTatThemHuiVien()
+    {
+        try
+        {
+            var dongYHoanTat = await dialogService.Confirm(
+               "", "Bạn có thực sự muốn hoàn tất không?",
+               new ConfirmOptions() { OkButtonText = "Có", CancelButtonText = "Không" });
+            if (dongYHoanTat == true)
+            {
+                if (danhSachHuiVienThamGia.Any())
+                {
+                    var danhSachHuiVienThemMoi = Enumerable.Empty<HuiVienDto>();
+                    //Thêm hụi viên mới
+                    if (themHuiVienMoi)
+                    {
+                        var danhSachHuiVienMoi = danhSachHuiVienThamGia.Where(item => item.HuiVienId <= 0);
+                        if (danhSachHuiVienMoi.Any())
+                        {
+                            var danhSachHuiVienInsert = danhSachHuiVienMoi.Select(item =>
+                            {
+                                return new HuiVienDto()
+                                    {
+                                        MaHuiVien = item.MaHuiVien,
+                                        TenHuiVien = item.TenHuiVien,
+                                        NgayTao = DateTime.Now
+                                    };
+                            });
+                            var themMoiRs = qlHuiVienService.ThemMoiDanhSachHuiVien(danhSachHuiVienInsert);
+                            if (themMoiRs != null && themMoiRs.Any())
+                            {
+                                danhSachHuiVienThemMoi = themMoiRs;
+                            }
+                        }
+                    }
+
+                    var insertLs = Enumerable.Empty<HuiVienThamGiaDto>();
+                    foreach (var hv in danhSachHuiVienThamGia)
+                    {
+                        if (hv.HuiVienId <= 0 && danhSachHuiVienThemMoi.Any())
+                        {
+                            var huiVienTemp = danhSachHuiVienThemMoi.FirstOrDefault(item => item.MaHuiVien == hv.MaHuiVien);
+                            if (huiVienTemp != null)
+                            {
+                                hv.HuiVienId = huiVienTemp.Id;
+                            }
+                        }
+                        int loop = hv.SoCThamGia;
+                        for (int i = 0; i < loop; i++)
+                        {
+                            hv.SoCSong = 1;
+                            insertLs = insertLs.Append(hv);
+
+                        }
+                    }
+
+                    bool insertRs = qlHuiVienService.ThemDanhSachHuiVienThamGia(insertLs);
+                    if (insertRs)
+                    {
+                        dialogService.Close(true);
+                    }
+                }
+                else
+                {
+                    dialogService.Close();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowErrorNotification(ex.GetError());
+        }
+
+    }
+
+    void ChonHuiVienDaTonTai(object value)
+    {
+        if (value != null)
+        {
+            string[] stringValue = value.ToString().Split("-");
+            if (stringValue != null && stringValue.Length == 2 && danhSachHuiVien != null && danhSachHuiVien.Any())
+            {
+                var maHuiVien = stringValue[1];
+                var huiVien = danhSachHuiVien.FirstOrDefault(item => item.MaHuiVien == maHuiVien);
+                if (huiVien != null)
+                {
+                    huiVienHienTai.TenHuiVien = huiVien.TenHuiVien;
+                    huiVienHienTai.MaHuiVien = huiVien.MaHuiVien;
+                    huiVienHienTai.DayHuiId = dayHuiId;
+                    huiVienHienTai.HuiVienId = huiVien.HuiVienId;
+                }
+            }
+        }
+    }
+
+
+    void OnLoadHuiVienData(LoadDataArgs args)
+    {
+        var getData = qlHuiVienService.LayDanhSachHuiVienTheoTenGanDung(args.Filter);
+        if (getData != null && getData.Any())
+        {
+            danhSachHuiVien = getData.ToList();
+        }
+        else
+        {
+            danhSachHuiVien = new List<TimKiemHuiVienAutocompleteDto>();
+        }
+    }
+}

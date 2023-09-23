@@ -1,0 +1,173 @@
+﻿@page "/DayHui/{dayHuiId:int?}"
+@using static QlHui.App.Data.Constant.Const;
+@inject Radzen.DialogService _dialogService
+@inject IQlHuiService _service;
+@inject IUtils _utils;
+@inherits NotificationBase;
+<div class="container">
+    <RadzenCard>
+        <div class="row">
+            <div class="col-md-4 col-lg-4 p-3">
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2">Ngày khui</RadzenText>
+                <RadzenDatePicker DateFormat=@DateTimeFormat.UIDateFormat Class="w-100" @bind-Value=@currentItem.NgayKhui
+                                  Style="text-align: right;" Disabled=@disableEdit Change="OnChange" />
+            </div>
+            <div class="col-md-4 col-lg-4 p-3">
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2">Tiền 1 C</RadzenText>
+                <RadzenNumeric TValue="string" @oninput="@(arg=>OnInputTien1C(arg))"
+                               Value="@currentItem.TienMotChan.GetMoneyFormat()"
+                                Class="w-100" Style="text-align: right;" Disabled=@disableEdit  />
+            </div>
+            <div class="col-md-4 col-lg-4 p-3">
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2">Tiền thảo</RadzenText>
+                <RadzenNumeric TValue="string" Class="w-100" @oninput="@(arg=>currentItem.TienThao = arg.Value.ToString().GetFloatNumber())"
+                               Value="@currentItem.TienThao.GetMoneyFormat()"
+                               Style="text-align: right;" Disabled=@disableEdit  />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2 col-lg-2 p-3">
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2">Số ngày</RadzenText>
+                <RadzenNumeric TValue="int" Class="w-100" @bind-Value=@currentItem.SoNgayLoaiHui
+                               TextAlign="TextAlign.Right" Min="1" Change="OnChange" Disabled=@disableEdit />
+
+            </div>
+            <div class="col-md-3 col-lg-3 p-3">
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2">Loại hụi</RadzenText>
+                <RadzenDropDown AllowClear="true" TValue="int?" Class="w-100" @bind-Value=@currentItem.LoaiHui
+                                Data=@(dsLoaiHui) Change="OnChange" TextAlign="TextAlign.Right"
+                                TextProperty="DisplayName" ValueProperty="Value" Disabled=@disableEdit />
+            </div>
+            <div class="col-md-7 col-md-7 p-3">
+                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2">Mã dây hụi</RadzenText>
+                <RadzenTextBox Class="w-100" Disabled="true" @bind-Value:get=@currentItem.MaDayHui />
+            </div>
+        </div>
+    </RadzenCard>
+</div>
+
+<div class="row pt-3">
+    <div class="col-md-12 text-end">
+        <RadzenButton Click="@SaveData" Variant="Variant.Flat" Text="Lưu" Style="width: 120px" IsBusy=@isSaveButtonLoading
+                      Visible=@(disableEdit==false) Icon="save" />
+        <RadzenButton Click="@((args) => _dialogService.Close(false))" Variant="Variant.Flat" Icon="close"
+                      ButtonStyle="ButtonStyle.Light" Text="Đóng" Style="width: 120px" Class="me-1" />
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public int? dayHuiId { get; set; }
+
+    List<LoaiHuiDto> dsLoaiHui = Const.DanhSachLoaiHui;
+    DayHuiDto currentItem = new();
+    AlertOption alertOption = new();
+
+    bool isSaveButtonLoading = false;
+    bool disableEdit = false;
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        if (dayHuiId.HasValue)
+        {
+            var exsitedDayHui = _service.GetById(dayHuiId.Value);
+            if (exsitedDayHui != null)
+            {
+                if (exsitedDayHui.SoNgayLoaiHui == 0) exsitedDayHui.SoNgayLoaiHui = 1;
+                currentItem = exsitedDayHui;
+            }
+            else
+            {
+                disableEdit = true;
+                ShowErrorNotification("Lỗi không tìm thấy dây hụi đã chọn");
+            }
+        }
+    }
+
+    void OnChange()
+    {
+        if (currentItem.NgayKhui.HasValue && currentItem.TienMotChan.HasValue && currentItem.LoaiHui.HasValue)
+        {
+            currentItem.MaDayHui = _service.TaoMaDayHui(
+                        currentItem.NgayKhui.Value, currentItem.LoaiHui.Value,
+                        currentItem.TienMotChan.Value, currentItem.SoNgayLoaiHui);
+        }
+        else
+        {
+            currentItem.MaDayHui = "";
+        }
+    }
+    void OnInputTien1C(ChangeEventArgs arg)
+    {
+        currentItem.TienMotChan = arg.Value.ToString().GetFloatNumber();
+        OnChange();
+    }
+    async Task SaveData()
+    {
+        try
+        {
+           
+            if (currentItem.TienThao.HasValue == false)
+            {
+                ShowErrorNotification("Phải nhập tiền thảo!");
+                return;
+            }
+            isSaveButtonLoading = true;
+            if (dayHuiId.HasValue == false)
+            {
+                //Truong hop them moi
+                if (string.IsNullOrEmpty(currentItem.MaDayHui) == false)
+                {
+                    currentItem.NgayTao = DateTime.Now;
+                    currentItem.TongSoChan = 0;
+                    currentItem.KyBo = 0;
+                    currentItem.DaCoNguoiBoHui = false;
+                    currentItem.NgayBoHui = currentItem.NgayKhui;
+                    var coTaoMoiThanhCong = await Task.Run(() => _service.Create(currentItem));
+                    if (coTaoMoiThanhCong == true)
+                    {
+                        ShowSuccessNotification($"Tạo thành công dây hụi {currentItem.MaDayHui}");
+                        ResetData();
+                    }
+                    else
+                    {
+                        ShowErrorNotification("Tạo thất bại!");
+                    }
+                }
+            }
+            else
+            {
+                currentItem.NgayBoHui = currentItem.NgayKhui;
+                // truong hop chinh sua
+                var updateRs = _service.Update(currentItem);
+                if (updateRs)
+                {
+                    ShowSuccessNotification("Chỉnh sửa thành công!");
+                    _dialogService.Close();
+                }
+                else
+                {
+                    ShowErrorNotification("Chỉnh sửa thành công!");
+                }
+
+            }
+
+        }
+        catch (Exception ex)
+        {
+            ShowErrorNotification($"Lỗi hệ thống! {ex.GetError()}");
+        }
+        isSaveButtonLoading = false;
+    }
+    void ResetData()
+    {
+        currentItem.MaDayHui = string.Empty;
+        currentItem.LoaiHui = null;
+        currentItem.TienMotChan = null;
+        currentItem.TienThao = null;
+        currentItem.NgayKhui = DateTime.Now;
+    }
+
+}

@@ -1,0 +1,607 @@
+﻿@page "/ChiTietDayHui/{dayHuiId:int}"
+@inject IQlHuiService qlHuiService;
+@inject IQlHuiVienService qlHuiVienService;
+@inject ILsBoHuiService lsBoHuiService;
+@inject ILsDongHuiService lsDongHuiService;
+@implements IDisposable;
+@inject IJSRuntime JSRuntime;
+@inject DialogService dialogService;
+@inherits NotificationBase;
+@inject NavigationManager navManager;
+@using static QlHui.App.Data.Constant.Const;
+<div class="pt-2 row">
+    <div class="col">
+        <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="arrow_back_ios" Variant="Variant.Flat" Size="ButtonSize.Small"
+                      Text="Trở lại" Click=@(args=> navManager.NavigateTo("/TimKiemDayHui")) />
+    </div>
+    <div class="row position-relative pt-2">
+        <div class="d-grid gap-3 d-md-flex justify-content-md-end">
+            <RadzenButton Text="Thêm hụi viên mới" ButtonStyle="ButtonStyle.Info" Click=@ThemHuiVienMoi Disabled=@(isDisabledButton || daCoNguoiBoHui) />
+            <RadzenButton Text="Thêm hụi viên đã tồn tại" ButtonStyle="ButtonStyle.Primary"Click=@ThemHuiVienDaTonTai Disabled=@(isDisabledButton || daCoNguoiBoHui) />
+        </div>
+    </div>
+</div>
+<RadzenFieldset Text="Chi tiết dây hụi">
+    <div class="row">
+        <div class="col-3 row">
+            <RadzenText TextStyle="TextStyle.Body1" class="col-5" Style="font-weight: bold;">Ngày khui: </RadzenText>
+            <RadzenText class="col-7">@ngayKhui</RadzenText>
+        </div>
+        <div class="col-4 row">
+            <RadzenText TextStyle="TextStyle.Body1" class="col-4" Style="font-weight: bold;">Mã dây hụi: </RadzenText>
+            <RadzenText class="col-8">@dayHuiHienTai.MaDayHui</RadzenText>
+        </div>
+        <div class="col-3 row">
+            <RadzenText TextStyle="TextStyle.Body1" class="col-5" Style="font-weight: bold;">Tiền 1 C: </RadzenText>
+            <RadzenText class="col-7">@dayHuiHienTai.TienMotChan.GetMoneyFormat() </RadzenText>
+        </div>
+        <div class="col-2 row">
+            <RadzenText TextStyle="TextStyle.Body1" class="col-7" Style="font-weight: bold;">Số phần: </RadzenText>
+            <RadzenText class="col-5">@tongSoPhan</RadzenText>
+        </div>
+        <div class="col-1 row">
+            <RadzenText TextStyle="TextStyle.Body1" class="col-6" Style="font-weight: bold;">Kỳ: </RadzenText>
+            <RadzenText class="col-6">@dayHuiHienTai.KyBo </RadzenText>
+        </div>
+        <div class="col-3 row">
+            <RadzenText TextStyle="TextStyle.Body1" class="col-6" Style="font-weight: bold;">Tiền thảo: </RadzenText>
+            <RadzenText class="col-6">@dayHuiHienTai.TienThao.GetMoneyFormat()  </RadzenText>
+        </div>
+    </div>
+</RadzenFieldset>
+@*<div class="row position-relative pt-2">
+    <div class="d-grid gap-3 d-md-flex justify-content-md-end">
+        <RadzenButton Text="Bỏ hụi lại" Icon="settings_backup_restore" />
+    </div>
+</div>*@
+<div class="pt-2">
+    <RadzenDataGrid @ref="thamGiaDayHuiGrid" TItem="HuiVienThamGiaDto" Data=@danhSachHuiVienThamGia Style="max-height:400px" RowUpdate="@CapNhatDuLieuDong"
+                    AllowSorting="true" IsLoading=@isSearchLoadingShow
+                    PagerHorizontalAlign="HorizontalAlign.Center" AllowAlternatingRows="false" EditMode="DataGridEditMode.Single" Density=Density.Compact>
+        <EmptyTemplate>
+            <p style="color: lightgrey; font-size: 24px; text-align: center; margin: 2rem;">@Const.EmptyTable</p>
+        </EmptyTemplate>
+        <Columns>
+            <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Title="Stt" TextAlign="TextAlign.Center" Width="60px">
+                <Template>
+                    @(danhSachHuiVienThamGia.IndexOf(context) + 1)
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Title="Thao tác" TextAlign="TextAlign.Center" Width="220px" Frozen="true">
+                <Template Context="data">
+                    <RadzenButton Text="Bỏ hụi" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.ExtraSmall" Click=@(arg=>BoHui(data))
+                                  Visible=@(data.DaBoHui!=true && coTheBoHui) />
+
+                    <RadzenButton ButtonStyle="ButtonStyle.Warning" Text="Đã trả" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.ExtraSmall" Click="@(args=>TraTien(data))"
+                                  Visible=@(data.TrangThai==TrangThaiDongHui.CHUA_TRA.GetHashCode()&& data.PhaiTra.GetValueOrDefault()>0) />
+
+                    <RadzenButton ButtonStyle="ButtonStyle.Warning" Text="Đã thu" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.ExtraSmall" Click="@(args=>ThuTien(data))"
+                                  Visible=@(data.TrangThai==TrangThaiDongHui.CHUA_THU.GetHashCode() && data.TongPhaiThu.GetValueOrDefault()>0) />
+
+                    <RadzenButton ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Shade="Shade.Lighter"
+                                  Icon="visibility" title="Xem chi tiết" Size="ButtonSize.ExtraSmall" Click="@(args => HienThiChiTietLichSuDongHui(data))" />
+
+                    <RadzenButton ButtonStyle="ButtonStyle.Info" Variant="Variant.Flat" Shade="Shade.Lighter"
+                                  Icon="group" title="Đổi người" Size="ButtonSize.ExtraSmall" Click="@(args => DoiNguoiThamGia(data))" Visible=@(data.SoCChet==0) />
+
+                    <RadzenButton ButtonStyle="ButtonStyle.Warning" Variant="Variant.Flat" Shade="Shade.Lighter"
+                                  Icon="edit" title="Chỉnh sửa" Size="ButtonSize.ExtraSmall" Click="@(args => ChinhSuaDong(data))" @onclick:stopPropagation="true" />
+
+                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Variant="Variant.Flat" Shade="Shade.Light" Visible=@(daCoNguoiBoHui!=true)
+                                  Icon="delete" title="Xóa" Size="ButtonSize.ExtraSmall" Click=@(arg=>XoaHuiVienThamGia(data)) @onclick:stopPropagation="true" />
+
+                </Template>
+                <EditTemplate Context="data">
+                    <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Click="@((args) => LuuChinhSuaDong(data))" Size="ButtonSize.ExtraSmall" Text="Lưu lại">
+                    </RadzenButton>
+                    <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Click="@((args) => BoChinhSuaDong(data))" Size="ButtonSize.ExtraSmall" Text="Bỏ">
+                    </RadzenButton>
+                </EditTemplate>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Property="MaHuiVien" Frozen="true" Width="70px">
+                <HeaderTemplate>
+                    <span>Mã</span><br />
+                    <span>hụi</span><br />
+                    <span>viên</span>
+                </HeaderTemplate>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Property="TenHuiVien" Title="Tên hụi viên" Frozen="true" Width="180px" />
+            <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Width="100px" TextAlign="TextAlign.Center">
+                <HeaderTemplate>
+                    <span>Sống</span><br />
+                    <span>/Chết</span>
+                </HeaderTemplate>
+                <Template Context="data">
+                    <span>@(data.SoCSong > 0 ? "S" : "C")</span>
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Property="TongDaDong" Type=typeof(float?) Width="100px" TextAlign="TextAlign.Right">
+                <HeaderTemplate>
+                    <span>Tổng</span><br />
+                    <span>đã đóng</span>
+                </HeaderTemplate>
+                <Template Context="data">
+                    <span>@(data.TongDaDong.GetMoneyFormat())</span>
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Type=typeof(float?) FormatString=@NumericFormat.MoneyFormat Width="100px" TextAlign="TextAlign.Right">
+                <HeaderTemplate>
+                    <span>Tổng</span><br />
+                    <span>phải thu</span>
+                </HeaderTemplate>
+                <Template Context="data">
+                    <span>@(data.TongPhaiThu.GetMoneyFormat(false))</span>
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Property="KyHienTaiPhaiThu" Type=typeof(float?) Width="100px" TextAlign="TextAlign.Right">
+                <HeaderTemplate>
+                    <span>Kỳ</span><br />
+                    <span>hiện tại</span><br />
+                    <span>phải thu</span>
+                </HeaderTemplate>
+                <Template Context="data">
+                    <span>@data.KyHienTaiPhaiThu.GetMoneyFormat()</span>
+                </Template>
+                <EditTemplate Context="data">
+                    <RadzenNumeric TValue="string" Class="w-100" @oninput="@(arg=>data.KyHienTaiPhaiThu = arg.Value.ToString().GetFloatNumber())"
+                                   Value="@data.KyHienTaiPhaiThu.GetMoneyFormat()" Style="text-align: right;" />
+                </EditTemplate>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Property="PhaiTra" Title="Tiền hốt" Type=typeof(float?) Width="100px" TextAlign="TextAlign.Right">
+                <Template Context="data">
+                    <span>@(data.PhaiTra.GetMoneyFormat())</span>
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Property="TienLoi" Title="Lời/Lỗ" Type=typeof(float?) FormatString=@NumericFormat.MoneyFormat Width="100px" TextAlign="TextAlign.Right">
+                <Template Context="data">
+                    <span>@(data.TienLoi.GetMoneyFormat())</span>
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Property="TrangThai" Title="Trạng thái" Width="100px">
+                <Template Context="data">
+                    <RadzenLabel Visible=@(data.TrangThai==TrangThaiDongHui.CHUA_THU.GetHashCode()) class="text-danger">Chưa thu</RadzenLabel>
+                    <RadzenLabel Visible=@(data.TrangThai==TrangThaiDongHui.DA_THU.GetHashCode()) class="text-dark">Đã thu</RadzenLabel>
+                    <RadzenLabel Visible=@(data.TrangThai==TrangThaiDongHui.CHUA_TRA.GetHashCode()) class="text-warning">Chưa trả</RadzenLabel>
+                    <RadzenLabel Visible=@(data.TrangThai==TrangThaiDongHui.DA_TRA.GetHashCode()) class="text-success">Đã trả</RadzenLabel>
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Property="GhiChu" Title="Ghi chú" Width="300px">
+                <EditTemplate Context="data">
+                    <RadzenTextArea @bind-Value=@data.GhiChu class="w-200" />
+                </EditTemplate>
+            </RadzenDataGridColumn>
+
+        </Columns>
+    </RadzenDataGrid>
+</div>
+<RadzenFieldset Text="Lịch sử bỏ hụi">
+    <RadzenDataGrid TItem="LichSuBoHuiDto" Data=@danhSachLichSuBoHui Style="max-height:400px"
+                    AllowSorting="true" IsLoading=@isSearchLoadingShow PagerHorizontalAlign="HorizontalAlign.Center" AllowAlternatingRows="false">
+        <EmptyTemplate>
+            <p style="color: lightgrey; font-size: 24px; text-align: center; margin: 2rem;">@Const.EmptyTable</p>
+        </EmptyTemplate>
+        <Columns>
+            <RadzenDataGridColumn TItem="LichSuBoHuiDto" Property="KyBo" Title="Kỳ bỏ" TextAlign="TextAlign.Center" Width="80px" />
+            <RadzenDataGridColumn TItem="LichSuBoHuiDto" Property="NgayBoHui" Title="Ngày bỏ hụi" Type=typeof(DateTime?) FormatString={0:dd/MM/yyyy} TextAlign="TextAlign.Right" />
+            <RadzenDataGridColumn TItem="LichSuBoHuiDto" Property="NguoiBo" Title="Người bỏ" />
+            <RadzenDataGridColumn TItem="LichSuBoHuiDto" Property="SoTien" Title="Tiền bỏ" Type=typeof(float?) TextAlign="TextAlign.Center" FormatString="{0:0,0}" />
+            <RadzenDataGridColumn TItem="LichSuBoHuiDto" Property="TongHot" Title="Tổng hốt" Type=typeof(float?) FormatString={0:0,0} TextAlign="TextAlign.Center" />
+            <RadzenDataGridColumn TItem="LichSuBoHuiDto" Property="ChiTiet" Title="Chi tiết" Width="500px">
+                <Template Context="data">
+                    @foreach (var item in data.ChiTiet.Split("\n"))
+                    {
+                        <span>@item</span>
+                        <br />
+                    }
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+</RadzenFieldset>
+@code {
+    [Parameter]
+    public int dayHuiId { get; set; }
+
+    public bool isVisibleBoHuiLaiButton { get; set; }
+
+    PagerPosition pagerPosition = PagerPosition.Bottom;
+    QLDayHuiSearchCriteria searchCriteria = new();
+    AlertOption alertOption = new();
+    DateTime currentDate = DateTime.Now;
+    DayHuiDto dayHuiHienTai;
+    RadzenDataGrid<HuiVienThamGiaDto> thamGiaDayHuiGrid;
+    IList<HuiVienThamGiaDto> danhSachHuiVienThamGia = new List<HuiVienThamGiaDto>();
+    IList<LichSuBoHuiDto> danhSachLichSuBoHui = new List<LichSuBoHuiDto>();
+
+    HuiVienThamGiaDto huiVienUpdateOld;
+
+    string ngayKhui = string.Empty;
+    string tongSoPhan = string.Empty;
+    string tienBo = string.Empty;
+    string tienMotChan = string.Empty;
+
+    bool isSearchLoadingShow = false;
+    bool isDisabledButton = false;
+    bool daCoNguoiBoHui = false;
+    bool coTheBoHui = false;
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        dialogService.OnOpen += OnOpenDialog;
+        dialogService.OnClose += OnCloseDialog;
+        LoadData();
+    }
+    //protected override async Task OnAfterRenderAsync(bool firstRender)
+    //{
+    //    //if (firstRender)
+    //    //{
+    //    //    await JSRuntime.InvokeVoidAsync("addHoverStyles", thamGiaDayHuiGrid);
+    //    //}
+    //}
+    void OnOpenDialog(string title, Type type, Dictionary<string, object> parameters, DialogOptions options)
+    {
+        Console.WriteLine("Dialog opened");
+    }
+
+    void OnCloseDialog(dynamic result)
+    {
+        if (result == true)
+        {
+            LoadData();
+        }
+        dialogService.Dispose();
+    }
+
+    async Task ThemHuiVienMoi()
+    {
+        try
+        {
+            await dialogService.OpenAsync<ThemHuiVienVaoDayHui>($"Thêm hụi viên mới - Dây: {dayHuiHienTai?.MaDayHui}",
+            new Dictionary<string, object>()
+                                                                                                                                                                            {
+                        {"dayHuiId", dayHuiId},{"themHuiVienDaTonTai",false}
+                                                                                                                                                                            },
+            new DialogOptions() { Width = "85%", Height = "80%", Resizable = true });
+        }
+        catch (Exception ex)
+        {
+            ShowErrorNotification(ex.GetError());
+        }
+    }
+
+    async Task ThemHuiVienDaTonTai()
+    {
+        try
+        {
+            await dialogService.OpenAsync<ThemHuiVienVaoDayHui>(
+             $"Thêm hụi viên đã tồn tại trên hệ thống - Dây: {dayHuiHienTai?.MaDayHui}",
+             new Dictionary<string, object>()
+                                                                                                                                                                                    {
+                                {"dayHuiId", dayHuiId},{"themHuiVienDaTonTai",true}
+                                                                                                                                                                                    },
+             new DialogOptions() { Width = "85%", Height = "80%", Resizable = true });
+        }
+        catch (Exception ex)
+        {
+            ShowErrorNotification(ex.GetError());
+        }
+    }
+
+    async Task XoaHuiVienThamGia(HuiVienThamGiaDto dto)
+    {
+        try
+        {
+            if (dto != null)
+            {
+                bool dayHuiDaCoNguoiBo = qlHuiService.DayHuiDaCoNguoiBoChua(dayHuiId);
+                if (dayHuiDaCoNguoiBo)
+                {
+                    ShowWarningNotification("Không thể xóa thành viên tham gia vì dây hụi đã có người đóng");
+                    return;
+                }
+                else
+                {
+                    var xacNhanXoa = await dialogService.Confirm(
+                        $"Hụi viên tham gia: {dto.TenHuiVien}", $"Bạn có muốn xóa khỏi danh sách tham gia dây {dayHuiHienTai.MaDayHui}?",
+                        new ConfirmOptions() { OkButtonText = "Có", CancelButtonText = "Không" });
+
+                    if (xacNhanXoa == true)
+                    {
+                        bool xoaThanhCong = qlHuiVienService.XoaHuiVienThamGia(dto);
+                        if (xoaThanhCong)
+                        {
+                            ShowSuccessNotification("Xóa hụi viên tham gia thành công");
+                            CapNhatDuLieu();
+                        }
+                        else
+                        {
+                            ShowErrorNotification("Có lỗi khi xóa hụi viên tham gia");
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowErrorNotification(ex.GetError());
+        }
+
+    }
+
+    void SetData(DayHuiDto dayHui)
+    {
+        if (dayHui != null)
+        {
+            tongSoPhan = dayHui.TongSoChan + "P";
+            ngayKhui = dayHui.NgayKhui.HasValue ? dayHui.NgayKhui.Value.ToString(DateTimeFormat.UIDateFormat) : string.Empty;
+            tienMotChan = dayHui.TienMotChan.HasValue ? dayHui.TienMotChan.Value.ToString(NumericFormat.MoneyFormat) : string.Empty;
+        }
+        else
+        {
+            ngayKhui = string.Empty;
+            tongSoPhan = "0P";
+            tienMotChan = string.Empty;
+        }
+    }
+
+    void LayDanhSachHuiVienThamGiaDayHui()
+    {
+        var retRs = qlHuiVienService.LayDanhSachHuiVienThamGiaDayHui(dayHuiId);
+        if (retRs != null && retRs.Any())
+        {
+            if (coTheBoHui)
+            {
+                danhSachHuiVienThamGia = retRs.Select(item =>
+                {
+                    if (item.TongPhaiThu.GetValueOrDefault() <= 0 && item.PhaiTra.GetValueOrDefault() <= 0)
+                    {
+                        item.TrangThai = null;
+                    }
+                    return item;
+                }).ToList();
+            }
+            else
+            {
+                danhSachHuiVienThamGia = retRs.ToList();
+
+            }
+        }
+        else
+        {
+            danhSachHuiVienThamGia = new List<HuiVienThamGiaDto>();
+        }
+    }
+
+    void LayDanhSachLsBoHui()
+    {
+        danhSachLichSuBoHui = lsBoHuiService.LayDanhSachLichSuBoHui(dayHuiId).ToList();
+    }
+    void LoadData()
+    {
+        dayHuiHienTai = qlHuiService.GetById(dayHuiId);
+        coTheBoHui = dayHuiHienTai.NgayBoHui.GetValueOrDefault().Date <= DateTime.Now.Date;
+        if (dayHuiHienTai == null)
+        {
+            isDisabledButton = true;
+            ShowWarningNotification("Không tìm thấy dây hụi");
+        }
+        else
+        {
+            CapNhatDuLieu();
+        }
+    }
+    void CapNhatDuLieu()
+    {
+        LayDanhSachHuiVienThamGiaDayHui();
+        if (danhSachHuiVienThamGia != null && danhSachHuiVienThamGia.Any())
+        {
+            dayHuiHienTai.TongSoChan = danhSachHuiVienThamGia.Sum(item => item.SoCThamGia);
+            daCoNguoiBoHui = danhSachHuiVienThamGia.Any(item => item.DaBoHui == true);
+            LayDanhSachLsBoHui();
+        }
+        dayHuiHienTai.KyBo = TinhToanSoKyHienTai();
+        _ = qlHuiService.Update(dayHuiHienTai);
+        SetData(dayHuiHienTai);
+    }
+
+    async Task ChinhSuaDong(HuiVienThamGiaDto rowItem)
+    {
+        huiVienUpdateOld = rowItem.DeepCopy();
+        await thamGiaDayHuiGrid.EditRow(rowItem);
+    }
+
+    async Task CapNhatDuLieuDong(HuiVienThamGiaDto rowItem)
+    {
+        try
+        {
+            if (rowItem != null)
+            {
+                bool updateSuccess = qlHuiVienService.CapNhatHuiVienThamGia(rowItem);
+                if (updateSuccess)
+                {
+                    ShowSuccessNotification("Cập nhật thành công!");
+                    huiVienUpdateOld = null;
+                }
+                else
+                {
+                    ShowErrorNotification("Lưu thất bại!");
+                    await thamGiaDayHuiGrid.EditRow(rowItem);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowErrorNotification(ex.GetError());
+        }
+
+    }
+
+    async Task LuuChinhSuaDong(HuiVienThamGiaDto rowItem)
+    {
+        if (huiVienUpdateOld != null)
+        {
+            rowItem.TongPhaiThu = (rowItem.TongPhaiThu.GetValueOrDefault() - huiVienUpdateOld.KyHienTaiPhaiThu.GetValueOrDefault()) + rowItem.KyHienTaiPhaiThu.GetValueOrDefault();
+        }
+        await thamGiaDayHuiGrid.UpdateRow(rowItem);
+    }
+
+    void BoChinhSuaDong(HuiVienThamGiaDto rowItem)
+    {
+
+        huiVienUpdateOld = null;
+
+        thamGiaDayHuiGrid.CancelEditRow(rowItem);
+
+        // For production
+    }
+
+    async Task DoiNguoiThamGia(HuiVienThamGiaDto rowItem)
+    {
+        if (rowItem != null)
+        {
+            try
+            {
+                await dialogService.OpenAsync<DoiNguoiThamGia>($"Đổi người tham gia - Hụi viên : {rowItem.TenHuiVien}-{rowItem.MaHuiVien}",
+                new Dictionary<string, object>()
+                                                                                                                                                                                        {
+                        {"huiVienThamGiaId", rowItem.Id}
+                                                                                                                                                                                        },
+                new DialogOptions() { Width = "768px", Height = "300px", Resizable = true });
+            }
+            catch (Exception ex)
+            {
+                ShowErrorNotification(ex.GetError());
+            }
+        }
+
+    }
+
+    async Task BoHui(HuiVienThamGiaDto rowItem)
+    {
+        if (rowItem != null)
+        {
+            try
+            {
+                await dialogService.OpenAsync<BoHui>($"Hụi viên : {rowItem.TenHuiVien}-{rowItem.MaHuiVien}",
+                new Dictionary<string, object>()
+                                                                                                                                                                                            {
+                        {"huiVienThamGiaId", rowItem.Id}
+                                                                                                                                                                                            },
+                new DialogOptions() { Width = "480px", Height = "300px", Resizable = true });
+            }
+            catch (Exception ex)
+            {
+                ShowErrorNotification(ex.GetError());
+            }
+        }
+    }
+
+    int TinhToanSoKyHienTai()
+    {
+        int soKy = 0;
+        if (dayHuiHienTai != null && danhSachHuiVienThamGia != null && danhSachHuiVienThamGia.Any())
+        {
+            int tongDanhSachHuiVienThamGia = danhSachHuiVienThamGia.Count();
+            var currentDate = DateTime.Now;
+            var ngayKhui = dayHuiHienTai.NgayKhui.Value;
+            while (soKy <= tongDanhSachHuiVienThamGia &&
+                   ngayKhui.Date <= dayHuiHienTai.NgayBoHui.Value.Date &&
+                   ngayKhui.Date <= DateTime.Now.Date)
+            {
+                soKy++;
+                if (dayHuiHienTai.LoaiHui.HasValue)
+                {
+                    if (dayHuiHienTai.LoaiHui.Value == LoaiHui.NGAY.GetHashCode())
+                    {
+                        ngayKhui = ngayKhui.AddDays(1 * dayHuiHienTai.SoNgayLoaiHui);
+                    }
+                    else if (dayHuiHienTai.LoaiHui.Value == LoaiHui.TUAN.GetHashCode())
+                    {
+                        ngayKhui = ngayKhui.AddDays(7 * dayHuiHienTai.SoNgayLoaiHui);
+                    }
+                    else
+                    {
+                        ngayKhui = ngayKhui.AddMonths(1 * dayHuiHienTai.SoNgayLoaiHui);
+                    }
+                }
+            }
+        }
+        else
+        {
+            soKy = 1;
+        }
+        return soKy;
+    }
+
+    async Task TraTien(HuiVienThamGiaDto rowItem)
+    {
+        if (rowItem != null && rowItem.Id > 0)
+        {
+            var updateItem = rowItem.TraTien();
+            var xacNhan = await dialogService.Confirm(
+                      $"Hụi viên: {rowItem.TenHuiVien}", $"Xác nhận TRẢ {updateItem.TienDaTra.GetMoneyFormat()}?",
+                      new ConfirmOptions() { OkButtonText = "Có", CancelButtonText = "Không" });
+            if (xacNhan == true)
+            {
+                var updateRs = qlHuiVienService.CapNhatHuiVienThamGia(updateItem);
+                if (updateRs)
+                {
+                    var lichSuDongHui = new LichSuDongHuiDto().LayLsTraTien(updateItem, dayHuiHienTai.KyBo);
+                    _ = lsDongHuiService.Insert(lichSuDongHui);
+                    ShowSuccessNotification("Trả tiền thành công!");
+                    LayDanhSachHuiVienThamGiaDayHui();
+                }
+                else
+                {
+                    ShowErrorNotification("Có lỗi khi cập nhật!");
+                }
+            }
+        }
+    }
+
+    async Task ThuTien(HuiVienThamGiaDto rowItem)
+    {
+        if (rowItem != null && rowItem.Id > 0)
+        {
+            try
+            {
+                await dialogService.OpenAsync<ThuTien>($"Thu tiền - Hụi viên : {rowItem.TenHuiVien}-{rowItem.MaHuiVien}",
+                new Dictionary<string, object>()
+                                                                           {
+                        {"huiVienThamGiaId", rowItem.Id}
+                                                                           },
+                 new DialogOptions() { Width = "480px", Height = "300px", Resizable = true });
+            }
+            catch (Exception ex)
+            {
+                ShowErrorNotification(ex.GetError());
+            }
+        }
+    }
+
+    async Task HienThiChiTietLichSuDongHui(HuiVienThamGiaDto rowItem)
+    {
+        if (rowItem != null)
+        {
+            try
+            {
+                await dialogService.OpenAsync<LichSuDongHui>($"Lịch sử đóng hụi - Hụi viên : {rowItem.TenHuiVien}-{rowItem.MaHuiVien}",
+                new Dictionary<string, object>()
+                                                                       {
+                        {"huiVienThamGiaId", rowItem.Id}
+                                                                       },
+                 new DialogOptions() { Width = "85%", Height = "80%", Resizable = true });
+            }
+            catch (Exception ex)
+            {
+                ShowErrorNotification(ex.GetError());
+            }
+        }
+    }
+    public void Dispose()
+    {
+        dialogService.OnOpen -= OnOpenDialog;
+        dialogService.OnClose -= OnCloseDialog;
+    }
+}
