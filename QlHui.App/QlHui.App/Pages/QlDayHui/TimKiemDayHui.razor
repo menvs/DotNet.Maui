@@ -42,7 +42,7 @@
 <div class="pt-2">
     <RadzenDataGrid @ref="@gridTimKiemDayHui" TItem="DayHuiDto" Data=@listSearchData AllowSorting="true" IsLoading=@isSearchLoadingShow 
                     ShowPagingSummary="true" PagingSummaryFormat="@pagingSummaryFormat"
-                    Density="Density.Compact" PageSize="@panigation.Take" Count="totalItems" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Center" LoadData="@LoadData">
+                    Density="Density.Default" PageSize="@panigation.Take" Count="totalItems" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Center" LoadData="@LoadData">
         <EmptyTemplate>
             <p style="color: lightgrey; font-size: 24px; text-align: center; margin: 2rem;">@Const.EmptyTable</p>
         </EmptyTemplate>
@@ -52,13 +52,7 @@
                     @(listSearchData.IndexOf(context) + 1 + panigation.Skip)
                 </Template>
             </RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="DayHuiDto" Property="MaDayHui" Title="Mã dây hui" Width="20%" />
-            <RadzenDataGridColumn TItem="DayHuiDto" Property="NgayKhui" Title="Ngày khui" Type=typeof(DateTime?) FormatString={0:dd/MM/yyyy} TextAlign="TextAlign.Right" />
-            <RadzenDataGridColumn TItem="DayHuiDto" Property="TienThao" Title="Tiền thảo" Type=typeof(float?) FormatString={0:#,##0} TextAlign="TextAlign.Center" />
-            <RadzenDataGridColumn TItem="DayHuiDto" Property="TienMotChan" Title="Tiền 1C" Type=typeof(float?) FormatString={0:#,##0} TextAlign="TextAlign.Center" />
-            <RadzenDataGridColumn TItem="DayHuiDto" Property="TongSoChan" Title="Số phần" />
-            <RadzenDataGridColumn TItem="DayHuiDto" Property="KyBo" Title="Kỳ" />
-            <RadzenDataGridColumn Width="160px" TItem="DayHuiDto" Property="Id" Title="Thao tác" TextAlign="TextAlign.Center">
+                <RadzenDataGridColumn Width="160px" TItem="DayHuiDto" Property="Id" Title="Thao tác" TextAlign="TextAlign.Center">
                 <Template Context="data">
                     <RadzenButton ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.Small"
                                   Icon="visibility" Class="m-1" title="Xem chi tiết"
@@ -71,6 +65,13 @@
                                   Click=@(args => XoaDayHui(data)) />
                 </Template>
             </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="DayHuiDto" Property="MaDayHui" Title="Mã dây hui" Width="20%" />
+            <RadzenDataGridColumn TItem="DayHuiDto" Property="NgayKhui" Title="Ngày khui" Type=typeof(DateTime?) FormatString={0:dd/MM/yyyy} TextAlign="TextAlign.Right" />
+            <RadzenDataGridColumn TItem="DayHuiDto" Property="TienThao" Title="Tiền thảo" Type=typeof(float?) FormatString={0:#,##0} TextAlign="TextAlign.Center" />
+            <RadzenDataGridColumn TItem="DayHuiDto" Property="TienMotChan" Title="Tiền 1C" Type=typeof(float?) FormatString={0:#,##0} TextAlign="TextAlign.Center" />
+            <RadzenDataGridColumn TItem="DayHuiDto" Property="TongSoChan" Title="Số phần" />
+            <RadzenDataGridColumn TItem="DayHuiDto" Property="KyBo" Title="Kỳ" />
+        
         </Columns>
     </RadzenDataGrid>
 </div>
