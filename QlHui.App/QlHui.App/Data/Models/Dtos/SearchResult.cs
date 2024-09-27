@@ -3,6 +3,6 @@
     internal class SearchResult<T>
     {
         public int TotalItem { get; set; }
-        public IEnumerable<T> Data { get; set; }
+        public IList<T> Data { get; set; }
     }
 }

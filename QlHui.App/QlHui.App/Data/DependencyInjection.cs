@@ -1,9 +1,8 @@
-﻿using QlHui.App.Data.Services.ImplService;
-using QlHui.App.Data.Services.IService;
+﻿using QlHui.App.Data.Services;
 using QlHui.App.Data.Utils;
 using Radzen;
 
-namespace QlHui.App.Data.Services
+namespace QlHui.App.Data
 {
     internal static class DependencyInjection
     {

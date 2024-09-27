@@ -1,57 +1,56 @@
 ﻿@page "/DayHui/{dayHuiId:int?}"
 @using static QlHui.App.Data.Constant.Const;
+@using QlHui.App.Data.Services;
 @inject Radzen.DialogService _dialogService
 @inject IQlHuiService _service;
 @inject IUtils _utils;
 @inherits NotificationBase;
-<div class="container">
-    <RadzenCard>
-        <div class="row">
-            <div class="col-md-4 col-lg-4 p-3">
-                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2">Ngày khui</RadzenText>
-                <RadzenDatePicker DateFormat=@DateTimeFormat.UIDateFormat Class="w-100" @bind-Value=@currentItem.NgayKhui
-                                  Style="text-align: right;" Disabled=@disableEdit Change="OnChange" />
-            </div>
-            <div class="col-md-4 col-lg-4 p-3">
-                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2">Tiền 1 C</RadzenText>
-                <RadzenNumeric TValue="string" @oninput="@(arg=>OnInputTien1C(arg))"
-                               Value="@currentItem.TienMotChan.GetMoneyFormat()"
-                                Class="w-100" Style="text-align: right;" Disabled=@disableEdit  />
-            </div>
-            <div class="col-md-4 col-lg-4 p-3">
-                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2">Tiền thảo</RadzenText>
-                <RadzenNumeric TValue="string" Class="w-100" @oninput="@(arg=>currentItem.TienThao = arg.Value.ToString().GetFloatNumber())"
-                               Value="@currentItem.TienThao.GetMoneyFormat()"
-                               Style="text-align: right;" Disabled=@disableEdit  />
-            </div>
+<RadzenFieldset Text="Thông tin">
+    <div class="row">
+        <div class="col-md-4 col-lg-4 p-3">
+            <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2">Ngày khui</RadzenText>
+            <RadzenDatePicker DateFormat=@DateTimeFormat.UIDateFormat Class="w-100" @bind-Value=@currentItem.NgayKhui
+                              Style="text-align: right;" Disabled=@disableEdit Change="OnChange" />
         </div>
-        <div class="row">
-            <div class="col-md-2 col-lg-2 p-3">
-                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2">Số ngày</RadzenText>
-                <RadzenNumeric TValue="int" Class="w-100" @bind-Value=@currentItem.SoNgayLoaiHui
-                               TextAlign="TextAlign.Right" Min="1" Change="OnChange" Disabled=@disableEdit />
+        <div class="col-md-4 col-lg-4 p-3">
+            <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2">Tiền 1 C</RadzenText>
+            <RadzenNumeric TValue="string" @oninput="@(arg=>OnInputTien1C(arg))"
+                           Value="@currentItem.TienMotChan.GetMoneyFormat()"
+                           Class="w-100" Style="text-align: right;" Disabled=@disableEdit />
+        </div>
+        <div class="col-md-4 col-lg-4 p-3">
+            <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2">Tiền thảo</RadzenText>
+            <RadzenNumeric TValue="string" Class="w-100" @oninput="@(arg=>currentItem.TienThao = arg.Value.ToString().GetFloatNumber())"
+                           Value="@currentItem.TienThao.GetMoneyFormat()"
+                           Style="text-align: right;" Disabled=@disableEdit />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2 col-lg-2 p-3">
+            <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2">Số ngày</RadzenText>
+            <RadzenNumeric TValue="int" Class="w-100" @bind-Value=@currentItem.SoNgayLoaiHui
+                           TextAlign="TextAlign.Right" Min="1" Change="OnChange" Disabled=@disableEdit />
 
-            </div>
-            <div class="col-md-3 col-lg-3 p-3">
-                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2">Loại hụi</RadzenText>
-                <RadzenDropDown AllowClear="true" TValue="int?" Class="w-100" @bind-Value=@currentItem.LoaiHui
-                                Data=@(dsLoaiHui) Change="OnChange" TextAlign="TextAlign.Right"
-                                TextProperty="DisplayName" ValueProperty="Value" Disabled=@disableEdit />
-            </div>
-            <div class="col-md-7 col-md-7 p-3">
-                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2">Mã dây hụi</RadzenText>
-                <RadzenTextBox Class="w-100" Disabled="true" @bind-Value:get=@currentItem.MaDayHui />
-            </div>
         </div>
-    </RadzenCard>
-</div>
+        <div class="col-md-3 col-lg-3 p-3">
+            <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2">Loại hụi</RadzenText>
+            <RadzenDropDown AllowClear="true" TValue="int?" Class="w-100" @bind-Value=@currentItem.LoaiHui
+                            Data=@(dsLoaiHui) Change="OnChange" TextAlign="TextAlign.Right"
+                            TextProperty="DisplayName" ValueProperty="Value" Disabled=@disableEdit />
+        </div>
+        <div class="col-md-7 col-md-7 p-3">
+            <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2">Mã dây hụi</RadzenText>
+            <RadzenTextBox Class="w-100" Disabled="true" @bind-Value:get=@currentItem.MaDayHui />
+        </div>
+    </div>
+</RadzenFieldset>
 
 <div class="row pt-3">
     <div class="col-md-12 text-end">
         <RadzenButton Click="@SaveData" Variant="Variant.Flat" Text="Lưu" Style="width: 120px" IsBusy=@isSaveButtonLoading
-                      Visible=@(disableEdit==false) Icon="save" />
+                      Visible=@(disableEdit==false) Icon="save" ButtonStyle="ButtonStyle.Success" class="rz-border-radius-6" />
         <RadzenButton Click="@((args) => _dialogService.Close(false))" Variant="Variant.Flat" Icon="close"
-                      ButtonStyle="ButtonStyle.Light" Text="Đóng" Style="width: 120px" Class="me-1" />
+                      ButtonStyle="ButtonStyle.Light" Text="Đóng" Style="width: 120px" class= "rz-border-radius-6" />
     </div>
 </div>
 

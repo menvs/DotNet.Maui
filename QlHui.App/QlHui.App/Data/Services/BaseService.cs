@@ -1,7 +1,7 @@
 ﻿using qlhui.app.Data.DataAccess.Entities;
 using SQLite;
 
-namespace QlHui.App.Data.Services.ImplService
+namespace QlHui.App.Data.Services
 {
     internal class BaseService
     {

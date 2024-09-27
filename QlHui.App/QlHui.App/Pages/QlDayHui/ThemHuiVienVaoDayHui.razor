@@ -1,49 +1,36 @@
 ﻿@page "/ThemHuiVienMoiVaoDayHui/{dayHuiId:int}/{themHuiVienDaTonTai:bool}"
-
+@using QlHui.App.Data.Services
 @using static QlHui.App.Data.Constant.Const;
 @inject Radzen.DialogService dialogService
+@inherits HuiVienBase;
 @inject IQlHuiService qlHuiService;
 @inject IQlHuiVienService qlHuiVienService;
-@inherits HuiVienBase;
-<div>
-    <RadzenTemplateForm TItem="HuiVienThamGiaDto" Data=@huiVienHienTai Submit=@ThemVaoDanhSachHuiVien>
+<div class="row">
+    <div class="col-7 p-3 row">
+        <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2" class="col-5">Tên hụi viên tham gia</RadzenText>
+        <div class="col-7">
+            <RadzenTextBox @bind-Value=@huiVienHienTai.TenHuiVien Name="TenHuiVien"
+                           style="display: block" class="w-100" Visible=@themHuiVienMoi />
+            <RadzenRequiredValidator Component="TenHuiVien" Text="Yêu cầu nhập tên hụi viên"
+                                     Popup=@isInvalid Style="position: absolute" Visible=@themHuiVienMoi />
 
-        <div class="row">
-            <div class="col-7 p-3 row">
-                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2" class="col-5">Tên hụi viên tham gia</RadzenText>
-                <div class="col-7">
-                    <RadzenTextBox @bind-Value=@huiVienHienTai.TenHuiVien Name="TenHuiVien"
-                                   style="display: block" class="w-100" Visible=@themHuiVienMoi />
-                    <RadzenRequiredValidator Component="TenHuiVien" Text="Yêu cầu nhập tên hụi viên"
-                                             Popup=@isInvalid Style="position: absolute" Visible=@themHuiVienMoi />
+            <RadzenAutoComplete Name="TenHuiVienAutocomplete" style="display: block" class="w-100" Change="@(arg=>ChonHuiVienDaTonTai(arg))"
+                                Visible=@themHuiVienDaTonTai Data=@danhSachHuiVien TextProperty="DisplayName" LoadData=@OnLoadHuiVienData />
+            <RadzenRequiredValidator Component="TenHuiVienAutocomplete" Text="Yêu cầu chọn tên hụi viên"
+                                     Popup=@isInvalid Style="position: absolute" Visible=@themHuiVienDaTonTai />
 
-                    <RadzenAutoComplete Name="TenHuiVienAutocomplete" style="display: block" class="w-100" Change="@(arg=>ChonHuiVienDaTonTai(arg))"
-                                        Visible=@themHuiVienDaTonTai Data=@danhSachHuiVien TextProperty="DisplayName" LoadData=@OnLoadHuiVienData />
-                    <RadzenRequiredValidator Component="TenHuiVienAutocomplete" Text="Yêu cầu chọn tên hụi viên"
-                                             Popup=@isInvalid Style="position: absolute" Visible=@themHuiVienDaTonTai />
-
-                </div>
-            </div>
-            <div class="col-3 p-3 row">
-                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2" class="col-7">Số C tham gia</RadzenText>
-                <div class="col-5">
-                    <RadzenNumeric TValue="int" class="col" Style="text-align: right;" @bind-Value=@huiVienHienTai.SoCThamGia Name="SoCThamGia" />
-                    <RadzenRequiredValidator Component="SoCThamGia" Text="Yêu cầu nhập số C tham gia" Popup=@isInvalid Style="position: absolute" />
-                </div>
-            </div>
-            <div class="col-1 p-3">
-                <RadzenButton Variant="Variant.Flat" Icon="add" Text="Thêm" ButtonType="ButtonType.Submit" />
-            </div>
         </div>
-    </RadzenTemplateForm>
-</div>
-<div class="pt-2 row">
-    <div class="col-md-12 text-end">
-        <RadzenButton ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Text="Hoàn tất" Click="@HoanTatThemHuiVien" />
+    </div>
+    <div class="col-3 p-3 row">
+        <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2" class="col-7">Số C tham gia</RadzenText>
+        <div class="col-5">
+            <RadzenNumeric TValue="int" class="col" Style="text-align: right;" @bind-Value=@huiVienHienTai.SoCThamGia Name="SoCThamGia" />
+            <RadzenRequiredValidator Component="SoCThamGia" Text="Yêu cầu nhập số C tham gia" Popup=@isInvalid Style="position: absolute" />
+        </div>
     </div>
 </div>
 <div class="pt-2">
-    <RadzenDataGrid TItem="HuiVienThamGiaDto" Data=@danhSachHuiVienThamGia PagerPosition=@pagerPosition Count=@totalItems Density="Density.Compact"
+    <RadzenDataGrid TItem="HuiVienThamGiaDto" Data=@danhSachHuiVienThamGia PagerPosition=@pagerPosition Count=@totalItems
                     AllowPaging="true" AllowSorting="true" PageSize="10" ShowPagingSummary="true" Style="max-height:350px">
         <EmptyTemplate>
             <p style="color: lightgrey; font-size: 24px; text-align: center; margin: 2rem;">@Const.EmptyTable</p>
@@ -59,12 +46,17 @@
             <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Property="SoCThamGia" Title="Số C tham gia" Type=typeof(int) />
             <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Title="Thao tác" TextAlign="TextAlign.Center">
                 <Template Context="data">
-                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Variant="Variant.Flat" Shade="Shade.Lighter" Icon="delete" Class="m-1" title="Xóa" Size="ButtonSize.Small"
+                    <RadzenButton ButtonStyle="ButtonStyle.Base" Variant="Variant.Flat" Shade="Shade.Lighter" Icon="delete" title="Xóa" Size="ButtonSize.Medium"
                                   Click=@(args => XoaHuiVienDaChon(data)) />
                 </Template>
             </RadzenDataGridColumn>
         </Columns>
     </RadzenDataGrid>
+</div>
+<div class="pt-2 row">
+    <div class="col-md-12 text-end">
+        <RadzenButton ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Text="Hoàn tất" Click="@HoanTatThemHuiVien" />
+    </div>
 </div>
 @code {
     [Parameter]
@@ -92,8 +84,8 @@
     async Task XoaHuiVienDaChon(HuiVienThamGiaDto data)
     {
         var dongYXoa = await dialogService.Confirm(
-                $"Hụi viên: {data.TenHuiVien}", "Bạn có muốn xóa khỏi danh sách tham gia hụi không?",
-                new ConfirmOptions() { OkButtonText = "Có", CancelButtonText = "Không" });
+            $"Hụi viên: {data.TenHuiVien}", "Bạn có muốn xóa khỏi danh sách tham gia hụi không?",
+            new ConfirmOptions() { OkButtonText = "Có", CancelButtonText = "Không" });
         if (dongYXoa == true)
         {
             danhSachHuiVienThamGia = danhSachHuiVienThamGia.Where(item => item.MaHuiVien != data.MaHuiVien);
@@ -198,40 +190,36 @@
         try
         {
             var dongYHoanTat = await dialogService.Confirm(
-               "", "Bạn có thực sự muốn hoàn tất không?",
-               new ConfirmOptions() { OkButtonText = "Có", CancelButtonText = "Không" });
+           "", "Bạn có thực sự muốn hoàn tất không?",
+           new ConfirmOptions() { OkButtonText = "Có", CancelButtonText = "Không" });
             if (dongYHoanTat == true)
             {
                 if (danhSachHuiVienThamGia.Any())
                 {
-                    var danhSachHuiVienThemMoi = Enumerable.Empty<HuiVienDto>();
+                    IList<HuiVienDto> danhSachHuiVienThemMoi = [];
                     //Thêm hụi viên mới
                     if (themHuiVienMoi)
                     {
-                        var danhSachHuiVienMoi = danhSachHuiVienThamGia.Where(item => item.HuiVienId <= 0);
-                        if (danhSachHuiVienMoi.Any())
+                        var danhSachHuiVienMoi = danhSachHuiVienThamGia.Where(item => item.HuiVienId <= 0).Select(item =>
                         {
-                            var danhSachHuiVienInsert = danhSachHuiVienMoi.Select(item =>
-                            {
-                                return new HuiVienDto()
-                                    {
-                                        MaHuiVien = item.MaHuiVien,
-                                        TenHuiVien = item.TenHuiVien,
-                                        NgayTao = DateTime.Now
-                                    };
-                            });
-                            var themMoiRs = qlHuiVienService.ThemMoiDanhSachHuiVien(danhSachHuiVienInsert);
-                            if (themMoiRs != null && themMoiRs.Any())
-                            {
-                                danhSachHuiVienThemMoi = themMoiRs;
-                            }
+                            return new HuiVienDto()
+                                {
+                                    MaHuiVien = item.MaHuiVien,
+                                    TenHuiVien = item.TenHuiVien,
+                                    NgayTao = DateTime.Now
+                                };
+                        }).ToList();
+                        var themMoiRs = qlHuiVienService.ThemMoiDanhSachHuiVien(danhSachHuiVienMoi);
+                        if (themMoiRs != null && themMoiRs.Count > 0)
+                        {
+                            danhSachHuiVienThemMoi = themMoiRs;
                         }
                     }
 
-                    var insertLs = Enumerable.Empty<HuiVienThamGiaDto>();
+                    IList<HuiVienThamGiaDto> insertLs = [];
                     foreach (var hv in danhSachHuiVienThamGia)
                     {
-                        if (hv.HuiVienId <= 0 && danhSachHuiVienThemMoi.Any())
+                        if (hv.HuiVienId <= 0 && danhSachHuiVienThemMoi.Count>0)
                         {
                             var huiVienTemp = danhSachHuiVienThemMoi.FirstOrDefault(item => item.MaHuiVien == hv.MaHuiVien);
                             if (huiVienTemp != null)
@@ -243,7 +231,7 @@
                         for (int i = 0; i < loop; i++)
                         {
                             hv.SoCSong = 1;
-                            insertLs = insertLs.Append(hv);
+                            insertLs.Add(hv);
 
                         }
                     }
@@ -282,6 +270,7 @@
                     huiVienHienTai.MaHuiVien = huiVien.MaHuiVien;
                     huiVienHienTai.DayHuiId = dayHuiId;
                     huiVienHienTai.HuiVienId = huiVien.HuiVienId;
+                    ThemVaoDanhSachHuiVien();
                 }
             }
         }
@@ -290,14 +279,6 @@
 
     void OnLoadHuiVienData(LoadDataArgs args)
     {
-        var getData = qlHuiVienService.LayDanhSachHuiVienTheoTenGanDung(args.Filter);
-        if (getData != null && getData.Any())
-        {
-            danhSachHuiVien = getData.ToList();
-        }
-        else
-        {
-            danhSachHuiVien = new List<TimKiemHuiVienAutocompleteDto>();
-        }
+        danhSachHuiVien = qlHuiVienService.LayDanhSachHuiVienTheoTenGanDung(args.Filter);
     }
 }

@@ -1,8 +1,9 @@
 ﻿@page "/LichSuDongHui/{huiVienThamGiaId:int}"
+@using QlHui.App.Data.Services
 @inherits NotificationBase;
 @inject ILsDongHuiService service;
 
-<RadzenDataGrid TItem="LichSuDongHuiDto" Data=@dsLichSuDongHui Style="height:400px" Density=Density.Compact
+<RadzenDataGrid TItem="LichSuDongHuiDto" Data=@dsLichSuDongHui Style="height:400px"
                 AllowSorting="true" IsLoading=@isLoadingShow PagerHorizontalAlign="HorizontalAlign.Center" AllowAlternatingRows="false">
     <EmptyTemplate>
         <p style="color: lightgrey; font-size: 24px; text-align: center; margin: 2rem;">@Const.EmptyTable</p>

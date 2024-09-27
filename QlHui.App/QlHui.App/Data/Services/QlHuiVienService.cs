@@ -1,11 +1,26 @@
 ﻿using qlhui.app.Data.DataAccess.Entities;
 using QlHui.App.Data.Models.Dtos;
-using QlHui.App.Data.Services.IService;
 using QlHui.App.Data.Utils;
 using static QlHui.App.Data.Constant.Enums;
 
-namespace QlHui.App.Data.Services.ImplService
+namespace QlHui.App.Data.Services
 {
+    internal interface IQlHuiVienService
+    {
+        HuiVienDto LayThongTinHuiVien(int huiVienId);
+        HuiVienThamGiaDto LayThongTinHuiVienThamGia(int huiVienThamGiaId);
+        IList<HuiVienDto> DsHuiVienTheoMaGanDung(string maHuiVIen);
+        IList<HuiVienThamGiaDto> LayDanhSachHuiVienThamGiaDayHui(int dayHuiId);
+        IList<TimKiemHuiVienAutocompleteDto> LayDanhSachHuiVienTheoTenGanDung(string tieuChiTimKiem);
+        bool ThemDanhSachHuiVienThamGia(IList<HuiVienThamGiaDto> dtos);
+        IList<HuiVienDto> ThemMoiDanhSachHuiVien(IList<HuiVienDto> dtos);
+        bool XoaHuiVienThamGia(HuiVienThamGiaDto huiVienThamGia);
+        bool CapNhatHuiVienThamGia(HuiVienThamGiaDto huiVienThamGia);
+        SearchResult<HuiVienKetQuaTimKiemDto> TimKiemHuiVien(HuiVienTieuChiTimKiemDto tieuchiTimKiem, PanigationDto panigation);
+        IList<TinhTienTheoHuiVienDto> LayDanhSachTinhTienTheoHuiVien(int huiVienId);
+        bool TatToanTatCa(IList<TinhTienTheoHuiVienDto> dsHuiVien);
+    }
+
     internal class QlHuiVienService : BaseService, IQlHuiVienService
     {
         private readonly IUtils _utils;
@@ -13,9 +28,9 @@ namespace QlHui.App.Data.Services.ImplService
         {
             _utils = utils;
         }
-        public IEnumerable<HuiVienDto> ThemMoiDanhSachHuiVien(IEnumerable<HuiVienDto> dtos)
+        public IList<HuiVienDto> ThemMoiDanhSachHuiVien(IList<HuiVienDto> dtos)
         {
-            var retItem = Enumerable.Empty<HuiVienDto>();
+            IList<HuiVienDto> retItem = [];
             if (dtos != null && dtos.Any())
             {
                 var entities = _utils.TransformToEntity<HuiVienDto, HuiVienEntity>(dtos);
@@ -23,64 +38,62 @@ namespace QlHui.App.Data.Services.ImplService
                 if (insertRs > 0)
                 {
                     var danhSachMaHuiVien = dtos.Select(item => item.MaHuiVien);
-                    entities = _connection.Table<HuiVienEntity>().Where(item => danhSachMaHuiVien.Contains(item.MaHuiVien)).AsEnumerable();
-                    retItem = _utils.TransformToDto<HuiVienDto, HuiVienEntity>(entities);
+                    entities = _connection.Table<HuiVienEntity>()
+                                .Where(item => danhSachMaHuiVien.Contains(item.MaHuiVien)).ToList();
+
+                    retItem = _utils.TransformToDto<HuiVienDto, HuiVienEntity>(entities).ToList();
                 }
             }
             return retItem;
         }
-        public IEnumerable<HuiVienThamGiaDto> LayDanhSachHuiVienThamGiaDayHui(int dayHuiId)
+        public IList<HuiVienThamGiaDto> LayDanhSachHuiVienThamGiaDayHui(int dayHuiId)
         {
-            var retData = Enumerable.Empty<HuiVienThamGiaDto>();
+            IList<HuiVienThamGiaDto> retData = [];
             if (dayHuiId > 0)
             {
-                var entityItems = _connection.Table<HuiVienThamGiaEntity>().Where(hv => hv.DayHuiId == dayHuiId).AsEnumerable();
-                if (entityItems.Any())
+                var entityItems = _connection.Table<HuiVienThamGiaEntity>().Where(hv => hv.DayHuiId == dayHuiId).ToList();
+                if (entityItems.Count>0)
                 {
                     retData = _utils.TransformToDto<HuiVienThamGiaDto, HuiVienThamGiaEntity>(entityItems);
                 }
             }
             return retData;
         }
-        public bool ThemDanhSachHuiVienThamGia(IEnumerable<HuiVienThamGiaDto> dtos)
+        public bool ThemDanhSachHuiVienThamGia(IList<HuiVienThamGiaDto> dtos)
         {
-            if (dtos != null && dtos.Any())
+            if (dtos != null && dtos.Count>0)
             {
                 var entities = _utils.TransformToEntity<HuiVienThamGiaDto, HuiVienThamGiaEntity>(dtos);
-                if (entities.Any())
-                {
-                    var insertRs = _connection.InsertAll(entities, true);
-                    return insertRs > 0;
-                }
+                var insertRs = _connection.InsertAll(entities, true);
+                return insertRs > 0;
             }
             return false;
         }
-        public IEnumerable<HuiVienDto> DsHuiVienTheoMaGanDung(string maHuiVIen)
+        public IList<HuiVienDto> DsHuiVienTheoMaGanDung(string maHuiVIen)
         {
-            var dsHuiVien = Enumerable.Empty<HuiVienDto>();
+            IList<HuiVienDto> dsHuiVien = [];
             if (string.IsNullOrEmpty(maHuiVIen) == false)
             {
                 string upper = maHuiVIen.ToUpper();
-                var dsHuiVienEntity = _connection.Table<HuiVienEntity>().Where(item => item.MaHuiVien.Contains(upper)).AsEnumerable();
-                if (dsHuiVienEntity.Any())
+                var dsHuiVienEntity = _connection.Table<HuiVienEntity>().Where(item => item.MaHuiVien.Contains(upper)).ToList();
+                if (dsHuiVienEntity.Count>0)
                 {
                     dsHuiVien = _utils.TransformToDto<HuiVienDto, HuiVienEntity>(dsHuiVienEntity);
                 }
             }
             return dsHuiVien;
         }
-        public IEnumerable<TimKiemHuiVienAutocompleteDto> LayDanhSachHuiVienTheoTenGanDung(string tieuChiTimKiem)
+        public IList<TimKiemHuiVienAutocompleteDto> LayDanhSachHuiVienTheoTenGanDung(string tieuChiTimKiem)
         {
-            var retData = Enumerable.Empty<TimKiemHuiVienAutocompleteDto>();
+            IList<TimKiemHuiVienAutocompleteDto> retData = [];
             if (string.IsNullOrEmpty(tieuChiTimKiem)) return retData;
             tieuChiTimKiem = tieuChiTimKiem.Trim();
-            //string query = $"SELECT Id,TenHuiVien,MaHuiVien FROM HuiVienEntity WHERE upper(TenHuiVien) like '%'";
-            //var tempList = _connection.DeferredQuery<HuiVienEntity>(query, tieuChiTimKiem.Trim().ToUpper());
-            var tempList = _connection.Table<HuiVienEntity>().AsEnumerable();
-            var queryData = tempList.Where(item => item.TenHuiVien.Contains(tieuChiTimKiem, StringComparison.CurrentCultureIgnoreCase));
-            if (queryData != null && queryData.Any())
+            var queryData = _connection.Table<HuiVienEntity>()
+                                        .Where(item => item.TenHuiVien.ToLower().Contains(tieuChiTimKiem.ToLower()))
+                                        .Take(10).ToList();
+            if (queryData != null && queryData.Count>0)
             {
-                retData = queryData.Take(10).Select(item =>
+                retData = queryData.Select(item =>
                 {
                     var newItem = new TimKiemHuiVienAutocompleteDto
                     {
@@ -90,7 +103,7 @@ namespace QlHui.App.Data.Services.ImplService
                         DisplayName = $"{item.TenHuiVien}-{item.MaHuiVien}"
                     };
                     return newItem;
-                });
+                }).ToList();
             }
             return retData;
         }
@@ -143,7 +156,22 @@ namespace QlHui.App.Data.Services.ImplService
             if (tieuchiTimKiem != null)
             {
                 var dsHuiVien = _connection.Table<HuiVienEntity>();
+                if (!string.IsNullOrEmpty(tieuchiTimKiem.MaHuiVien))
+                {
+                    dsHuiVien = dsHuiVien.Where(item => item.MaHuiVien != null
+                                                && item.MaHuiVien.ToUpper().Contains(tieuchiTimKiem.MaHuiVien.ToUpper()));
+                }
+
+                if (!string.IsNullOrEmpty(tieuchiTimKiem.TenHuiVien))
+                {
+                    dsHuiVien = dsHuiVien.Where(item => item.TenHuiVien != null
+                                                && item.TenHuiVien.ToUpper().Contains(tieuchiTimKiem.TenHuiVien.ToUpper()));
+                }
+
                 var dshuiVienThamGia = _connection.Table<HuiVienThamGiaEntity>();
+                const int ttDaThu = (int)TrangThaiDongHui.DA_THU;
+                const int ttChuaThu = (int)TrangThaiDongHui.CHUA_THU;
+                const int ttChuaTra = (int)TrangThaiDongHui.CHUA_TRA;
 
                 var queryData = dsHuiVien.Join(dshuiVienThamGia.DefaultIfEmpty(),
                         hv => hv.Id, hvThamGia => hvThamGia.HuiVienId,
@@ -166,25 +194,24 @@ namespace QlHui.App.Data.Services.ImplService
                             MaHuiVien = firstItem?.MaHuiVien,
                         };
 
-                        var dsDuNoItems = group.Where(item => item.TrangThai != null);
-                        if (dsDuNoItems.Any())
+                        var dsDuNoItems = group.Where(item => item.TrangThai != null && item.TrangThai != ttDaThu)
+                                                .Select(duNo => new { duNo.TongPhaiThu, duNo.PhaiTra }).ToList();
+                        if (dsDuNoItems.Count > 0)
                         {
-                            dsDuNoItems = dsDuNoItems.Where(item => item.TrangThai != TrangThaiDongHui.DA_THU.GetHashCode());
-
                             float tongPhaiThuTemp = dsDuNoItems.Sum(item => item.TongPhaiThu.GetValueOrDefault());
                             float tongPhaiTraTemp = dsDuNoItems.Sum(item => item.PhaiTra.GetValueOrDefault());
                             float duNo = tongPhaiTraTemp - tongPhaiThuTemp;
 
-                            int status = TrangThaiDongHui.DA_THU.GetHashCode();
+                            int status = ttDaThu;
                             if (duNo > 0)
                             {
-                                status = TrangThaiDongHui.CHUA_TRA.GetHashCode();
+                                status = ttChuaTra;
                                 retItem.TongPhaiTra = duNo;
                                 retItem.TongPhaiThu = 0;
                             }
                             else if (duNo < 0)
                             {
-                                status = TrangThaiDongHui.CHUA_THU.GetHashCode();
+                                status = ttChuaThu;
                                 retItem.TongPhaiThu = -duNo;
                                 retItem.TongPhaiTra = 0;
                             }
@@ -196,49 +223,38 @@ namespace QlHui.App.Data.Services.ImplService
                             retItem.TongPhaiTra = 0;
                             retItem.TongPhaiThu = 0;
                         }
-
                         return retItem;
-                    }).AsEnumerable();
+                    });
 
-                if (queryData.Any())
+                if (tieuchiTimKiem.CanThuTien || tieuchiTimKiem.CanTraTien)
                 {
-                    if (string.IsNullOrEmpty(tieuchiTimKiem.MaHuiVien) == false)
+                    if (tieuchiTimKiem.CanThuTien && tieuchiTimKiem.CanTraTien)
                     {
-                        queryData = queryData.Where(item => item.MaHuiVien != null && item.MaHuiVien.Contains(tieuchiTimKiem.MaHuiVien, StringComparison.CurrentCultureIgnoreCase));
+                        queryData = queryData.Where(item => item.TrangThai == ttChuaThu || item.TrangThai == ttChuaTra);
                     }
-                    if (string.IsNullOrEmpty(tieuchiTimKiem.TenHuiVien) == false)
+                    else if (tieuchiTimKiem.CanThuTien)
                     {
-                        queryData = queryData.Where(item => item.TenHuiVien != null && item.TenHuiVien.Contains(tieuchiTimKiem.TenHuiVien, StringComparison.CurrentCultureIgnoreCase));
+                        queryData = queryData.Where(item => item.TrangThai == ttChuaThu);
                     }
-                    if (tieuchiTimKiem.CanThuTien || tieuchiTimKiem.CanTraTien)
+                    else
                     {
-                        if (tieuchiTimKiem.CanThuTien && tieuchiTimKiem.CanTraTien)
-                        {
-                            queryData = queryData.Where(item => item.TrangThai == TrangThaiDongHui.CHUA_THU.GetHashCode() || item.TrangThai == TrangThaiDongHui.CHUA_TRA.GetHashCode());
-                        }
-                        else if (tieuchiTimKiem.CanThuTien)
-                        {
-                            queryData = queryData.Where(item => item.TrangThai == TrangThaiDongHui.CHUA_THU.GetHashCode());
-                        }
-                        else
-                        {
-                            queryData = queryData.Where(item => item.TrangThai == TrangThaiDongHui.CHUA_TRA.GetHashCode());
-                        }
+                        queryData = queryData.Where(item => item.TrangThai == ttChuaTra);
                     }
-                    retResult.TotalItem = queryData.Count();
-                    retResult.Data = queryData.Skip(panigation.Skip).Take(panigation.Take);
                 }
+
+                retResult.TotalItem = queryData.Count();
+                retResult.Data = queryData.OrderByDescending(t => t.TenHuiVien).Skip(panigation.Skip).Take(panigation.Take).ToList();
             }
             return retResult;
         }
 
-        public IEnumerable<TinhTienTheoHuiVienDto> LayDanhSachTinhTienTheoHuiVien(int huiVienId)
+        public IList<TinhTienTheoHuiVienDto> LayDanhSachTinhTienTheoHuiVien(int huiVienId)
         {
-            var retResult = Enumerable.Empty<TinhTienTheoHuiVienDto>();
+            IList<TinhTienTheoHuiVienDto> retResult = [];
             if (huiVienId > 0)
             {
-                int chuaThu = TrangThaiDongHui.CHUA_THU.GetHashCode();
-                int chuaTra = TrangThaiDongHui.CHUA_TRA.GetHashCode();
+                int chuaThu = (int)TrangThaiDongHui.CHUA_THU;
+                int chuaTra = (int)TrangThaiDongHui.CHUA_TRA;
 
                 var dsHuiVienThamGia = _connection.Table<HuiVienThamGiaEntity>()
                     .Where(item => item.HuiVienId == huiVienId && (item.TrangThai == chuaThu || item.TrangThai == chuaTra))
@@ -252,44 +268,47 @@ namespace QlHui.App.Data.Services.ImplService
                         item.TienLoi,
                         item.TrangThai,
                         item.Id
-                    });
+                    }).ToList();
 
-                if (dsHuiVienThamGia.Any())
+                if (dsHuiVienThamGia.Count > 0)
                 {
                     var dsIdDayHui = dsHuiVienThamGia.Select(item => item.DayHuiId).Distinct();
 
-                    var dsDayHui = _connection.Table<DayHuiEntity>().Where(item => dsIdDayHui.Contains(item.Id)).Select(item =>
+                    var dsDayHui = _connection.Table<DayHuiEntity>().Where(item => dsIdDayHui.Contains(item.Id)).ToList();
+                    if (dsDayHui.Count > 0)
                     {
-                        var tempItem = _connection.Table<HuiVienThamGiaEntity>().Where(i => i.DayHuiId == item.Id && i.SoCSong != 1).Select(z => z.Id).Count();
-                        return new
-                        {
-                            item.MaDayHui,
-                            item.NgayKhui,
-                            KyBo = tempItem,
-                            item.TongSoChan,
-                            item.TienMotChan,
-                            item.Id
-                        };
-                    });
-
-                    retResult = dsDayHui.Join(dsHuiVienThamGia,
-                        dayHui => dayHui.Id,
-                        huiVienThamGia => huiVienThamGia.DayHuiId,
-                        (dayHui, huiVienThamGia) =>
-                    new TinhTienTheoHuiVienDto()
-                    {
-                        MaDayHui = dayHui.MaDayHui,
-                        NgayKhui = dayHui.NgayKhui,
-                        Ky = $"{dayHui.KyBo}/{dayHui.TongSoChan}",
-                        Tien1C = dayHui.TienMotChan,
-                        SoCSong = huiVienThamGia.SoCSong,
-                        SoCChet = huiVienThamGia.SoCChet,
-                        TienPhaiThu = huiVienThamGia.TongPhaiThu,
-                        TienPhaiTra = huiVienThamGia.PhaiTra,
-                        TienLoi = huiVienThamGia.TienLoi,
-                        TrangThai = huiVienThamGia.TrangThai,
-                        HuiVienThamGiaId = huiVienThamGia.Id
-                    }).AsEnumerable();
+                        var tempdsDayHui = dsDayHui.Select(item =>
+                         {
+                             var demKyBo = _connection.Table<HuiVienThamGiaEntity>().Count(i => i.DayHuiId == item.Id && i.SoCSong != 1);
+                             return new
+                             {
+                                 item.MaDayHui,
+                                 item.NgayKhui,
+                                 KyBo = demKyBo,
+                                 item.TongSoChan,
+                                 item.TienMotChan,
+                                 item.Id
+                             };
+                         });
+                        retResult = tempdsDayHui.Join(dsHuiVienThamGia,
+                                   dayHui => dayHui.Id,
+                                   huiVienThamGia => huiVienThamGia.DayHuiId,
+                                   (dayHui, huiVienThamGia) =>
+                           new TinhTienTheoHuiVienDto()
+                           {
+                               MaDayHui = dayHui.MaDayHui,
+                               NgayKhui = dayHui.NgayKhui,
+                               Ky = $"{dayHui.KyBo}/{dayHui.TongSoChan}",
+                               Tien1C = dayHui.TienMotChan,
+                               SoCSong = huiVienThamGia.SoCSong,
+                               SoCChet = huiVienThamGia.SoCChet,
+                               TienPhaiThu = huiVienThamGia.TongPhaiThu,
+                               TienPhaiTra = huiVienThamGia.PhaiTra,
+                               TienLoi = huiVienThamGia.TienLoi,
+                               TrangThai = huiVienThamGia.TrangThai,
+                               HuiVienThamGiaId = huiVienThamGia.Id
+                           }).ToList();
+                    }
                 }
             }
             return retResult;
@@ -301,7 +320,7 @@ namespace QlHui.App.Data.Services.ImplService
             try
             {
                 _connection.BeginTransaction();
-                if (dsHuiVien != null && dsHuiVien.Any())
+                if (dsHuiVien.Count>0)
                 {
                     var dsLichSuDongHuiMoi = new List<LichSuDongHuiDto>();
                     var dsHuiVienThamGiaUpdate = new List<HuiVienThamGiaDto>();

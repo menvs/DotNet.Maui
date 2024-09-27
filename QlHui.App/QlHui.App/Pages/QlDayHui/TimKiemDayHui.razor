@@ -1,31 +1,31 @@
 ﻿@page "/TimKiemDayHui"
 @using qlhui.app.Data.DataAccess.Entities;
 @using static QlHui.App.Data.Constant.Const;
+@using QlHui.App.Data.Services;
 @inject DialogService dialogService;
 @inject NavigationManager navManager;
 @inherits NotificationBase;
 @implements IDisposable;
 @inject IQlHuiService service;
 
-
-<div class="pt-2">
-    @*<RadzenButton Text="Delete all data" ButtonStyle="ButtonStyle.Danger" Icon="trash" Click=@DeleteAllData />*@
-    <RadzenFieldset Text="Tìm kiếm">
+@*<RadzenButton Text="Delete all data" ButtonStyle="ButtonStyle.Danger" Icon="trash" Click=@DeleteAllData />*@
+<RadzenFieldset Text="Điều kiện tìm kiếm">
+    <RadzenCard>
         <div class="pt-3">
             <RadzenCheckBox @bind-Value=@searchCriteria.HienThiTatCaDayHuiCanBoHomNay
                             Name="cbShowAll" TValue="bool" />
             <RadzenLabel Text="Hiển thị tất cả các dây cần bỏ hụi ngày hôm nay" Component="cbShowAll" Style="margin-left: 8px; vertical-align: middle; font-weight: bold;" />
         </div>
         <div class="row">
-            <div class="col-md-4 col-lg-4 p-3 row">
+            <div class="col-4 col-md-4 col-lg-4 p-3 row align-content-center">
                 <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2" class="col-4">Ngày khui</RadzenText>
                 <RadzenDatePicker @bind-Value=@searchCriteria.NgayKhui DateFormat=@DateTimeFormat.UIDateFormat Class="col-8" />
             </div>
-            <div class="col-md-4 col-lg-4 p-3 row">
+            <div class="col-4 col-md-4 col-lg-4 p-3 row align-content-center">
                 <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2" class="col-4">Mã dây hụi</RadzenText>
                 <RadzenTextBox @bind-Value=@searchCriteria.MaDayHui Class="col-8" />
             </div>
-            <div class="col-md-4 col-lg-4 p-3 row">
+            <div class="col-4 col-md-4 col-lg-4 p-3 row align-content-center">
                 <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2" class="col-4">Tiền 1 C</RadzenText>
                 <RadzenNumeric TValue="string" Format=@NumericFormat.MoneyFormat Class="col-8" Style="text-align: right;" Value="@searchCriteria.TienMotChan.GetMoneyFormat()"
                                @oninput="@(arg=>searchCriteria.TienMotChan = arg.Value.ToString().GetFloatNumber())" />
@@ -33,14 +33,16 @@
         </div>
         <div class="row position-relative pt-2">
             <div class="d-grid gap-3 d-md-flex justify-content-md-end">
-                <RadzenButton Text="Tạo mới" ButtonStyle="ButtonStyle.Info" Icon="add" Click=@OpenCreateDialog />
-                <RadzenButton Text="Tìm kiếm" ButtonStyle="ButtonStyle.Success" Icon="search" Click=@OnClickSearchData />
+                <RadzenButton Text="Tìm kiếm" ButtonStyle="ButtonStyle.Primary" Icon="search" Click=@OnClickSearchData class="rz-border-radius-6" />
+                <RadzenButton Text="Tạo mới" ButtonStyle="ButtonStyle.Info" Icon="add" Click=@OpenCreateDialog class="rz-border-radius-6" />
             </div>
         </div>
-    </RadzenFieldset>
-</div>
-<div class="pt-2">
-    <RadzenDataGrid @ref="@gridTimKiemDayHui" TItem="DayHuiDto" Data=@listSearchData AllowSorting="true" IsLoading=@isSearchLoadingShow 
+    </RadzenCard>
+    
+</RadzenFieldset>
+
+<RadzenFieldset Text="Danh sách kết quả">
+    <RadzenDataGrid @ref="@gridTimKiemDayHui" TItem="DayHuiDto" Data=@listSearchData AllowSorting="true" IsLoading=@isSearchLoadingShow
                     ShowPagingSummary="true" PagingSummaryFormat="@pagingSummaryFormat"
                     Density="Density.Default" PageSize="@panigation.Take" Count="totalItems" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Center" LoadData="@LoadData">
         <EmptyTemplate>
@@ -52,16 +54,16 @@
                     @(listSearchData.IndexOf(context) + 1 + panigation.Skip)
                 </Template>
             </RadzenDataGridColumn>
-                <RadzenDataGridColumn Width="160px" TItem="DayHuiDto" Property="Id" Title="Thao tác" TextAlign="TextAlign.Center">
+            <RadzenDataGridColumn Width="160px" TItem="DayHuiDto" Property="Id" Title="Thao tác" TextAlign="TextAlign.Center">
                 <Template Context="data">
-                    <RadzenButton ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.Small"
-                                  Icon="visibility" Class="m-1" title="Xem chi tiết"
-                                  Click=@(args => RedirectToDetailPage(data.Id)) />
-                    <RadzenButton ButtonStyle="ButtonStyle.Warning" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.Small"
-                                  Icon="edit" Class="m-1" title="Chỉnh sửa dây hụi" Visible=@(data.DaCoNguoiBoHui!=true)
+                    <RadzenButton ButtonStyle="ButtonStyle.Base" Variant="Variant.Flat"
+                                  Icon="visibility" title="Xem chi tiết"
+                                  Click=@(args => RedirectToDetailPage(data.Id)) Shade="Shade.Light" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Base" Variant="Variant.Flat" Shade="Shade.Light"
+                                  Icon="edit" title="Chỉnh sửa thông tin dây hụi" Visible=@(data.DaCoNguoiBoHui!=true)
                                   Click=@(args => OpenUpdateDialog(data)) />
-                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.Small"
-                                  Icon="delete" Class="m-1" title="Xóa"
+                    <RadzenButton ButtonStyle="ButtonStyle.Base" Variant="Variant.Flat" Shade="Shade.Light"
+                                  Icon="delete" title="Xóa"
                                   Click=@(args => XoaDayHui(data)) />
                 </Template>
             </RadzenDataGridColumn>
@@ -71,10 +73,10 @@
             <RadzenDataGridColumn TItem="DayHuiDto" Property="TienMotChan" Title="Tiền 1C" Type=typeof(float?) FormatString={0:#,##0} TextAlign="TextAlign.Center" />
             <RadzenDataGridColumn TItem="DayHuiDto" Property="TongSoChan" Title="Số phần" />
             <RadzenDataGridColumn TItem="DayHuiDto" Property="KyBo" Title="Kỳ" />
-        
         </Columns>
     </RadzenDataGrid>
-</div>
+  
+</RadzenFieldset>
 @code {
 
     #region Global Variables
@@ -104,7 +106,7 @@
     void CloseCreateNewDialog(dynamic result)
     {
         Console.WriteLine($"Dialog closed");
-        OnClickSearchData().GetAwaiter();
+        SearchData();
         dialogService.Dispose();
     }
     void LoadData(LoadDataArgs args)
@@ -113,11 +115,8 @@
         panigation.Take = args.Top.Value;
         SearchData();
     }
-    async Task OnClickSearchData()
+    void OnClickSearchData()
     {
-        //gridTimKiemDayHui.Reset(true);
-       // await gridTimKiemDayHui.FirstPage();
-        //panigation.Skip = 0;
         SearchData();
 
     }
@@ -170,9 +169,9 @@
         try
         {
             var confirmDelete = await dialogService.Confirm(
-                "Bạn có thực sự muốn xóa không?", $"Xóa dây hụi '{data.MaDayHui}'",
-                new ConfirmOptions() { OkButtonText = "Có", CancelButtonText = "Không" });
-            if (confirmDelete.GetValueOrDefault())
+            "Bạn có thực sự muốn xóa không?", $"Xóa dây hụi '{data.MaDayHui}'",
+            new ConfirmOptions() { OkButtonText = "Có", CancelButtonText = "Không" });
+            if (confirmDelete == true)
             {
                 //bool coNguoiBoHuiChua = service.DayHuiDaCoNguoiBoChua(data.Id);
                 //if (coNguoiBoHuiChua)
@@ -184,7 +183,7 @@
                 if (deleteRs)
                 {
                     ShowSuccessNotification($"Xóa thành công '{data.MaDayHui}'!");
-                    await OnClickSearchData();
+                    OnClickSearchData();
                 }
                 else
                 {
@@ -219,7 +218,7 @@
             await dialogService.OpenAsync<DayHui>($"Chỉnh sửa dây hụi {dayHui.MaDayHui}",
             new Dictionary<string, object>()
                         {
-                {"dayHuiId", dayHui.Id}
+                            {"dayHuiId", dayHui.Id}
                         },
             new DialogOptions() { Width = "768px", Height = "480px", Resizable = true, Draggable = true });
         }

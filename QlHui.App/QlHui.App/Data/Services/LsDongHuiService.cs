@@ -1,10 +1,14 @@
 ﻿using qlhui.app.Data.DataAccess.Entities;
 using QlHui.App.Data.Models.Dtos;
-using QlHui.App.Data.Services.IService;
 using QlHui.App.Data.Utils;
 
-namespace QlHui.App.Data.Services.ImplService
+namespace QlHui.App.Data.Services
 {
+    internal interface ILsDongHuiService
+    {
+        bool Insert(LichSuDongHuiDto input);
+        IList<LichSuDongHuiDto> LayDanhSachLichSuDongHui(int huiVienThamGiaId);
+    }
     internal class LsDongHuiService : BaseService, ILsDongHuiService
     {
         private readonly IUtils _utils;
@@ -12,15 +16,15 @@ namespace QlHui.App.Data.Services.ImplService
         {
             _utils = utils;
         }
-        public IEnumerable<LichSuDongHuiDto> LayDanhSachLichSuDongHui(int huiVienThamGia)
+        public IList<LichSuDongHuiDto> LayDanhSachLichSuDongHui(int huiVienThamGia)
         {
-            var retResult = Enumerable.Empty<LichSuDongHuiDto>();
+            List<LichSuDongHuiDto> retResult = [];
             if (huiVienThamGia > 0)
             {
-                var entities = _connection.Table<LichSuDongHuiEntity>().Where(item => item.HuiVienThamGiaId == huiVienThamGia).AsEnumerable();
-                if (entities.Any())
+                var entities = _connection.Table<LichSuDongHuiEntity>().Where(item => item.HuiVienThamGiaId == huiVienThamGia).ToList();
+                if (entities.Count > 0)
                 {
-                    retResult = _utils.TransformToDto<LichSuDongHuiDto, LichSuDongHuiEntity>(entities).ToList();
+                    retResult = _utils.TransformToDto<LichSuDongHuiDto, LichSuDongHuiEntity>(entities);
                 }
             }
             return retResult;

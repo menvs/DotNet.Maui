@@ -1,4 +1,5 @@
 ﻿@page "/DoiNguoiThamGia/{huiVienThamGiaId:int}";
+@using QlHui.App.Data.Services
 @inject IQlHuiVienService qlHuiVienService;
 @inject IQlHuiService qlHuiService;
 @inherits HuiVienBase;
@@ -11,7 +12,8 @@
                                 Data=@danhSachHuiVien TextProperty="DisplayName" LoadData=@OnLoadHuiVienData />
             <div class="container pt-2 row">
                 <div class="col-md-12 text-end">
-                    <RadzenButton ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Text="Đổi người" Icon="change_circle" Click=@DoiNguoiDaTonTai Disabled=@(huiVienDoiThanh==null) />
+                    <RadzenButton ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Text="Đổi người"
+                                  Icon="change_circle" Click=@DoiNguoiDaTonTai Disabled=@(huiVienDoiThanh==null) class="rz-border-radius-6" />
                 </div>
             </div>
         </RadzenTabsItem>
@@ -20,7 +22,8 @@
                            TextProperty="DisplayName" />
             <div class="container pt-2 row">
                 <div class="col-md-12 text-end">
-                    <RadzenButton ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Text="Đổi người" Icon="change_circle" Click=@DoiNguoiMoi Disabled=@(string.IsNullOrEmpty(huiVienTimKiem)) />
+                    <RadzenButton ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Text="Đổi người" class="rz-border-radius-6"
+                        Icon="change_circle" Click=@DoiNguoiMoi Disabled=@(string.IsNullOrEmpty(huiVienTimKiem)) />
                 </div>
             </div>
         </RadzenTabsItem>

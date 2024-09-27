@@ -6,6 +6,7 @@ namespace QlHui.App.Data.Utils
     {
         TDto TransformToDto<TDto, TEntity>(TEntity input);
         IEnumerable<TDto> TransformToDto<TDto, TEntity>(IEnumerable<TEntity> input);
+        List<TDto> TransformToDto<TDto, TEntity>(IList<TEntity> input);
         TEntity TransformToEntity<TDto, TEntity>(TDto input);
         IEnumerable<TEntity> TransformToEntity<TDto, TEntity>(IEnumerable<TDto> input);
     }
@@ -52,6 +53,15 @@ namespace QlHui.App.Data.Utils
             }
             return returnData;
         }
+        public List<TDto> TransformToDto<TDto, TEntity>(IList<TEntity> input)
+        {
+            List<TDto> returnData =[];
+            if (input != null)
+            {
+                returnData = input.Select(TransformToDto<TDto, TEntity>).ToList();
+            }
+            return returnData;
+        }
 
         public TEntity TransformToEntity<TDto, TEntity>(TDto input)
         {
@@ -93,5 +103,6 @@ namespace QlHui.App.Data.Utils
             }
             return returnData;
         }
+
     }
 }

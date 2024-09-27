@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using QlHui.App.Data;
-using QlHui.App.Data.Services;
 
 namespace QlHui.App;
 
@@ -23,7 +22,6 @@ public static class MauiProgram
         builder.Logging.AddDebug();
 #endif
         builder.Services.InjectService();
-        builder.Services.AddSingleton<WeatherForecastService>();
 
         return builder.Build();
     }

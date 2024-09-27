@@ -1,4 +1,5 @@
 ﻿@page "/BoHui/{huiVienThamGiaId:int}"
+@using QlHui.App.Data.Services
 @inherits NotificationBase;
 @inject DialogService dialogService;
 @inject IQlHuiVienService qlHuiVienService;
@@ -13,7 +14,7 @@
 </div>
 <div class="container pt-2 row">
     <div class="col-md-12 text-end">
-        <RadzenButton ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Text="Bỏ hụi" Icon="payments"
+        <RadzenButton ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Text="Bỏ hụi" Icon="payments" class="rz-border-radius-6"
                       Disabled=@(soTienBoHui.HasValue == false || huiVienThamGiaHienTai==null) Click=@NhanBoHui />
     </div>
 </div>
@@ -32,34 +33,40 @@
     {
         try
         {
-            if (soTienBoHui.HasValue)
+            if (!soTienBoHui.HasValue)
             {
-                var xacNhanBoHui = await dialogService.Confirm(
-                           $"Bạn có muốn bỏ hụi cho hụi viên này với số tiền {soTienBoHui.Value.GetMoneyFormat()} không ?", $"Hụi Viên {huiVienThamGiaHienTai.TenHuiVien}",
-                           new ConfirmOptions() { OkButtonText = "Có", CancelButtonText = "Không" });
+                ShowErrorNotification("Vui lòng nhập số tiền bỏ hụi.");
+                return;
+            }
+            string confirmMessage = $"Bạn có muốn bỏ hụi cho hụi viên này với số tiền {soTienBoHui.Value.GetMoneyFormat()} không ?";
+            var xacNhanBoHui = await dialogService.Confirm(confirmMessage
+                                  , $"Hụi Viên {huiVienThamGiaHienTai.TenHuiVien}",
+                                   new ConfirmOptions() { OkButtonText = "Có", CancelButtonText = "Không" });
 
-                if (xacNhanBoHui == true)
-                {
-                    var rs = qlHuiService.BoHui(huiVienThamGiaHienTai, soTienBoHui.GetValueOrDefault());
-                    if (rs)
-                    {
-                        ShowSuccessNotification("Bỏ hụi thành công");
-                        dialogService.Close(true);
-                    }
-                    else
-                    {
-                        ShowErrorNotification("Có lỗi khi thực hiện thao tác.");
-                    }
-                }
+            if (xacNhanBoHui == false) return;
+
+            var (rs, errorMessages) = qlHuiService.BoHui(huiVienThamGiaHienTai, soTienBoHui.Value);
+            if (rs)
+            {
+                ShowSuccessNotification("Bỏ hụi thành công");
+                dialogService.Close(true);
             }
             else
             {
-                ShowErrorNotification("Vui lòng nhập số tiền bỏ hụi.");
+                if (errorMessages.Count > 0)
+                {
+                    ShowErrorNotification(string.Join("\n", errorMessages));
+                }
+                else
+                {
+                    ShowErrorNotification("Có lỗi khi thực hiện thao tác.");
+                }
             }
-        }catch(Exception ex)
+        }
+        catch (Exception ex)
         {
             ShowErrorNotification(ex.GetError());
         }
-        
+
     }
 }

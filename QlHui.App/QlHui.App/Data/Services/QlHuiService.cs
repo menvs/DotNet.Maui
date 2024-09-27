@@ -1,15 +1,28 @@
 ﻿using qlhui.app.Data.DataAccess.Entities;
 using QlHui.App.Data.Constant;
 using QlHui.App.Data.Models.Dtos;
-using QlHui.App.Data.Services.IService;
 using QlHui.App.Data.Utils;
 using System.Data.Common;
 using System.Linq.Expressions;
 using static QlHui.App.Data.Constant.Const;
 using static QlHui.App.Data.Constant.Enums;
 
-namespace QlHui.App.Data.Services.ImplService
+namespace QlHui.App.Data.Services
 {
+    internal interface IQlHuiService
+    {
+        string TaoMaDayHui(DateTime ngayKhui, int loaiHui, float tien1C, int soNgayLoaiHui);
+        bool Create(DayHuiDto input);
+        bool Update(DayHuiDto input);
+        SearchResult<DayHuiDto> Search(QLDayHuiSearchCriteria criteria, PanigationDto panigation);
+        bool DeleteDayHuiById(int id);
+        DayHuiDto GetById(int id);
+        bool DayHuiDaCoNguoiBoChua(int dayHuiId);
+        bool DoiNguoiThamGiaDayHui(HuiVienDto huiVienDoiThanh, int idHuiVienThamGia);
+        (bool, List<string>) BoHui(HuiVienThamGiaDto huiVienThamGia, float soTienBoHui);
+        void XoaData();
+
+    }
     internal class QlHuiService : BaseService, IQlHuiService
     {
         private readonly IUtils _utils;
@@ -41,7 +54,7 @@ namespace QlHui.App.Data.Services.ImplService
                 do
                 {
                     index++;
-                    maHuiTemp = $"{dateTimePrefix}-{moneyPrefixString}/{soNgayLoaiHui}{loaiHuiFrefix}-Day{index}";
+                    maHuiTemp = $"{dateTimePrefix}-{moneyPrefixString}/{soNgayLoaiHui}{loaiHuiFrefix}-DAY{index}";
                 } while (queryData.Any(item => item.MaDayHui == maHuiTemp));
             }
             return maHuiTemp;
@@ -91,7 +104,7 @@ namespace QlHui.App.Data.Services.ImplService
             var entityListItem = tempItems.Skip(panigation.Skip).Take(panigation.Take);
             if (entityListItem.Any())
             {
-                retData.Data = _utils.TransformToDto<DayHuiDto, DayHuiEntity>(entityListItem);
+                retData.Data = _utils.TransformToDto<DayHuiDto, DayHuiEntity>(entityListItem).ToList();
             }
             return retData;
         }
@@ -175,27 +188,28 @@ namespace QlHui.App.Data.Services.ImplService
 
             return false;
         }
-        public bool BoHui(HuiVienThamGiaDto huiVienThamGia, float soTienBoHui)
+        public (bool, List<string>) BoHui(HuiVienThamGiaDto huiVienThamGia, float soTienBoHui)
         {
             bool result = false;
+            List<string> errorMessages = [];
             try
             {
                 _connection.BeginTransaction();
-                var danhSachHuiVienThamGia = _connection.Table<HuiVienThamGiaEntity>().Where(item => item.DayHuiId == huiVienThamGia.DayHuiId).AsEnumerable();
+                var danhSachHuiVienThamGia = _connection.Table<HuiVienThamGiaEntity>().Where(item => item.DayHuiId == huiVienThamGia.DayHuiId).ToList();
                 var thongTinDayHui = _connection.Get<DayHuiEntity>(huiVienThamGia.DayHuiId);
                 bool boHuiLanDau = thongTinDayHui?.DaCoNguoiBoHui == false;
                 bool tienBoHuiLonHonTien1C = soTienBoHui > thongTinDayHui.TienMotChan;
                 if (tienBoHuiLonHonTien1C)
                 {
-                    throw new Exception($"Không thể bỏ hụi vì số tiền bỏ hụi {soTienBoHui.GetMoneyFormat()} > Tiền 1 C {thongTinDayHui.TienMotChan.GetMoneyFormat()}");
+                    errorMessages.Add($"Không thể bỏ hụi vì số tiền bỏ hụi {soTienBoHui.GetMoneyFormat()} > Tiền 1 C {thongTinDayHui.TienMotChan.GetMoneyFormat()}");
                 }
                 var lichSuBoHui = _connection.Table<LichSuBoHuiEntity>().FirstOrDefault(item => item.KyBo == thongTinDayHui.KyBo && item.DayHuiId == thongTinDayHui.Id);
                 if (lichSuBoHui != null)
                 {
-                    throw new Exception($"Kỳ hụi thứ {lichSuBoHui.KyBo} đã được {lichSuBoHui.NguoiBo} bỏ với số tiền {lichSuBoHui.SoTien.GetMoneyFormat()} ngày {lichSuBoHui.NgayBoHui}");
+                    errorMessages.Add($"Kỳ hụi thứ {lichSuBoHui.KyBo} đã được {lichSuBoHui.NguoiBo} bỏ với số tiền {lichSuBoHui.SoTien.GetMoneyFormat()} ngày {lichSuBoHui.NgayBoHui}");
                 }
 
-                if (danhSachHuiVienThamGia.Any())
+                if (danhSachHuiVienThamGia.Count > 0 && errorMessages.Count == 0)
                 {
                     var dsHuiVienThamGiaConLai = danhSachHuiVienThamGia.Where(item => item.Id != huiVienThamGia.Id);
                     int soCSongConLai = dsHuiVienThamGiaConLai.Sum(item => item.SoCSong);
@@ -211,12 +225,12 @@ namespace QlHui.App.Data.Services.ImplService
                         huiVienBoHui.TrangThai = TrangThaiDongHui.CHUA_TRA.GetHashCode();
                         if (boHuiLanDau)
                         {
-                            huiVienBoHui.TienLoi = (huiVienBoHui.TienLoi.GetValueOrDefault() - (soTienBoHui * soCSongConLai)) - thongTinDayHui.TienThao.GetValueOrDefault();
-                            huiVienBoHui.PhaiTra = (soTienChanSong + soTienChanChet) - thongTinDayHui.TienThao.GetValueOrDefault();
+                            huiVienBoHui.TienLoi = huiVienBoHui.TienLoi.GetValueOrDefault() - soTienBoHui * soCSongConLai - thongTinDayHui.TienThao.GetValueOrDefault();
+                            huiVienBoHui.PhaiTra = soTienChanSong + soTienChanChet - thongTinDayHui.TienThao.GetValueOrDefault();
                         }
                         else
                         {
-                            huiVienBoHui.TienLoi = huiVienBoHui.TienLoi.GetValueOrDefault() - (soTienBoHui * soCSongConLai);
+                            huiVienBoHui.TienLoi = huiVienBoHui.TienLoi.GetValueOrDefault() - soTienBoHui * soCSongConLai;
                             huiVienBoHui.PhaiTra = soTienChanSong + soTienChanChet;
                         }
 
@@ -230,7 +244,7 @@ namespace QlHui.App.Data.Services.ImplService
                                 if (boHuiLanDau)
                                 {
                                     item.TienLoi = soTienBoHui - thongTinDayHui.TienThao.GetValueOrDefault();
-                                    item.KyHienTaiPhaiThu = (thongTinDayHui.TienMotChan - soTienBoHui) + thongTinDayHui.TienThao.GetValueOrDefault();
+                                    item.KyHienTaiPhaiThu = thongTinDayHui.TienMotChan - soTienBoHui + thongTinDayHui.TienThao.GetValueOrDefault();
                                     item.TongPhaiThu = item.TongPhaiThu.GetValueOrDefault() + item.KyHienTaiPhaiThu.GetValueOrDefault();
                                 }
                                 else
@@ -267,11 +281,11 @@ namespace QlHui.App.Data.Services.ImplService
                                 }
 
                                 if ((item.TrangThai.HasValue == false
-                                || item.TrangThai == TrangThaiDongHui.DA_THU.GetHashCode()
-                                || item.TrangThai == TrangThaiDongHui.DA_TRA.GetHashCode())
+                                || item.TrangThai == (int)TrangThaiDongHui.DA_THU
+                                || item.TrangThai == (int)TrangThaiDongHui.DA_TRA)
                                 && item.KyHienTaiPhaiThu.GetValueOrDefault() > 0)
                                 {
-                                    item.TrangThai = TrangThaiDongHui.CHUA_THU.GetHashCode();
+                                    item.TrangThai = (int)TrangThaiDongHui.CHUA_THU;
                                 }
                                 return item;
                             });
@@ -315,16 +329,16 @@ namespace QlHui.App.Data.Services.ImplService
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 _connection.Rollback();
-                throw;
+                errorMessages.Add($"Lỗi hệ thống: {ex.Message}");
             }
 
             if (result) _connection.Commit();
             else _connection.Rollback();
 
-            return result;
+            return (result, errorMessages);
         }
 
         public void XoaData()

@@ -1,10 +1,13 @@
 ﻿using qlhui.app.Data.DataAccess.Entities;
 using QlHui.App.Data.Models.Dtos;
-using QlHui.App.Data.Services.IService;
 using QlHui.App.Data.Utils;
 
-namespace QlHui.App.Data.Services.ImplService
+namespace QlHui.App.Data.Services
 {
+    internal interface ILsBoHuiService
+    {
+        IList<LichSuBoHuiDto> LayDanhSachLichSuBoHui(int dayHuiId);
+    }
     internal class LsBoHuiService : BaseService, ILsBoHuiService
     {
         private readonly IUtils _utils;
@@ -14,13 +17,15 @@ namespace QlHui.App.Data.Services.ImplService
 
         }
 
-        public IEnumerable<LichSuBoHuiDto> LayDanhSachLichSuBoHui(int dayHuiId)
+        public IList<LichSuBoHuiDto> LayDanhSachLichSuBoHui(int dayHuiId)
         {
-            var retResult = Enumerable.Empty<LichSuBoHuiDto>();
+            IList<LichSuBoHuiDto> retResult = [];
             if (dayHuiId > 0)
             {
-                var entities = _connection.Table<LichSuBoHuiEntity>().Where(item => item.DayHuiId == dayHuiId).OrderByDescending(item => item.KyBo).AsEnumerable();
-                if (entities.Any())
+                var entities = _connection.Table<LichSuBoHuiEntity>()
+                                .Where(item => item.DayHuiId == dayHuiId)
+                                .OrderByDescending(item => item.KyBo).ToList();
+                if (entities.Count>0)
                 {
                     retResult = _utils.TransformToDto<LichSuBoHuiDto, LichSuBoHuiEntity>(entities);
                 }
