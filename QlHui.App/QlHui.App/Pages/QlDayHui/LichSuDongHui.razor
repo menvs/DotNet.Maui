@@ -6,7 +6,7 @@
 <RadzenDataGrid TItem="LichSuDongHuiDto" Data=@dsLichSuDongHui Style="height:400px"
                 AllowSorting="true" IsLoading=@isLoadingShow PagerHorizontalAlign="HorizontalAlign.Center" AllowAlternatingRows="false">
     <EmptyTemplate>
-        <p style="color: lightgrey; font-size: 24px; text-align: center; margin: 2rem;">@Const.EmptyTable</p>
+        <p style="color: lightgrey; font-size: 18px; text-align: center; margin: 2rem;">@Const.EmptyTable</p>
     </EmptyTemplate>
     <Columns>
         <RadzenDataGridColumn TItem="LichSuDongHuiDto" Property="KyBo" Title="Kỳ bỏ" Width="80px" TextAlign="TextAlign.Center" />

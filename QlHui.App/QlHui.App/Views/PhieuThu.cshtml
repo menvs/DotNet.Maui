@@ -1,0 +1,101 @@
+﻿@model QlHui.App.Data.Models.Config.PhieuThuConfigModel;
+<style>
+    table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+
+    .align_end {
+        text-align: end;
+    }
+
+    .SongChet {
+        color: cornflowerblue;
+        font-weight: bold;
+        font-size: 16px;
+    }
+</style>
+
+<div style="text-align: center;">
+    <h2 style="color:darkblue;font-weight:bold">Chủ hụi: @Model.OwnerInfo.Name</h2>
+    <h3>SĐT: @Model.OwnerInfo.PhoneNumber</h3>
+    <h3>@Model.OwnerInfo.BankName - <span style="color:red;font-weight:bold">@Model.OwnerInfo.BankAccountNumber</span> - @Model.OwnerInfo.Name</h3>
+</div>
+<hr/>
+<h2 style="text-align: center;">GIẤY GIAO HỤI</h2>
+<div>
+    <h3>1. THÔNG TIN HỤI</h3>
+    <table style="width:100%;">
+            <tr>
+                <td>Ngày mở:</td>
+            <td class="align_end">@Model.NgayMo</td>
+            </tr>
+            <tr>
+                <td>Dây hụi:</td>
+            <td class="align_end">@Model.DayHui</td>
+            </tr>
+            <tr>
+                <td>Số phần:</td>
+            <td class="align_end">@Model.SoPhan</td>
+            </tr>
+            <tr>
+                <td>Khui:</td>
+            <td class="align_end">@Model.Khui</td>
+            </tr>
+            <!-- Additional rows... -->
+        </table>
+    <h3>2. THANH TOÁN</h3>
+    <table style="width:100%;">
+            <tr>
+                <td>Hụi viên:</td>
+            <td class="align_end">@Model.HuiVien</td>
+            </tr>
+            <tr>
+                <td>Ngày hốt:</td>
+            <td class="align_end">@Model.NgayHot</td>
+            </tr>
+            <tr>
+                <td>Thăm kêu:</td>
+            <td class="align_end">@Model.ThamKeu</td>
+            </tr>
+            <tr>
+                <td>Số kỳ:</td>
+            <td class="align_end" style="font-size:18px;font-weight:bold">@Model.SoKy</td>
+            </tr>
+            <tr>
+            <td colspan="2" class="SongChet">@Model.Song</td>
+            </tr>
+            <tr>
+            <td colspan="2" class="SongChet"> @Model.Chet</td>
+            </tr>
+            <tr>
+                <td>Tiền hụi (Sống + Chết):</td>
+            <td class="align_end" style="font-size:16px;font-weight:bold">@Model.TienHui</td>
+            </tr>
+            <tr>
+                <td>- Trừ thảo: </td>
+            <td class="align_end">@Model.TruThao</td>
+            </tr>
+            <tr>
+                <td>- Trừ khác: </td>
+            <td class="align_end">@Model.TruKhac</td>
+            </tr>
+            <tr>
+                <td style="font-weight:bold;font-size:16px">Còn giao:</td>
+            <td class="align_end" style="font-size:18px;font-weight:bold;color:red">@Model.ConGiao</td>
+            </tr>
+            <!-- Additional rows... -->
+        </table>
+    <h4>Còn lại @Model.SoPhanConLai phần là mãn hụi</h4>
+</div>
+<hr />
+<p style="font-weight:bold;color:red;">Tôi đã đọc, kiểm đếm và nhận đủ số tiền giao hụi trên trong tình trạn hoàn toàn tỉnh táo, không bị ép buộc, phải đống lại hoàn thành dây hụi cho đến mãn dây. Mọi phát sinh về sau tối xin chiu trách nhiệm trước pháp luật.</p>
+<div style="column-count:2;">
+    <div style="text-align:center;">BÊN NHẬN</div>
+    <div style="text-align:center;">
+        BÊN GIAO <br/>
+        <span style="font-weight:bold;">@Model.OwnerInfo.Name</span>
+     </div>
+</div>
+
+

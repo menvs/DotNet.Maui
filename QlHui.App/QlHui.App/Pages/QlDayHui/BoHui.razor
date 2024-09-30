@@ -4,20 +4,15 @@
 @inject DialogService dialogService;
 @inject IQlHuiVienService qlHuiVienService;
 @inject IQlHuiService qlHuiService;
-<div class="container">
-    <RadzenFieldset Text="Số tiền bỏ hụi" Style="font-weight:bold;">
-        <div>
-            <RadzenNumeric Name="SoTienBoHui" style="display: block" @oninput="@(arg=>soTienBoHui = arg.Value.ToString().GetFloatNumber())"
-                           TValue=string TextAlign="TextAlign.Right" Value="@soTienBoHui.GetMoneyFormat()" />
-        </div>
-    </RadzenFieldset>
-</div>
-<div class="container pt-2 row">
-    <div class="col-md-12 text-end">
-        <RadzenButton ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Text="Bỏ hụi" Icon="payments" class="rz-border-radius-6"
-                      Disabled=@(soTienBoHui.HasValue == false || huiVienThamGiaHienTai==null) Click=@NhanBoHui />
-    </div>
-</div>
+<RadzenFieldset Text="Số tiền bỏ hụi" Style="font-weight:bold;">
+    <RadzenNumeric Name="SoTienBoHui" style="display: block" @oninput="@(arg=>soTienBoHui = arg.Value.ToString().GetFloatNumber())"
+                   TValue=string TextAlign="TextAlign.Right" Value="@soTienBoHui.GetMoneyFormat()" />
+</RadzenFieldset>
+<RadzenStack Orientation="Orientation.Horizontal" class="rz-p-2"
+             JustifyContent="JustifyContent.End" Wrap="FlexWrap.Wrap">
+    <RadzenButton ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Text="Bỏ hụi" Icon="payments"
+                  Disabled=@(soTienBoHui.HasValue == false || huiVienThamGiaHienTai==null) Click=@NhanBoHui />
+</RadzenStack>
 @code {
     [Parameter]
     public int huiVienThamGiaId { set; get; }

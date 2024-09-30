@@ -6,81 +6,83 @@
 
 @inject IQlHuiVienService service;
 
-
-<RadzenFieldset Text="Thông tin tìm kiếm">
-    <RadzenCard>
-        <div class="row">
-            <div class="col-4 col-md-4 col-lg-4 row align-content-center">
-                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2" class="col-4">Mã hụi viên</RadzenText>
-                <RadzenTextBox @bind-Value=@searchCriteria.MaHuiVien Class="col-8" />
-            </div>
-            <div class="col-4 col-md-4 col-lg-4 row align-content-center">
-                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2" class="col-4">Tên hụi viên</RadzenText>
-                <RadzenTextBox @bind-Value=@searchCriteria.TenHuiVien Class="col-8" />
-            </div>
-            <div class="col-2 col-md-2 col-lg-2 align-content-center">
+<RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H6" class="rz-p-2 rz-color-primary" Style="font-weight:bold;">Điều kiện tìm kiếm</RadzenText>
+<RadzenCard>
+    <RadzenRow class="rz-p-2">
+        <RadzenColumn Size="4" >
+            <RadzenStack Orientation="Orientation.Horizontal">
+                <RadzenText>Mã hụi viên</RadzenText>
+                <RadzenTextBox @bind-Value=@searchCriteria.MaHuiVien />
+            </RadzenStack>
+        </RadzenColumn>
+        <RadzenColumn Size="4">
+            <RadzenStack Orientation="Orientation.Horizontal">
+                <RadzenText>Tên hụi viên</RadzenText>
+                <RadzenTextBox @bind-Value=@searchCriteria.TenHuiVien  />
+            </RadzenStack>
+        </RadzenColumn>
+        <RadzenColumn Size="2">
+            <RadzenStack Orientation="Orientation.Horizontal">
                 <RadzenCheckBox @bind-Value=@searchCriteria.CanThuTien Name="cbCanThu" TValue="bool" />
-                <RadzenLabel Text="Cần thu tiền" Component="cbCanThu" Style="margin-left: 8px; vertical-align: middle;" />
-            </div>
-            <div class="col-2 col-md-2 col-lg-2 align-content-center">
+                <RadzenLabel Text="Cần thu tiền" Component="cbCanThu" />
+            </RadzenStack>
+        </RadzenColumn>
+        <RadzenColumn Size="2">
+            <RadzenStack Orientation="Orientation.Horizontal">
                 <RadzenCheckBox @bind-Value=@searchCriteria.CanTraTien Name="cbCanTra" TValue="bool" />
-                <RadzenLabel Text="Cần trả tiền" Component="cbCanThu" Style="margin-left: 8px; vertical-align: middle;" />
-            </div>
-        </div>
-        <div class="row position-relative pt-2">
-            <div class="d-grid gap-3 d-md-flex justify-content-md-end">
-                <RadzenButton Text="Tìm kiếm" ButtonStyle="ButtonStyle.Primary" Icon="search" Click=@OnClickSearchData class="rz-border-radius-6" />
-            </div>
-        </div>
-    </RadzenCard>
-    
-</RadzenFieldset>
-<RadzenFieldset Text="Danh sách kết quả">
-    <RadzenDataGrid TItem="HuiVienKetQuaTimKiemDto" Data=@listSearchData AllowSorting="true" IsLoading=@isSearchLoadingShow Density="Density.Default">
-        <EmptyTemplate>
-            <p style="color: lightgrey; font-size: 24px; text-align: center; margin: 2rem;">@Const.EmptyTable</p>
-        </EmptyTemplate>
-        <Columns>
-            <RadzenDataGridColumn TItem="HuiVienKetQuaTimKiemDto" Property="Index" Title="Stt" Width="10%" TextAlign="TextAlign.Center">
+                <RadzenLabel Text="Cần trả tiền" Component="cbCanThu" />
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" class="rz-p-2">
+        <RadzenButton Text="Tìm kiếm" ButtonStyle="ButtonStyle.Info" Icon="search" Click=@OnClickSearchData  />
+    </RadzenStack>
+</RadzenCard>
+<RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H6" class="rz-p-2 rz-color-primary" Style="font-weight:bold;">Danh sách kết quả</RadzenText>
+<RadzenDataGrid TItem="HuiVienKetQuaTimKiemDto" Data=@listSearchData AllowSorting="true" IsLoading=@isSearchLoadingShow Density="Density.Default">
+    <EmptyTemplate>
+        <p style="color: lightgrey; font-size: 18px; text-align: center; margin: 2rem;">@Const.EmptyTable</p>
+    </EmptyTemplate>
+    <Columns>
+        <RadzenDataGridColumn TItem="HuiVienKetQuaTimKiemDto" Property="Index" Title="#" Width="10%" TextAlign="TextAlign.Center">
 
-                <Template>
-                    @(listSearchData.IndexOf(context) + 1)
-                </Template>
-            </RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="HuiVienKetQuaTimKiemDto" Property="Id" Title="Thao tác" TextAlign="TextAlign.Center" Width="10%">
-                <Template Context="data">
-                    <RadzenButton ButtonStyle="ButtonStyle.Base" Variant="Variant.Flat" Shade="Shade.Light" Visible="@(data.TrangThai != null &&  data.TrangThai != (int)TrangThaiDongHui.DA_THU)"
-                                  Icon="visibility" title="Xem chi tiết" Click="@(args=>RedirectToDetailPage(data.HuiVienId))" />
-                </Template>
-            </RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="HuiVienKetQuaTimKiemDto" Property="MaHuiVien" Title="Mã hụi viên" Width="20%" />
-            <RadzenDataGridColumn TItem="HuiVienKetQuaTimKiemDto" Property="TenHuiVien" Title="Tên hụi viên" Width="20%" />
-            <RadzenDataGridColumn TItem="HuiVienKetQuaTimKiemDto" Property="TrangThai" Title="Trạng thái" TextAlign="TextAlign.Center" Width="10%">
-                <Template Context="data">
-                    <RadzenLabel Visible=@(data.TrangThai==(int)TrangThaiDongHui.CHUA_THU) class="text-danger">Chưa thu</RadzenLabel>
-                    <RadzenLabel Visible=@(data.TrangThai==(int)TrangThaiDongHui.DA_THU) class="text-dark">Đã thu</RadzenLabel>
-                    <RadzenLabel Visible=@(data.TrangThai==(int)TrangThaiDongHui.CHUA_TRA) class="text-warning">Chưa trả</RadzenLabel>
-                    <RadzenLabel Visible=@(data.TrangThai==(int)TrangThaiDongHui.DA_TRA) class="text-success">Đã trả</RadzenLabel>
-                </Template>
-            </RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="HuiVienKetQuaTimKiemDto" Property="TongPhaiThu" Title="Tổng phải thu" TextAlign="TextAlign.Right" Width="20%">
-                <Template Context="data">
-                    <span>@(data.TongPhaiThu.GetMoneyFormat())</span>
-                </Template>
-            </RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="HuiVienKetQuaTimKiemDto" Property="TongPhaiTra" Title="Tổng phải trả" TextAlign="TextAlign.Right" Width="20%">
-                <Template Context="data">
-                    <span>@(data.TongPhaiTra.GetMoneyFormat())</span>
-                </Template>
-            </RadzenDataGridColumn>
+            <Template>
+                @(listSearchData.IndexOf(context) + 1)
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="HuiVienKetQuaTimKiemDto" Property="Id" Title="Thao tác" TextAlign="TextAlign.Center" Width="10%">
+            <Template Context="data">
+                <RadzenButton ButtonStyle="ButtonStyle.Info" Variant="Variant.Flat" Shade="Shade.Light" 
+                              Visible="@(data.TrangThai != null &&  data.TrangThai != (int)TrangThaiDongHui.DA_THU)"
+                              Icon="visibility" title="Xem chi tiết" Click="@(args=>RedirectToDetailPage(data.HuiVienId))" />
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="HuiVienKetQuaTimKiemDto" Property="MaHuiVien" Title="Mã hụi viên" Width="20%" />
+        <RadzenDataGridColumn TItem="HuiVienKetQuaTimKiemDto" Property="TenHuiVien" Title="Tên hụi viên" Width="20%" />
+        <RadzenDataGridColumn TItem="HuiVienKetQuaTimKiemDto" Property="TrangThai" Title="Trạng thái" TextAlign="TextAlign.Center" Width="10%">
+            <Template Context="data">
+                <RadzenLabel Visible=@(data.TrangThai==(int)TrangThaiDongHui.CHUA_THU) class="text-danger">Chưa thu</RadzenLabel>
+                <RadzenLabel Visible=@(data.TrangThai==(int)TrangThaiDongHui.DA_THU) class="text-success">Đã thu</RadzenLabel>
+                <RadzenLabel Visible=@(data.TrangThai==(int)TrangThaiDongHui.CHUA_TRA) class="text-warning">Chưa trả</RadzenLabel>
+                <RadzenLabel Visible=@(data.TrangThai==(int)TrangThaiDongHui.DA_TRA) class="text-success">Đã trả</RadzenLabel>
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="HuiVienKetQuaTimKiemDto" Property="TongPhaiThu" Title="Tổng phải thu" TextAlign="TextAlign.Right" Width="20%">
+            <Template Context="data">
+                <span>@(data.TongPhaiThu.GetMoneyFormat())</span>
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="HuiVienKetQuaTimKiemDto" Property="TongPhaiTra" Title="Tổng phải trả" TextAlign="TextAlign.Right" Width="20%">
+            <Template Context="data">
+                <span>@(data.TongPhaiTra.GetMoneyFormat())</span>
+            </Template>
+        </RadzenDataGridColumn>
 
 
-        </Columns>
-    </RadzenDataGrid>
-    <RadzenPager ShowPagingSummary="true" PagingSummaryFormat="@pagingSummaryFormat" HorizontalAlign="HorizontalAlign.Center"
-                 Count="totalItems" PageSize="@panigation.Take" PageNumbersCount="@(totalItems/panigation.Take)" PageChanged="@PageChanged" />
-   
-</RadzenFieldset>
+    </Columns>
+</RadzenDataGrid>
+<RadzenPager ShowPagingSummary="true" PagingSummaryFormat="@pagingSummaryFormat" HorizontalAlign="HorizontalAlign.Center"
+             Count="totalItems" PageSize="@panigation.Take" PageNumbersCount="@(totalItems/panigation.Take)" PageChanged="@PageChanged" />
 @code {
     HuiVienTieuChiTimKiemDto searchCriteria = new();
     IList<HuiVienKetQuaTimKiemDto> listSearchData = new List<HuiVienKetQuaTimKiemDto>();

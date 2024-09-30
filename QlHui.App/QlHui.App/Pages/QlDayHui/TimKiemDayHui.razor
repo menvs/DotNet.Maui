@@ -9,60 +9,62 @@
 @inject IQlHuiService service;
 
 @*<RadzenButton Text="Delete all data" ButtonStyle="ButtonStyle.Danger" Icon="trash" Click=@DeleteAllData />*@
-<RadzenFieldset Text="Điều kiện tìm kiếm">
-    <RadzenCard>
-        <div class="pt-3">
-            <RadzenCheckBox @bind-Value=@searchCriteria.HienThiTatCaDayHuiCanBoHomNay
-                            Name="cbShowAll" TValue="bool" />
-            <RadzenLabel Text="Hiển thị tất cả các dây cần bỏ hụi ngày hôm nay" Component="cbShowAll" Style="margin-left: 8px; vertical-align: middle; font-weight: bold;" />
-        </div>
-        <div class="row">
-            <div class="col-4 col-md-4 col-lg-4 p-3 row align-content-center">
-                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2" class="col-4">Ngày khui</RadzenText>
-                <RadzenDatePicker @bind-Value=@searchCriteria.NgayKhui DateFormat=@DateTimeFormat.UIDateFormat Class="col-8" />
-            </div>
-            <div class="col-4 col-md-4 col-lg-4 p-3 row align-content-center">
-                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2" class="col-4">Mã dây hụi</RadzenText>
-                <RadzenTextBox @bind-Value=@searchCriteria.MaDayHui Class="col-8" />
-            </div>
-            <div class="col-4 col-md-4 col-lg-4 p-3 row align-content-center">
-                <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2" class="col-4">Tiền 1 C</RadzenText>
-                <RadzenNumeric TValue="string" Format=@NumericFormat.MoneyFormat Class="col-8" Style="text-align: right;" Value="@searchCriteria.TienMotChan.GetMoneyFormat()"
+<RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H6" class="rz-p-2 rz-color-primary" Style="font-weight:bold;">Điều kiện tìm kiếm</RadzenText>
+<RadzenCard>
+    <RadzenStack Orientation="Orientation.Horizontal" class="rz-p-2">
+        <RadzenCheckBox @bind-Value=@searchCriteria.HienThiTatCaDayHuiCanBoHomNay
+                        Name="cbShowAll" TValue="bool" />
+        <RadzenLabel Text="Hiển thị tất cả các dây cần bỏ hụi ngày hôm nay" Component="cbShowAll" Style="font-weight: bold;" />
+    </RadzenStack>
+    <RadzenRow class="rz-p-2">
+        <RadzenColumn Size="4">
+            <RadzenStack Orientation="Orientation.Horizontal" >
+                <RadzenText>Ngày khui</RadzenText>
+                <RadzenDatePicker @bind-Value=@searchCriteria.NgayKhui DateFormat=@DateTimeFormat.UIDateFormat  />
+            </RadzenStack>
+        </RadzenColumn>
+        <RadzenColumn Size="4">
+            <RadzenStack Orientation="Orientation.Horizontal" >
+                <RadzenText>Mã dây hụi</RadzenText>
+                <RadzenTextBox @bind-Value=@searchCriteria.MaDayHui  />
+            </RadzenStack>
+        </RadzenColumn>
+        <RadzenColumn Size="4">
+            <RadzenStack Orientation="Orientation.Horizontal" >
+                <RadzenText>Tiền 1 C</RadzenText>
+                <RadzenNumeric TValue="string" Format=@NumericFormat.MoneyFormat TextAlign="TextAlign.Right" Value="@searchCriteria.TienMotChan.GetMoneyFormat()"
                                @oninput="@(arg=>searchCriteria.TienMotChan = arg.Value.ToString().GetFloatNumber())" />
-            </div>
-        </div>
-        <div class="row position-relative pt-2">
-            <div class="d-grid gap-3 d-md-flex justify-content-md-end">
-                <RadzenButton Text="Tìm kiếm" ButtonStyle="ButtonStyle.Primary" Icon="search" Click=@OnClickSearchData class="rz-border-radius-6" />
-                <RadzenButton Text="Tạo mới" ButtonStyle="ButtonStyle.Info" Icon="add" Click=@OpenCreateDialog class="rz-border-radius-6" />
-            </div>
-        </div>
-    </RadzenCard>
-    
-</RadzenFieldset>
-
-<RadzenFieldset Text="Danh sách kết quả">
-    <RadzenDataGrid @ref="@gridTimKiemDayHui" TItem="DayHuiDto" Data=@listSearchData AllowSorting="true" IsLoading=@isSearchLoadingShow
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenStack Orientation="Orientation.Horizontal" 
+                 JustifyContent="JustifyContent.End" Wrap="FlexWrap.Wrap" class="rz-p-2">
+        <RadzenButton Text="Tìm kiếm" ButtonStyle="ButtonStyle.Info" Icon="search" Click=@OnClickSearchData />
+        <RadzenButton Text="Tạo mới" ButtonStyle="ButtonStyle.Primary" Icon="add" Click=@OpenCreateDialog />
+    </RadzenStack>
+</RadzenCard>
+<RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H6" class="rz-p-2 rz-color-primary" Style="font-weight:bold;">Danh sách kết quả</RadzenText>
+<RadzenDataGrid @ref="@gridTimKiemDayHui" TItem="DayHuiDto" Data=@listSearchData AllowSorting="true" IsLoading=@isSearchLoadingShow
                     ShowPagingSummary="true" PagingSummaryFormat="@pagingSummaryFormat"
                     Density="Density.Default" PageSize="@panigation.Take" Count="totalItems" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Center" LoadData="@LoadData">
         <EmptyTemplate>
-            <p style="color: lightgrey; font-size: 24px; text-align: center; margin: 2rem;">@Const.EmptyTable</p>
+            <p style="color: lightgrey; font-size: 18px; text-align: center; margin: 2rem;">@Const.EmptyTable</p>
         </EmptyTemplate>
         <Columns>
-            <RadzenDataGridColumn TItem="DayHuiDto" Property="Index" Title="Stt" Width="10%" TextAlign="TextAlign.Center">
+            <RadzenDataGridColumn TItem="DayHuiDto" Property="Index" Title="#" Width="10%" TextAlign="TextAlign.Center">
                 <Template>
                     @(listSearchData.IndexOf(context) + 1 + panigation.Skip)
                 </Template>
             </RadzenDataGridColumn>
             <RadzenDataGridColumn Width="160px" TItem="DayHuiDto" Property="Id" Title="Thao tác" TextAlign="TextAlign.Center">
                 <Template Context="data">
-                    <RadzenButton ButtonStyle="ButtonStyle.Base" Variant="Variant.Flat"
+                <RadzenButton ButtonStyle="ButtonStyle.Info" Variant="Variant.Flat"
                                   Icon="visibility" title="Xem chi tiết"
-                                  Click=@(args => RedirectToDetailPage(data.Id)) Shade="Shade.Light" />
-                    <RadzenButton ButtonStyle="ButtonStyle.Base" Variant="Variant.Flat" Shade="Shade.Light"
+                                  Click=@(args => RedirectToDetailPage(data.Id)) Shade="Shade.Lighter" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Shade="Shade.Light"
                                   Icon="edit" title="Chỉnh sửa thông tin dây hụi" Visible=@(data.DaCoNguoiBoHui!=true)
                                   Click=@(args => OpenUpdateDialog(data)) />
-                    <RadzenButton ButtonStyle="ButtonStyle.Base" Variant="Variant.Flat" Shade="Shade.Light"
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Variant="Variant.Flat" Shade="Shade.Lighter"
                                   Icon="delete" title="Xóa"
                                   Click=@(args => XoaDayHui(data)) />
                 </Template>
@@ -75,8 +77,6 @@
             <RadzenDataGridColumn TItem="DayHuiDto" Property="KyBo" Title="Kỳ" />
         </Columns>
     </RadzenDataGrid>
-  
-</RadzenFieldset>
 @code {
 
     #region Global Variables
@@ -203,7 +203,7 @@
         {
             await dialogService.OpenAsync<DayHui>($"Tạo mới dây hụi",
             new Dictionary<string, object>() { },
-            new DialogOptions() { Width = "768px", Height = "480px", Resizable = true, Draggable = true });
+            new DialogOptions() { Width = "70%", Height = "60%", Resizable = true, Draggable = true });
         }
         catch (Exception ex)
         {
@@ -220,7 +220,7 @@
                         {
                             {"dayHuiId", dayHui.Id}
                         },
-            new DialogOptions() { Width = "768px", Height = "480px", Resizable = true, Draggable = true });
+            new DialogOptions() { Width = "70%", Height = "60%", Resizable = true, Draggable = true });
         }
         catch (Exception ex)
         {

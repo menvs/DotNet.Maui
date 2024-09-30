@@ -13,30 +13,36 @@
               Text="Trở lại" Click=@(args=> navManager.NavigateTo("/TimKiemHuiVien")) />
 <RadzenFieldset Text="Chi tiết tính tiền theo hụi viên">
     <RadzenCard>
-        <div class="row">
-            <div class="col-4 row">
-                <RadzenText TextStyle="TextStyle.Body1" class="col-5">Mã hụi viên: </RadzenText>
-                <RadzenText class="col-7" Style="font-weight: bold;">@huiVien.MaHuiVien</RadzenText>
-            </div>
-            <div class="col-4 row">
-                <RadzenText TextStyle="TextStyle.Body1" class="col-4">Tên hụi viên: </RadzenText>
-                <RadzenText class="col-8" Style="font-weight: bold;">@huiVien.TenHuiVien</RadzenText>
-            </div>
-            <div class="col-4 row">
-                <RadzenText TextStyle="TextStyle.Body1" class="col-5">Tổng Lời/Lỗ: </RadzenText>
-                <RadzenText class="col-7" Style="font-weight: bold;">@(tongLoiLo.GetMoneyFormat())</RadzenText>
-            </div>
-        </div>
+        <RadzenRow>
+            <RadzenColumn class="rz-p-2" Size="4">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" Wrap="FlexWrap.Wrap">
+                    <RadzenText TextStyle="TextStyle.Body1">Mã hụi viên: </RadzenText>
+                    <RadzenText Style="font-weight: bold;">@huiVien.MaHuiVien</RadzenText>
+                </RadzenStack>
+            </RadzenColumn>
+            <RadzenColumn class="rz-p-2" Size="4">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" Wrap="FlexWrap.Wrap">
+                    <RadzenText TextStyle="TextStyle.Body1">Tên hụi viên: </RadzenText>
+                    <RadzenText Style="font-weight: bold;">@huiVien.TenHuiVien</RadzenText>
+                </RadzenStack>
+            </RadzenColumn>
+            <RadzenColumn class="rz-p-2" Size="4">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" Wrap="FlexWrap.Wrap">
+                    <RadzenText TextStyle="TextStyle.Body1">Tổng Lời/Lỗ: </RadzenText>
+                    <RadzenText Style="font-weight: bold;">@(tongLoiLo.GetMoneyFormat())</RadzenText>
+                </RadzenStack>
+            </RadzenColumn>
+        </RadzenRow>
     </RadzenCard>
 </RadzenFieldset>
 <RadzenFieldset Text="Danh sách dây hụi tham gia">
     <RadzenDataGrid TItem="TinhTienTheoHuiVienDto" Data=@danhSachTinhTien Style="max-height:400px" AllowSorting="true"
                     IsLoading=@isSearchLoadingShow PagerHorizontalAlign="HorizontalAlign.Center" AllowAlternatingRows="false" RowStyle="my-hover-class">
         <EmptyTemplate>
-            <p style="color: lightgrey; font-size: 24px; text-align: center; margin: 2rem;">@Const.EmptyTable</p>
+            <p style="color: lightgrey; font-size: 18px; text-align: center; margin: 2rem;">@Const.EmptyTable</p>
         </EmptyTemplate>
         <Columns>
-            <RadzenDataGridColumn TItem="TinhTienTheoHuiVienDto" Title="Stt" TextAlign="TextAlign.Center" Width="60px">
+            <RadzenDataGridColumn TItem="TinhTienTheoHuiVienDto" Title="Stt" TextAlign="TextAlign.Center" Width="80px">
                 <Template>
                     @(danhSachTinhTien.IndexOf(context) + 1)
                 </Template>
@@ -84,7 +90,6 @@
                     <span>@(data.TienPhaiTra.GetMoneyFormat())</span>
                 </Template>
             </RadzenDataGridColumn>
-
         </Columns>
     </RadzenDataGrid>
 </RadzenFieldset>
@@ -104,13 +109,12 @@
                 <RadzenText class="col-9 text-danger" Style="@summaryStyle">Chủ hụi phải @(tongPhaiThanhToan.GetValueOrDefault() >= 0 ? "TRẢ tiền cho" : "THU tiền của")  hụi viên: </RadzenText>
                 <RadzenText class="col-3 text-danger" TextAlign="TextAlign.Right" Style="@summaryStyle">@(tongPhaiThanhToan.GetValueOrDefault() >= 0 ? tongPhaiThanhToan.GetMoneyFormat() : (-tongPhaiThanhToan).GetMoneyFormat()) </RadzenText>
             </div>
-            <div class="row p-2">
-                <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Text="Tải xuống phiếu" class="col-6 rz-border-radius-6"
+            <div class="text-center p-2">
+@*                 <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Text="Tải xuống phiếu" class="col-6 rz-border-radius-6"
                               Visible=@(tongPhaiThanhToan!=null) Click="@TatToan" Icon="download">
-                </RadzenButton>
+                </RadzenButton> *@
                 <RadzenButton ButtonStyle="ButtonStyle.Secondary" Variant="Variant.Flat" Text="Tất toán tất cả" class="col-6 rz-border-radius-6"
                               Visible=@(tongPhaiThanhToan!=null) Click="@TatToan" Icon="done_all">
-
                 </RadzenButton>
             </div>
         </RadzenCard>

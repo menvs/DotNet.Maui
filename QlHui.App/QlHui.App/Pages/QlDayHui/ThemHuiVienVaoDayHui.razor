@@ -5,59 +5,61 @@
 @inherits HuiVienBase;
 @inject IQlHuiService qlHuiService;
 @inject IQlHuiVienService qlHuiVienService;
-<div class="row">
-    <div class="col-7 p-3 row">
-        <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2" class="col-5">Tên hụi viên tham gia</RadzenText>
-        <div class="col-7">
-            <RadzenTextBox @bind-Value=@huiVienHienTai.TenHuiVien Name="TenHuiVien"
-                           style="display: block" class="w-100" Visible=@themHuiVienMoi />
-            <RadzenRequiredValidator Component="TenHuiVien" Text="Yêu cầu nhập tên hụi viên"
-                                     Popup=@isInvalid Style="position: absolute" Visible=@themHuiVienMoi />
-
-            <RadzenAutoComplete Name="TenHuiVienAutocomplete" style="display: block" class="w-100" Change="@(arg=>ChonHuiVienDaTonTai(arg))"
-                                Visible=@themHuiVienDaTonTai Data=@danhSachHuiVien TextProperty="DisplayName" LoadData=@OnLoadHuiVienData />
+<RadzenRow class="rz-p-2">
+    <RadzenColumn Size="6">
+        <RadzenStack Orientation="Orientation.Horizontal">
+            <RadzenText>Tên hụi viên</RadzenText>
+            <RadzenStack Orientation="Orientation.Vertical" Visible=@themHuiVienMoi>
+                <RadzenTextBox @bind-Value=@huiVienHienTai.TenHuiVien Name="TenHuiVien" @onkeydown="ThemHuiVienMoi"
+                               style="display: block;" />
+                <RadzenRequiredValidator Component="TenHuiVien" Text="Yêu cầu nhập tên hụi viên"
+                                         Popup=@isInvalid Style="position: absolute" />
+            </RadzenStack>
+            <RadzenStack Orientation="Orientation.Vertical" Visible=@themHuiVienDaTonTai>
+                <RadzenAutoComplete Name="TenHuiVienAutocomplete" style="display: block;" Change="@(arg=>ChonHuiVienDaTonTai(arg))"
+                                 Data=@danhSachHuiVien TextProperty="DisplayName" LoadData=@OnLoadHuiVienData />
             <RadzenRequiredValidator Component="TenHuiVienAutocomplete" Text="Yêu cầu chọn tên hụi viên"
-                                     Popup=@isInvalid Style="position: absolute" Visible=@themHuiVienDaTonTai />
+                                     Popup=@isInvalid Style="position: absolute" />
+            </RadzenStack>
+        </RadzenStack>
+    </RadzenColumn>
+    <RadzenColumn Size="6">
+         <RadzenStack Orientation="Orientation.Horizontal">
+            <RadzenText>Số C tham gia</RadzenText>
+            <RadzenStack Orientation="Orientation.Vertical">
+                <RadzenNumeric TValue="int" TextAlign="TextAlign.Right" @bind-Value=@huiVienHienTai.SoCThamGia Name="SoCThamGia" />
+                <RadzenRequiredValidator Component="SoCThamGia" Text="Yêu cầu nhập số C tham gia" Popup=@isInvalid Style="position: absolute" />
+            </RadzenStack>
+         </RadzenStack>
+    </RadzenColumn>
+</RadzenRow>
 
-        </div>
-    </div>
-    <div class="col-3 p-3 row">
-        <RadzenText TextStyle="TextStyle.Subtitle1" TagName="TagName.H2" class="col-7">Số C tham gia</RadzenText>
-        <div class="col-5">
-            <RadzenNumeric TValue="int" class="col" Style="text-align: right;" @bind-Value=@huiVienHienTai.SoCThamGia Name="SoCThamGia" />
-            <RadzenRequiredValidator Component="SoCThamGia" Text="Yêu cầu nhập số C tham gia" Popup=@isInvalid Style="position: absolute" />
-        </div>
-    </div>
-</div>
-<div class="pt-2">
-    <RadzenDataGrid TItem="HuiVienThamGiaDto" Data=@danhSachHuiVienThamGia PagerPosition=@pagerPosition Count=@totalItems
-                    AllowPaging="true" AllowSorting="true" PageSize="10" ShowPagingSummary="true" Style="max-height:350px">
-        <EmptyTemplate>
-            <p style="color: lightgrey; font-size: 24px; text-align: center; margin: 2rem;">@Const.EmptyTable</p>
-        </EmptyTemplate>
-        <Columns>
-            <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Property="Index" Title="Stt" TextAlign="TextAlign.Center">
-                <Template>
-                    @(danhSachHuiVienThamGia.ToList().IndexOf(context) + 1)
-                </Template>
-            </RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Property="MaHuiVien" Title="Mã hụi viên" />
-            <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Property="TenHuiVien" Title="Tên hụi viên" />
-            <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Property="SoCThamGia" Title="Số C tham gia" Type=typeof(int) />
-            <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Title="Thao tác" TextAlign="TextAlign.Center">
-                <Template Context="data">
-                    <RadzenButton ButtonStyle="ButtonStyle.Base" Variant="Variant.Flat" Shade="Shade.Lighter" Icon="delete" title="Xóa" Size="ButtonSize.Medium"
-                                  Click=@(args => XoaHuiVienDaChon(data)) />
-                </Template>
-            </RadzenDataGridColumn>
-        </Columns>
-    </RadzenDataGrid>
-</div>
-<div class="pt-2 row">
-    <div class="col-md-12 text-end">
-        <RadzenButton ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Text="Hoàn tất" Click="@HoanTatThemHuiVien" />
-    </div>
-</div>
+<RadzenDataGrid TItem="HuiVienThamGiaDto" Data=@danhSachHuiVienThamGia PagerPosition=@pagerPosition Count=@totalItems
+                AllowPaging="true" AllowSorting="true" PageSize="10" ShowPagingSummary="true" Style="max-height:400px">
+    <EmptyTemplate>
+        <p style="color: lightgrey; font-size: 18px; text-align: center; margin: 2rem;">@Const.EmptyTable</p>
+    </EmptyTemplate>
+    <Columns>
+        <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Property="Index" Title="Stt" TextAlign="TextAlign.Center">
+            <Template>
+                @(danhSachHuiVienThamGia.ToList().IndexOf(context) + 1)
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Property="MaHuiVien" Title="Mã hụi viên" />
+        <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Property="TenHuiVien" Title="Tên hụi viên" />
+        <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Property="SoCThamGia" Title="Số C tham gia" Type=typeof(int) />
+        <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Title="Thao tác" TextAlign="TextAlign.Center">
+            <Template Context="data">
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Variant="Variant.Flat" Shade="Shade.Lighter" Icon="delete" title="Xóa"
+                              Click=@(args => XoaHuiVienDaChon(data)) />
+            </Template>
+        </RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
+<RadzenStack Orientation="Orientation.Horizontal"
+             JustifyContent="JustifyContent.End" Wrap="FlexWrap.Wrap" class="rz-p-2">
+    <RadzenButton ButtonStyle="ButtonStyle.Primary" Variant="Variant.Flat" Text="Hoàn tất" Click="@HoanTatThemHuiVien" Icon="save" />
+</RadzenStack>
 @code {
     [Parameter]
     public int dayHuiId { get; set; }
@@ -84,11 +86,19 @@
     async Task XoaHuiVienDaChon(HuiVienThamGiaDto data)
     {
         var dongYXoa = await dialogService.Confirm(
-            $"Hụi viên: {data.TenHuiVien}", "Bạn có muốn xóa khỏi danh sách tham gia hụi không?",
-            new ConfirmOptions() { OkButtonText = "Có", CancelButtonText = "Không" });
+    $"Hụi viên: {data.TenHuiVien}", "Bạn có muốn xóa khỏi danh sách tham gia hụi không?",
+    new ConfirmOptions() { OkButtonText = "Có", CancelButtonText = "Không" });
         if (dongYXoa == true)
         {
             danhSachHuiVienThamGia = danhSachHuiVienThamGia.Where(item => item.MaHuiVien != data.MaHuiVien);
+        }
+    }
+    void ThemHuiVienMoi(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            // Your logic when Enter is pressed
+            ThemVaoDanhSachHuiVien();
         }
     }
     void ThemVaoDanhSachHuiVien()
@@ -114,6 +124,7 @@
 
                 var huiVienThamGia = huiVienHienTai;
 
+                
                 if (themHuiVienDaTonTai)
                 {
                     if (huiVienThamGia.HuiVienId > 0)
@@ -275,7 +286,6 @@
             }
         }
     }
-
 
     void OnLoadHuiVienData(LoadDataArgs args)
     {

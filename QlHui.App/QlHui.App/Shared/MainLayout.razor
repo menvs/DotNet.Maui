@@ -1,24 +1,36 @@
-﻿@inherits LayoutComponentBase
+﻿@using Microsoft.Extensions.Configuration
+@using QlHui.App.Data.Models.Config
+@inherits LayoutComponentBase
+@inject IConfiguration configuration;
+
+@code {
+    bool sidebarExpanded = false;
+    OwnerConfigModel ownerConfig = new();
+}
+
 <RadzenDialog />
 <RadzenNotification />
 <RadzenContextMenu />
 <RadzenLayout class="rz-shadow-3">
     <RadzenHeader>
-        <div class="row">
-            <div class="col-8 d-flex align-items-center">
-                <RadzenSidebarToggle Click="@(() => sidebarExpanded = !sidebarExpanded)" />
-                <label class="col">Quản lý hụi</label>
-            </div>
-            <div class="col-4 px-4 d-flex align-items-center">
-                <h5><label>Chủ hụi: XXXXX - SDT: 000 000 000</label></h5>
-            </div>
-        </div>
-
+        <RadzenRow>
+            <RadzenColumn Size="4">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                    <RadzenSidebarToggle Click="@(() => sidebarExpanded = !sidebarExpanded)" />
+                </RadzenStack>
+            </RadzenColumn>
+            <RadzenColumn Size="8" class="rz-p-3">
+                <RadzenStack AlignItems="AlignItems.Center">
+                    <RadzenText TextStyle="TextStyle.DisplayH6" Style="color:white;">Chủ hụi: @ownerConfig.Name - SDT: @ownerConfig.PhoneNumber - STK: @ownerConfig.BankAccountNumber - Ngân hàng: @ownerConfig.BankName</RadzenText>
+                </RadzenStack>
+            </RadzenColumn>
+        </RadzenRow>
     </RadzenHeader>
     <RadzenSidebar @bind-Expanded="@sidebarExpanded" Style="width:200px">
         <RadzenPanelMenu>
             <RadzenPanelMenuItem Text="Quản lý Dây Hụi" Icon="view_list" Path="/TimKiemDayHui" />
             <RadzenPanelMenuItem Text="Quản lý Hụi Viên" Icon="group" Path="/TimKiemHuiVien" />
+          @*   <RadzenPanelMenuItem Text="Biên lai" Path="/BienLai" /> *@
         </RadzenPanelMenu>
     </RadzenSidebar>
     <RadzenBody>
@@ -27,7 +39,4 @@
     <RadzenFooter></RadzenFooter>
 </RadzenLayout>
 
-@code {
-    bool sidebarExpanded = false;
-   
-}
+
