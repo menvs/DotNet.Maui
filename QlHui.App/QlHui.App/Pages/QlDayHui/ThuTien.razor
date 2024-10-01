@@ -5,19 +5,28 @@
 @inject IQlHuiVienService qlHuiVienService;
 @inject IQlHuiService qlHuiService;
 @inject ILsDongHuiService lsDongHuiService;
-<RadzenFieldset Text="Nhập số tiền đã thu" Style="font-weight:bold;">
-    <RadzenNumeric Name="SoTien" style="display: block" @oninput="@(arg=>soTien = arg.Value.ToString().GetFloatNumber())"
-                   TValue=string TextAlign="TextAlign.Right" Value="@soTien.GetMoneyFormat()" />
-</RadzenFieldset>
-<RadzenStack Orientation="Orientation.Horizontal" class="rz-p-2"
-             JustifyContent="JustifyContent.End" Wrap="FlexWrap.Wrap">
-    <RadzenButton ButtonStyle="ButtonStyle.Primary" Variant="Variant.Flat" Text="Thu tiền" Icon="price_check"
-                  Disabled=@(soTien.HasValue == false || huiVienThamGiaHienTai==null) Click=@NhanThuTien />
-</RadzenStack>
+<RadzenCard>
+    <RadzenStack Orientation="Orientation.Horizontal" class="rz-p-2" Wrap="FlexWrap.Wrap">
+        <RadzenText>Số tiền thu</RadzenText>
+        <RadzenNumeric Name="SoTien" Style="width:100%;" @oninput="@(arg=>soTien = arg.Value.ToString().GetFloatNumber())"
+                       TValue=string TextAlign="TextAlign.Right" Value="@soTien.GetMoneyFormat()" />
+    </RadzenStack>
+    <RadzenStack Orientation="Orientation.Horizontal" class="rz-p-2" Wrap="FlexWrap.Wrap">
+        <RadzenText>Ghi chú</RadzenText>
+        <RadzenTextArea @bind-Value=@ghiChu Style="width:100%;" />
+    </RadzenStack>
+    <RadzenStack Orientation="Orientation.Horizontal" class="rz-p-2"
+                 JustifyContent="JustifyContent.End" Wrap="FlexWrap.Wrap">
+        <RadzenButton ButtonStyle="ButtonStyle.Primary" Variant="Variant.Flat" Text="Thu tiền" Icon="price_check"
+                      Disabled=@(soTien.HasValue == false || huiVienThamGiaHienTai==null) Click=@NhanThuTien />
+    </RadzenStack>
+</RadzenCard>
+
 @code {
     [Parameter]
     public int huiVienThamGiaId { set; get; }
     float? soTien = null;
+    string ghiChu = string.Empty;
     HuiVienThamGiaDto huiVienThamGiaHienTai;
     DayHuiDto dayHuiHienTai;
     protected override void OnParametersSet()
@@ -37,8 +46,8 @@
             if (soTien.HasValue && dayHuiHienTai != null)
             {
                 var xacNhanBoHui = await dialogService.Confirm(
-                           $"Xác nhận đã thu Hụi Viên {huiVienThamGiaHienTai.TenHuiVien}?",$"THU {soTien.Value.GetMoneyFormat()}", 
-                           new ConfirmOptions() { OkButtonText = "Có", CancelButtonText = "Không" });
+                       $"Xác nhận đã thu Hụi Viên {huiVienThamGiaHienTai.TenHuiVien}?",$"THU {soTien.Value.GetMoneyFormat()}", 
+                       new ConfirmOptions() { OkButtonText = "Có", CancelButtonText = "Không" });
 
                 if (xacNhanBoHui == true)
                 {
@@ -47,6 +56,7 @@
                     if (updateRs)
                     {
                         var lichSuDongHui = new LichSuDongHuiDto().LayLsThuTien(updateItem, dayHuiHienTai.KyBo, soTien);
+                        lichSuDongHui.GhiChu = ghiChu;
                         _ = lsDongHuiService.Insert(lichSuDongHui);
                         ShowSuccessNotification("Thu tiền thành công!");
                         dialogService.Close(true);

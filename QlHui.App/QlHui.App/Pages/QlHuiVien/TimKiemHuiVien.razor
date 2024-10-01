@@ -52,7 +52,7 @@
         </RadzenDataGridColumn>
         <RadzenDataGridColumn TItem="HuiVienKetQuaTimKiemDto" Property="Id" Title="Thao tác" TextAlign="TextAlign.Center" Width="10%">
             <Template Context="data">
-                <RadzenButton ButtonStyle="ButtonStyle.Info" Variant="Variant.Flat" Shade="Shade.Light" 
+                <RadzenButton ButtonStyle="ButtonStyle.Info" Variant="Variant.Flat" Shade="Shade.Lighter" 
                               Visible="@(data.TrangThai != null &&  data.TrangThai != (int)TrangThaiDongHui.DA_THU)"
                               Icon="visibility" title="Xem chi tiết" Click="@(args=>RedirectToDetailPage(data.HuiVienId))" />
             </Template>
@@ -61,10 +61,10 @@
         <RadzenDataGridColumn TItem="HuiVienKetQuaTimKiemDto" Property="TenHuiVien" Title="Tên hụi viên" Width="20%" />
         <RadzenDataGridColumn TItem="HuiVienKetQuaTimKiemDto" Property="TrangThai" Title="Trạng thái" TextAlign="TextAlign.Center" Width="10%">
             <Template Context="data">
-                <RadzenLabel Visible=@(data.TrangThai==(int)TrangThaiDongHui.CHUA_THU) class="text-danger">Chưa thu</RadzenLabel>
-                <RadzenLabel Visible=@(data.TrangThai==(int)TrangThaiDongHui.DA_THU) class="text-success">Đã thu</RadzenLabel>
-                <RadzenLabel Visible=@(data.TrangThai==(int)TrangThaiDongHui.CHUA_TRA) class="text-warning">Chưa trả</RadzenLabel>
-                <RadzenLabel Visible=@(data.TrangThai==(int)TrangThaiDongHui.DA_TRA) class="text-success">Đã trả</RadzenLabel>
+                <RadzenLabel Visible=@(data.TrangThai==(int)TrangThaiDongHui.CHUA_THU) class="rz-color-danger">Chưa thu</RadzenLabel>
+                <RadzenLabel Visible=@(data.TrangThai==(int)TrangThaiDongHui.DA_THU) class="rz-color-success">Đã thu</RadzenLabel>
+                <RadzenLabel Visible=@(data.TrangThai==(int)TrangThaiDongHui.CHUA_TRA) class="rz-color-warning">Chưa trả</RadzenLabel>
+                <RadzenLabel Visible=@(data.TrangThai==(int)TrangThaiDongHui.DA_TRA) class="rz-color-success">Đã trả</RadzenLabel>
             </Template>
         </RadzenDataGridColumn>
         <RadzenDataGridColumn TItem="HuiVienKetQuaTimKiemDto" Property="TongPhaiThu" Title="Tổng phải thu" TextAlign="TextAlign.Right" Width="20%">

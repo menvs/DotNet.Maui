@@ -5,6 +5,8 @@
 @using SelectPdf
 @using System.Reflection
 @using CommunityToolkit.Maui.Storage;
+@using System.Globalization
+
 @inject IQlHuiService qlHuiService;
 @inject IQlHuiVienService qlHuiVienService;
 @inject ILsBoHuiService lsBoHuiService;
@@ -15,6 +17,7 @@
 @inherits NotificationBase;
 @inject NavigationManager navManager;
 @using static QlHui.App.Data.Constant.Const;
+<RadzenProgressBar Value="100" ShowValue="false" Visible="@isShowProgressBar" Mode="ProgressBarMode.Indeterminate" />
 <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="arrow_back_ios" Variant="Variant.Text"
               Text="Trở lại" Click=@(args=> navManager.NavigateTo("/TimKiemDayHui")) />
 <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
@@ -82,39 +85,63 @@
                 @(danhSachHuiVienThamGia.IndexOf(context) + 1)
             </Template>
         </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Title="Thao tác" TextAlign="TextAlign.Center" Width="300px" MinWidth="100px" Frozen="true">
+        <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Title="Thao tác" TextAlign="TextAlign.Center" Width="250px" MinWidth="100px" Frozen="true">
             <Template Context="data">
-                <RadzenButton ButtonStyle="ButtonStyle.Success" title="Bỏ hụi" Variant="Variant.Text" Click=@(arg=>BoHui(data))
-                              Visible=@(data.DaBoHui!=true && coTheBoHui) Icon="payments"/>
-                <RadzenButton ButtonStyle="ButtonStyle.Primary" title="Trả tiền" Variant="Variant.Text" Shade="Shade.Dark" Click="@(args=>TraTien(data))" Icon="paid"
-                        Visible=@(data.TrangThai==(int)TrangThaiDongHui.CHUA_TRA && data.PhaiTra.GetValueOrDefault()>0) 
-                        />
-                <RadzenButton ButtonStyle="ButtonStyle.Primary" title="Thu tiền" Variant="Variant.Text" Shade="Shade.Darker" Click="@(args=>ThuTien(data))" Icon="price_check"
+                <RadzenButton ButtonStyle="ButtonStyle.Secondary" Text="Bỏ hụi" Icon="payments"
+                              Variant="Variant.Outlined"Shade="Shade.Light"  Click=@(arg=>BoHui(data))
+                              Visible=@(data.DaBoHui!=true && coTheBoHui) Size="ButtonSize.Small"/>
+
+                <RadzenButton ButtonStyle="ButtonStyle.Dark" Text="Giao tiền"
+                              Variant="Variant.Outlined" Shade="Shade.Light"
+                              Click="@(args=>TraTien(data))" Icon="paid" Size="ButtonSize.Small"
+                              Visible=@(data.TrangThai==(int)TrangThaiDongHui.CHUA_TRA && data.PhaiTra.GetValueOrDefault()>0)/>
+
+                <RadzenButton ButtonStyle="ButtonStyle.Warning" Text="Thu tiền"
+                              Variant="Variant.Outlined" Shade="Shade.Light"
+                              Click="@(args=>ThuTien(data))" Icon="price_check" Size="ButtonSize.Small"
                               Visible=@(data.TrangThai==(int)TrangThaiDongHui.CHUA_THU && data.TongPhaiThu.GetValueOrDefault()>0) />
-                <RadzenButton ButtonStyle="ButtonStyle.Dark" Variant="Variant.Text" Shade="Shade.Light"
+
+                <RadzenSplitButton Variant="Variant.Outlined" ButtonStyle="ButtonStyle.Primary"
+                                   Shade="Shade.Light" Text="Sửa" Size="ButtonSize.Small" Icon="edit"
+                                   Click="@(args => ThaoTac(args,data))" @onclick:stopPropagation="true">
+                    <ChildContent>
+                        <RadzenSplitButtonItem Text="Xoá" Value="1" Icon="delete" Visible=@(daCoNguoiBoHui!=true) />
+                        <RadzenSplitButtonItem Text="Đổi người" Value="2" Icon="change_circle" />
+                        <RadzenSplitButtonItem Text="Xuất phiếu giao" Value="3" Icon="export_notes" Visible=@(data.TrangThai==(int)TrangThaiDongHui.CHUA_TRA && data.PhaiTra.GetValueOrDefault()>0) />
+                        <RadzenSplitButtonItem Text="Xem lịch sử đóng hụi" Value="4" Icon="history" />
+                    </ChildContent>
+                </RadzenSplitButton>
+                @* <RadzenButton ButtonStyle="ButtonStyle.Primary" Variant="Variant.Text" Shade="Shade.Light"
                               Icon="edit" title="Chỉnh sửa" Click="@(args => ChinhSuaDong(data))" @onclick:stopPropagation="true" />
+
                 <RadzenButton ButtonStyle="ButtonStyle.Danger" Variant="Variant.Text" Shade="Shade.Light" Visible=@(daCoNguoiBoHui!=true)
                               Icon="delete" title="Xóa" Click=@(arg=>XoaHuiVienThamGia(data)) @onclick:stopPropagation="true" />
+
                 <RadzenButton ButtonStyle="ButtonStyle.Info" Variant="Variant.Text" Shade="Shade.Light"
                               Icon="history" title="Xem lịch sử đóng" Click="@(args => HienThiChiTietLichSuDongHui(data))" />
+
                 <RadzenButton ButtonStyle="ButtonStyle.Warning" Variant="Variant.Text" Shade="Shade.Light"
                               Icon="change_circle" title="Đổi người" Click="@(args => DoiNguoiThamGia(data))" Visible=@(data.SoCChet==0) />
+
                 <RadzenButton ButtonStyle="ButtonStyle.Warning" Variant="Variant.Text" Shade="Shade.Light"
-                              Icon="export_notes" title="Xuất đơn giao" Click="@(args => XuatPhieuGiao(data))" />
+                              Icon="export_notes" title="Xuất đơn giao" Click="@(args => XuatPhieuGiao(data))" /> *@
             </Template>
             <EditTemplate Context="data">
-                <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Primary" Variant="Variant.Flat" Shade="Shade.Light" 
-                              Click="@((args) => LuuChinhSuaDong(data))" title="Lưu chỉnh sửa">
+                <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Primary" 
+                              Size="ButtonSize.Small"
+                              Variant="Variant.Flat" 
+                              Click="@((args) => LuuChinhSuaDong(data))" Text="Lưu">
                 </RadzenButton>
-                <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Base" Variant="Variant.Flat" 
-                              Click="@((args) => BoChinhSuaDong(data))" title="Bỏ chỉnh sửa">
+                <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Base" 
+                              Variant="Variant.Flat" Size="ButtonSize.Small"
+                              Click="@((args) => BoChinhSuaDong(data))" Text="Bỏ">
                 </RadzenButton>
             </EditTemplate>
         </RadzenDataGridColumn>
         <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Property="MaHuiVien" Frozen="true" Width="100px" Title="Mã HV">
         </RadzenDataGridColumn>
         <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Property="TenHuiVien" Title="Tên HV" Frozen="true" Width="200px" />
-        <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Width="200px" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Width="150px" TextAlign="TextAlign.Center">
             <HeaderTemplate>
                 <span>Sống/Chết</span>
             </HeaderTemplate>
@@ -163,12 +190,12 @@
                 <span>@(data.TienLoi.GetMoneyFormat())</span>
             </Template>
         </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Property="TrangThai" Title="Trạng thái" Width="200px">
+        <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Property="TrangThai" Title="Trạng thái" Width="150px">
             <Template Context="data">
-                <RadzenLabel Visible=@(data.TrangThai==(int)TrangThaiDongHui.CHUA_THU) class="text-danger">Chưa thu</RadzenLabel>
-                <RadzenLabel Visible=@(data.TrangThai==(int)TrangThaiDongHui.DA_THU) class="text-dark">Đã thu</RadzenLabel>
-                <RadzenLabel Visible=@(data.TrangThai==(int)TrangThaiDongHui.CHUA_TRA) class="text-warning">Chưa trả</RadzenLabel>
-                <RadzenLabel Visible=@(data.TrangThai==(int)TrangThaiDongHui.DA_TRA) class="text-success">Đã trả</RadzenLabel>
+                <RadzenLabel Visible=@(data.TrangThai==(int)TrangThaiDongHui.CHUA_THU) class="rz-color-danger">Chưa thu</RadzenLabel>
+                <RadzenLabel Visible=@(data.TrangThai==(int)TrangThaiDongHui.DA_THU) class="rz-color-success">Đã thu</RadzenLabel>
+                <RadzenLabel Visible=@(data.TrangThai==(int)TrangThaiDongHui.CHUA_TRA) class="rz-color-warning">Chưa trả</RadzenLabel>
+                <RadzenLabel Visible=@(data.TrangThai==(int)TrangThaiDongHui.DA_TRA) class="rz-color-success">Đã trả</RadzenLabel>
             </Template>
         </RadzenDataGridColumn>
         <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Property="GhiChu" Title="Ghi chú" Width="500px">
@@ -205,8 +232,8 @@
 @code {
     [Parameter]
     public int dayHuiId { get; set; }
-
     public bool isVisibleBoHuiLaiButton { get; set; }
+    public bool isShowProgressBar { get; set; } = false;
 
     PagerPosition pagerPosition = PagerPosition.Bottom;
     QLDayHuiSearchCriteria searchCriteria = new();
@@ -397,8 +424,9 @@
     }
     void CapNhatDuLieu()
     {
+        isShowProgressBar = true;
         LayDanhSachHuiVienThamGiaDayHui();
-        if (danhSachHuiVienThamGia != null && danhSachHuiVienThamGia.Any())
+        if (danhSachHuiVienThamGia != null && danhSachHuiVienThamGia.Count>0)
         {
             dayHuiHienTai.TongSoChan = danhSachHuiVienThamGia.Sum(item => item.SoCThamGia);
             daCoNguoiBoHui = danhSachHuiVienThamGia.Any(item => item.DaBoHui == true);
@@ -407,6 +435,7 @@
         dayHuiHienTai.KyBo = TinhToanSoKyHienTai();
         _ = qlHuiService.Update(dayHuiHienTai);
         SetData(dayHuiHienTai);
+        isShowProgressBar = false;
     }
 
     async Task ChinhSuaDong(HuiVienThamGiaDto rowItem)
@@ -417,6 +446,7 @@
 
     async Task CapNhatDuLieuDong(HuiVienThamGiaDto rowItem)
     {
+        isShowProgressBar = true;
         try
         {
             if (rowItem != null)
@@ -438,7 +468,10 @@
         {
             ShowErrorNotification(ex.GetError());
         }
-
+        finally
+        {
+            isShowProgressBar = false;
+        }
     }
 
     async Task LuuChinhSuaDong(HuiVienThamGiaDto rowItem)
@@ -504,9 +537,10 @@
     int TinhToanSoKyHienTai()
     {
         int soKy = 0;
-        if (dayHuiHienTai != null && danhSachHuiVienThamGia != null && danhSachHuiVienThamGia.Any())
+
+        if (dayHuiHienTai != null && danhSachHuiVienThamGia != null && danhSachHuiVienThamGia.Count>0)
         {
-            int tongDanhSachHuiVienThamGia = danhSachHuiVienThamGia.Count();
+            int tongDanhSachHuiVienThamGia = danhSachHuiVienThamGia.Count;
             var currentDate = DateTime.Now;
             var ngayKhui = dayHuiHienTai.NgayKhui.Value;
             while (soKy <= tongDanhSachHuiVienThamGia &&
@@ -516,11 +550,11 @@
                 soKy++;
                 if (dayHuiHienTai.LoaiHui.HasValue)
                 {
-                    if (dayHuiHienTai.LoaiHui.Value == LoaiHui.NGAY.GetHashCode())
+                    if (dayHuiHienTai.LoaiHui.Value == (int)LoaiHui.NGAY)
                     {
                         ngayKhui = ngayKhui.AddDays(1 * dayHuiHienTai.SoNgayLoaiHui);
                     }
-                    else if (dayHuiHienTai.LoaiHui.Value == LoaiHui.TUAN.GetHashCode())
+                    else if (dayHuiHienTai.LoaiHui.Value == (int)LoaiHui.TUAN)
                     {
                         ngayKhui = ngayKhui.AddDays(7 * dayHuiHienTai.SoNgayLoaiHui);
                     }
@@ -575,7 +609,7 @@
                                                                            {
                         {"huiVienThamGiaId", rowItem.Id}
                                                                            },
-                 new DialogOptions() { Width = "480px", Height = "300px", Resizable = true });
+                 new DialogOptions() { Width = "60%", Height = "60%", Resizable = true });
             }
             catch (Exception ex)
             {
@@ -603,28 +637,122 @@
             }
         }
     }
-
-    async Task XuatPhieuGiao(HuiVienThamGiaDto rowItem)
+    static string LayLoaiHui(int loaiHui)
     {
-        var phieuThuModel = new PhieuThuConfigModel();
-        var html = await RazorTemplateEngine.RenderPartialAsync("Views/PhieuThu.cshtml",phieuThuModel);
-        HtmlToPdf converter = new HtmlToPdf();
+        if (loaiHui == (int)LoaiHui.NGAY)
+        {
+            return "Ngày";
+        }
 
-        // set converter options
-        converter.Options.PdfPageSize = PdfPageSize.A6;
-        converter.Options.PdfPageOrientation = PdfPageOrientation.Portrait;
-        converter.Options.DisplayHeader = true;
-        converter.Options.DisplayFooter = true;
-        converter.Options.MarginLeft = 30;
-        converter.Options.MarginRight = 30;
-        // convert the url to pdf
-        PdfDocument doc = converter.ConvertHtmlString(html);
-        using MemoryStream stream = new MemoryStream();
-        // save pdf document
-        doc.Save(stream);
-        var fileSaverResult = await FileSaver.Default.SaveAsync("PhieuThu.pdf", stream);
-        // close pdf document
-        doc.Close();
+        if (loaiHui == (int)LoaiHui.TUAN)
+        {
+            return "Tuần";
+        }
+
+        if (loaiHui == (int)LoaiHui.THANG)
+        {
+            return "Tháng";
+        }
+        return string.Empty;
+    }
+    Task XuatPhieuGiao(HuiVienThamGiaDto rowItem)
+    {
+        isShowProgressBar = true;
+        return Task.Run(async () =>
+        {
+            var huiVienThamGia = danhSachHuiVienThamGia.FirstOrDefault(hv => hv.MaHuiVien == rowItem.MaHuiVien);
+            string fileName = $"PhieuGiao_{rowItem.TenHuiVien}_Day{dayHuiHienTai.TienMotChan}_Ngay{dayHuiHienTai.NgayTao.GetValueOrDefault().ToString("ddTMMyyyy")}_Ky{dayHuiHienTai.KyBo}.pdf";
+            var phieuThuModel = new PhieuThuConfigModel();
+            CultureInfo vnCulture = new CultureInfo("vi-VN");
+            phieuThuModel.NgayMo = dayHuiHienTai.NgayKhui.GetValueOrDefault().ToString("D", vnCulture);
+            phieuThuModel.DayHui = dayHuiHienTai.TienMotChan.GetValueOrDefault().ToString("C0", vnCulture);
+            phieuThuModel.Khui = $"{LayLoaiHui(dayHuiHienTai.LoaiHui.GetValueOrDefault())} {phieuThuModel.DayHui}";
+            phieuThuModel.SoPhan = dayHuiHienTai.TongSoChan.ToString();
+
+            phieuThuModel.HuiVien = rowItem.TenHuiVien;
+            phieuThuModel.NgayHot = huiVienThamGia.NgayBoHui.GetValueOrDefault().ToString("D", vnCulture);
+            phieuThuModel.NgayGiao = DateTime.Now.ToString("D", vnCulture);
+            phieuThuModel.ThamKeu = huiVienThamGia.SoTienBo.GetValueOrDefault().ToString("C0", vnCulture);
+            phieuThuModel.SoKy = dayHuiHienTai.KyBo.ToString();
+            int soChanC = danhSachHuiVienThamGia.Sum(hv => hv.SoCChet) - 1;
+            float tongSoTienChanC = soChanC * dayHuiHienTai.TienMotChan.Value;
+            phieuThuModel.Chet = $"Chết = {soChanC} x {phieuThuModel.DayHui} = {tongSoTienChanC.ToString("C0", vnCulture)}";
+
+            int soChanS = danhSachHuiVienThamGia.Sum(hv => hv.SoCThamGia)-1 - soChanC ;
+            float soTienChanSong =dayHuiHienTai.TienMotChan.GetValueOrDefault()-huiVienThamGia.SoTienBo.GetValueOrDefault();
+            float tongSoTienChanSong = soChanS*soTienChanSong;
+            phieuThuModel.Song = $"Sống = {soChanS} x {soTienChanSong.ToString("C0", vnCulture)} = {tongSoTienChanSong.ToString("C0", vnCulture)}";
+
+            float tienHui = tongSoTienChanC + tongSoTienChanSong;
+            phieuThuModel.TienHui = tienHui.ToString("C0", vnCulture);
+            phieuThuModel.TruKhac = "0";
+            phieuThuModel.TruThao = "0";
+            if (soChanC == 0)
+            {
+                phieuThuModel.TruThao = dayHuiHienTai.TienThao.GetValueOrDefault().ToString("C0", vnCulture);
+            }
+            phieuThuModel.ConGiao = huiVienThamGia.PhaiTra.GetValueOrDefault().ToString("C0", vnCulture);
+            phieuThuModel.SoPhanConLai = soChanS.ToString();
+
+            var html = await RazorTemplateEngine.RenderPartialAsync("Views/PhieuThu.cshtml", phieuThuModel);
+
+            HtmlToPdf converter = new HtmlToPdf();
+            // set converter options
+            converter.Options.PdfPageSize = PdfPageSize.A5;
+            converter.Options.PdfPageOrientation = PdfPageOrientation.Portrait;
+            converter.Options.DisplayHeader = true;
+            converter.Options.DisplayFooter = true;
+            converter.Options.MarginLeft = 30;
+            converter.Options.MarginRight = 30;
+
+            // convert the url to pdf
+            PdfDocument doc = converter.ConvertHtmlString(html);
+            dialogService.Close();
+            using MemoryStream stream = new MemoryStream();
+            // save pdf document
+            doc.Save(stream);
+            isShowProgressBar = false;
+            var fileSaverResult = await FileSaver.Default.SaveAsync(fileName, stream);
+            // close pdf document
+            if (fileSaverResult.IsSuccessful)
+            {
+                doc.Close();
+                ShowSuccessNotification($"Xuất file thành công!");
+            }
+            
+        });
+    }
+
+    async Task ThaoTac(RadzenSplitButtonItem item, HuiVienThamGiaDto rowItem)
+    {
+        if (item != null && rowItem!=null)
+        {
+            switch (item.Value)
+            {
+                case "1":
+                    await XoaHuiVienThamGia(rowItem);
+                    break;
+                case "2":
+                    await DoiNguoiThamGia(rowItem);
+                    break;
+                case "3":
+                    await XuatPhieuGiao(rowItem);
+                    break;
+                case "4":
+                    await HienThiChiTietLichSuDongHui(rowItem);
+                    break;
+                default:
+                    await ChinhSuaDong(rowItem);
+                    break;
+            }
+        }
+        else
+        {
+            if (rowItem != null)
+            {
+                await ChinhSuaDong(rowItem);
+            }
+        }
     }
     public void Dispose()
     {

@@ -22,6 +22,7 @@ namespace QlHui.App.Data.Models.Dtos
         public float? SoTienBo { get; set; }
         public float? TienLoi { get; set; }
         public float? TienDaTra { get; set; }
+        public DateTime? NgayBoHui { get; set; }
         public HuiVienThamGiaDto()
         {
             SoCThamGia = 1;

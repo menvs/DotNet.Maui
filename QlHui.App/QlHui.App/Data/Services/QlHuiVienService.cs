@@ -174,7 +174,7 @@ namespace QlHui.App.Data.Services
                 const int ttChuaTra = (int)TrangThaiDongHui.CHUA_TRA;
 
                 var queryData = dsHuiVien.Join(dshuiVienThamGia.DefaultIfEmpty(),
-                        hv => hv.Id, hvThamGia => hvThamGia.HuiVienId,
+                        hv => hv.Id, hvThamGia => hvThamGia?.HuiVienId,
                         (hv, hvThamGia) => new
                         {
                             hv.MaHuiVien,

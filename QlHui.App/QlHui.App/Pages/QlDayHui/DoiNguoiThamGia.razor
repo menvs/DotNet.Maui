@@ -5,28 +5,31 @@
 @inherits HuiVienBase;
 @inject DialogService dialogService;
 
-<RadzenTabs TabPosition="TabPosition.Top" RenderMode="TabRenderMode.Client">
-    <Tabs>
-        <RadzenTabsItem Text="Hụi viên đã tồn tại">
-            <RadzenStack Orientation="Orientation.Horizontal" Wrap="FlexWrap.Wrap">
-                <RadzenAutoComplete Name="TenHuiVienAutocomplete" style="display: block;width:50%;"
-                                    Placeholder="Nhập tên để tìm kiếm hụi viên" Change=@(arg=>ChangeData(arg))
-                                    Data=@danhSachHuiVien TextProperty="DisplayName" LoadData=@OnLoadHuiVienData />
-                <RadzenButton ButtonStyle="ButtonStyle.Warning" Variant="Variant.Flat" Text="Đổi người"
-                              Icon="change_circle" Click=@DoiNguoiDaTonTai Disabled=@(huiVienDoiThanh==null) />
-            </RadzenStack>
-           
-        </RadzenTabsItem>
-        <RadzenTabsItem Text="Hụi viên mới">
-              <RadzenStack Orientation="Orientation.Horizontal" Wrap="FlexWrap.Wrap">
-                <RadzenTextBox Name="TenHuiVienMoi" style="display: block;width:50%;" Placeholder="Nhập tên hụi viên mới" Change=@(arg=>huiVienTimKiem = arg)
-                               TextProperty="DisplayName" />
-                <RadzenButton ButtonStyle="ButtonStyle.Warning" Variant="Variant.Flat" Text="Đổi người"
-                              Icon="change_circle" Click=@DoiNguoiMoi Disabled=@(string.IsNullOrEmpty(huiVienTimKiem)) />
-              </RadzenStack>
-        </RadzenTabsItem>
-    </Tabs>
-</RadzenTabs>
+<RadzenCard>
+    <RadzenTabs TabPosition="TabPosition.Top" RenderMode="TabRenderMode.Client">
+        <Tabs>
+            <RadzenTabsItem Text="Hụi viên đã tồn tại">
+                <RadzenStack Orientation="Orientation.Horizontal" Wrap="FlexWrap.Wrap">
+                    <RadzenAutoComplete Name="TenHuiVienAutocomplete" style="display: block;width:50%;"
+                                        Placeholder="Nhập tên để tìm kiếm hụi viên" Change=@(arg=>ChangeData(arg))
+                                        Data=@danhSachHuiVien TextProperty="DisplayName" LoadData=@OnLoadHuiVienData />
+                    <RadzenButton ButtonStyle="ButtonStyle.Warning" Variant="Variant.Flat" Text="Đổi người"
+                                  Icon="change_circle" Click=@DoiNguoiDaTonTai Disabled=@(huiVienDoiThanh==null) />
+                </RadzenStack>
+
+            </RadzenTabsItem>
+            <RadzenTabsItem Text="Hụi viên mới">
+                <RadzenStack Orientation="Orientation.Horizontal" Wrap="FlexWrap.Wrap">
+                    <RadzenTextBox Name="TenHuiVienMoi" style="display: block;width:50%;" Placeholder="Nhập tên hụi viên mới" Change=@(arg=>huiVienTimKiem = arg)
+                                   TextProperty="DisplayName" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Warning" Variant="Variant.Flat" Text="Đổi người"
+                                  Icon="change_circle" Click=@DoiNguoiMoi Disabled=@(string.IsNullOrEmpty(huiVienTimKiem)) />
+                </RadzenStack>
+            </RadzenTabsItem>
+        </Tabs>
+    </RadzenTabs>
+</RadzenCard>
+
 
 @code {
     [Parameter]

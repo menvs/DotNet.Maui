@@ -235,6 +235,8 @@ namespace QlHui.App.Data.Services
                         }
 
                         huiVienBoHui.DaBoHui = true;
+                        huiVienBoHui.NgayBoHui = DateTime.Now.ToString(DateTimeFormat.UIDateFormat);
+
                         var updateRs = _connection.Update(huiVienBoHui);
                         if (updateRs > 0)
                         {

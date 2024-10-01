@@ -22,5 +22,6 @@ namespace qlhui.app.Data.DataAccess.Entities
         public float? SoTienBo { get; set; }
         public float? TienLoi { get; set; }
         public float? TienDaTra { get; set; }
+        public string NgayBoHui { get; set; }
     }
 }

@@ -3,20 +3,21 @@
     public class PhieuThuConfigModel
     {
         public OwnerConfigModel OwnerInfo { get; set; } = new OwnerConfigModel();
-        public string NgayMo { get; set; } = "22/02/2022";
-        public string DayHui { get; set; } = "5.000.000";
-        public string SoPhan { get; set; } = "11";
-        public string Khui { get; set; } = "Khui";
-        public string HuiVien { get; set; } = "Nguyen Van A";
-        public string NgayHot { get; set; } = "22/02/2022";
-        public string ThamKeu { get; set; } = "";
-        public string SoKy { get; set; } = "10";
-        public string Song { get; set; } = "Song = Song +Song";
-        public string Chet { get; set; } = "Chet = Chet +Chet";
-        public string TienHui { get; set; } = "1.000.000";
-        public string TruThao { get; set; } = "0";
-        public string TruKhac { get; set; } = "0";
-        public string ConGiao { get; set; } = "30.000.000";
-        public string SoPhanConLai { get; set; } = "1";
+        public string NgayMo { get; set; } = string.Empty;
+        public string DayHui { get; set; } = string.Empty;
+        public string SoPhan { get; set; } = string.Empty;
+        public string Khui { get; set; } = string.Empty;
+        public string HuiVien { get; set; } = string.Empty;
+        public string NgayHot { get; set; } = string.Empty;
+        public string NgayGiao { get; set; } = string.Empty;
+        public string ThamKeu { get; set; } = string.Empty;
+        public string SoKy { get; set; } = string.Empty;
+        public string Song { get; set; } = string.Empty;
+        public string Chet { get; set; } = string.Empty;
+        public string TienHui { get; set; } = string.Empty;
+        public string TruThao { get; set; } = string.Empty;
+        public string TruKhac { get; set; } = string.Empty;
+        public string ConGiao { get; set; } = string.Empty;
+        public string SoPhanConLai { get; set; } = string.Empty;
     }
 }

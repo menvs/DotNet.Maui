@@ -6,60 +6,62 @@
 @inject IUtils _utils;
 @inherits NotificationBase;
 
-<RadzenRow class="rz-p-2">
-    <RadzenColumn Size="4">
-        <RadzenStack Orientation="Orientation.Horizontal">
-            <RadzenText Style="width:40%;">Ngày khui</RadzenText>
-            <RadzenDatePicker DateFormat=@DateTimeFormat.UIDateFormat @bind-Value=@currentItem.NgayKhui
-                              Disabled=@disableEdit Change="OnChange" />
-        </RadzenStack>
-    </RadzenColumn>
-    <RadzenColumn Size="4">
-        <RadzenStack Orientation="Orientation.Horizontal">
-            <RadzenText Style="width:40%;">Tiền 1 C</RadzenText>
-            <RadzenNumeric TValue="string" @oninput="@(arg=>OnInputTien1C(arg))"
-                           Value="@currentItem.TienMotChan.GetMoneyFormat()"
-                           Disabled=@disableEdit TextAlign="TextAlign.Right" />
-          </RadzenStack>
-        
-    </RadzenColumn>
-    <RadzenColumn Size="4">
-        <RadzenStack Orientation="Orientation.Horizontal">
-            <RadzenText Style="width:40%;">Tiền thảo</RadzenText>
-            <RadzenNumeric TValue="string" @oninput="@(arg=>currentItem.TienThao = arg.Value.ToString().GetFloatNumber())"
-                           Value="@currentItem.TienThao.GetMoneyFormat()" TextAlign="TextAlign.Right"
-                           Disabled=@disableEdit />
-        </RadzenStack>
-    </RadzenColumn>
-</RadzenRow>
-<RadzenRow class="rz-p-2">
-    <RadzenColumn Size="4" >
-          <RadzenStack Orientation="Orientation.Horizontal">
-            <RadzenText Style="width:40%;">Số ngày</RadzenText>
-            <RadzenNumeric TValue="int" @bind-Value=@currentItem.SoNgayLoaiHui
-                           TextAlign="TextAlign.Right" Min="1" Change="OnChange" Disabled=@disableEdit />
-          </RadzenStack>
-       
-    </RadzenColumn>
-    <RadzenColumn Size="4">
-        <RadzenStack Orientation="Orientation.Horizontal" >
-            <RadzenText Style="width:40%;">Loại hụi</RadzenText>
-            <RadzenDropDown AllowClear="true" TValue="int?" @bind-Value=@currentItem.LoaiHui
-                            Data=@(dsLoaiHui) Change="OnChange" TextAlign="TextAlign.Right"
-                            TextProperty="DisplayName" ValueProperty="Value" Disabled=@disableEdit />
-        </RadzenStack>
-    </RadzenColumn>
-</RadzenRow>
-<RadzenStack class="rz-p-2">
-    <RadzenTextBox Placeholder="Mã dây hụi" Disabled="true" @bind-Value:get=@currentItem.MaDayHui Style="width:100%;" />
-</RadzenStack>
-<RadzenStack Orientation="Orientation.Horizontal" class="rz-p-2"
-             JustifyContent="JustifyContent.End" Wrap="FlexWrap.Wrap">
-    <RadzenButton Click="@SaveData" Variant="Variant.Flat" Text="Lưu" Style="width: 120px" IsBusy=@isSaveButtonLoading
-                  Visible=@(disableEdit==false) Icon="save" ButtonStyle="ButtonStyle.Primary" />
-@*     <RadzenButton Click="@((args) => _dialogService.Close(false))" Variant="Variant.Flat" Icon="close"
-                  ButtonStyle="ButtonStyle.Light" Text="Đóng" Style="width: 120px" /> *@
-</RadzenStack>
+<RadzenCard>
+    <RadzenRow class="rz-p-2">
+        <RadzenColumn Size="4">
+            <RadzenStack Orientation="Orientation.Horizontal">
+                <RadzenText Style="width:40%;">Ngày khui</RadzenText>
+                <RadzenDatePicker DateFormat=@DateTimeFormat.UIDateFormat @bind-Value=@currentItem.NgayKhui
+                                  Disabled=@disableEdit Change="OnChange" />
+            </RadzenStack>
+        </RadzenColumn>
+        <RadzenColumn Size="4">
+            <RadzenStack Orientation="Orientation.Horizontal">
+                <RadzenText Style="width:40%;">Tiền 1 C</RadzenText>
+                <RadzenNumeric TValue="string" @oninput="@(arg=>OnInputTien1C(arg))"
+                               Value="@currentItem.TienMotChan.GetMoneyFormat()"
+                               Disabled=@disableEdit TextAlign="TextAlign.Right" />
+            </RadzenStack>
+
+        </RadzenColumn>
+        <RadzenColumn Size="4">
+            <RadzenStack Orientation="Orientation.Horizontal">
+                <RadzenText Style="width:40%;">Tiền thảo</RadzenText>
+                <RadzenNumeric TValue="string" @oninput="@(arg=>currentItem.TienThao = arg.Value.ToString().GetFloatNumber())"
+                               Value="@currentItem.TienThao.GetMoneyFormat()" TextAlign="TextAlign.Right"
+                               Disabled=@disableEdit />
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenRow class="rz-p-2">
+        <RadzenColumn Size="4">
+            <RadzenStack Orientation="Orientation.Horizontal">
+                <RadzenText Style="width:40%;">Số ngày</RadzenText>
+                <RadzenNumeric TValue="int" @bind-Value=@currentItem.SoNgayLoaiHui
+                               TextAlign="TextAlign.Right" Min="1" Change="OnChange" Disabled=@disableEdit />
+            </RadzenStack>
+
+        </RadzenColumn>
+        <RadzenColumn Size="4">
+            <RadzenStack Orientation="Orientation.Horizontal">
+                <RadzenText Style="width:40%;">Loại hụi</RadzenText>
+                <RadzenDropDown AllowClear="true" TValue="int?" @bind-Value=@currentItem.LoaiHui
+                                Data=@(dsLoaiHui) Change="OnChange" TextAlign="TextAlign.Right"
+                                TextProperty="DisplayName" ValueProperty="Value" Disabled=@disableEdit />
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenStack class="rz-p-2">
+        <RadzenTextBox Placeholder="Mã dây hụi" Disabled="true" @bind-Value:get=@currentItem.MaDayHui Style="width:100%;" />
+    </RadzenStack>
+    <RadzenStack Orientation="Orientation.Horizontal" class="rz-p-2"
+                 JustifyContent="JustifyContent.End" Wrap="FlexWrap.Wrap">
+        <RadzenButton Click="@SaveData" Variant="Variant.Flat" Text="Lưu" Style="width: 120px" IsBusy=@isSaveButtonLoading
+                      Visible=@(disableEdit==false) Icon="save" ButtonStyle="ButtonStyle.Primary" />
+        @*     <RadzenButton Click="@((args) => _dialogService.Close(false))" Variant="Variant.Flat" Icon="close"
+        ButtonStyle="ButtonStyle.Light" Text="Đóng" Style="width: 120px" /> *@
+    </RadzenStack>
+</RadzenCard>
 @code {
     [Parameter]
     public int? dayHuiId { get; set; }

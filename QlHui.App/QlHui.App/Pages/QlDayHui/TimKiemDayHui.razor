@@ -58,21 +58,21 @@
             </RadzenDataGridColumn>
             <RadzenDataGridColumn Width="160px" TItem="DayHuiDto" Property="Id" Title="Thao tác" TextAlign="TextAlign.Center">
                 <Template Context="data">
-                <RadzenButton ButtonStyle="ButtonStyle.Info" Variant="Variant.Flat"
-                                  Icon="visibility" title="Xem chi tiết"
-                                  Click=@(args => RedirectToDetailPage(data.Id)) Shade="Shade.Lighter" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Info" Variant="Variant.Flat"
+                                      Icon="visibility" title="Xem chi tiết"
+                                      Click=@(args => RedirectToDetailPage(data.Id)) Shade="Shade.Lighter" />
                     <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Shade="Shade.Light"
-                                  Icon="edit" title="Chỉnh sửa thông tin dây hụi" Visible=@(data.DaCoNguoiBoHui!=true)
-                                  Click=@(args => OpenUpdateDialog(data)) />
-                <RadzenButton ButtonStyle="ButtonStyle.Danger" Variant="Variant.Flat" Shade="Shade.Lighter"
-                                  Icon="delete" title="Xóa"
-                                  Click=@(args => XoaDayHui(data)) />
+                                      Icon="edit" title="Chỉnh sửa thông tin dây hụi" Visible=@(data.DaCoNguoiBoHui!=true)
+                                      Click=@(args => OpenUpdateDialog(data)) />
+                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Variant="Variant.Flat" Shade="Shade.Lighter"
+                                      Icon="delete" title="Xóa"
+                                      Click=@(args => XoaDayHui(data)) />
                 </Template>
             </RadzenDataGridColumn>
             <RadzenDataGridColumn TItem="DayHuiDto" Property="MaDayHui" Title="Mã dây hui" Width="20%" />
             <RadzenDataGridColumn TItem="DayHuiDto" Property="NgayKhui" Title="Ngày khui" Type=typeof(DateTime?) FormatString={0:dd/MM/yyyy} TextAlign="TextAlign.Right" />
-            <RadzenDataGridColumn TItem="DayHuiDto" Property="TienThao" Title="Tiền thảo" Type=typeof(float?) FormatString={0:#,##0} TextAlign="TextAlign.Center" />
-            <RadzenDataGridColumn TItem="DayHuiDto" Property="TienMotChan" Title="Tiền 1C" Type=typeof(float?) FormatString={0:#,##0} TextAlign="TextAlign.Center" />
+            <RadzenDataGridColumn TItem="DayHuiDto" Property="TienThao" Title="Tiền thảo" Type=typeof(float?) FormatString={0:#,##0} TextAlign="TextAlign.Right" />
+        <RadzenDataGridColumn TItem="DayHuiDto" Property="TienMotChan" Title="Tiền 1C" Type=typeof(float?) FormatString={0:#,##0} TextAlign="TextAlign.Right" />
             <RadzenDataGridColumn TItem="DayHuiDto" Property="TongSoChan" Title="Số phần" />
             <RadzenDataGridColumn TItem="DayHuiDto" Property="KyBo" Title="Kỳ" />
         </Columns>

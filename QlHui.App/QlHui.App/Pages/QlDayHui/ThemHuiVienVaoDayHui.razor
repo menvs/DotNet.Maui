@@ -9,15 +9,17 @@
     <RadzenColumn Size="6">
         <RadzenStack Orientation="Orientation.Horizontal">
             <RadzenText>Tên hụi viên</RadzenText>
-            <RadzenStack Orientation="Orientation.Vertical" Visible=@themHuiVienMoi>
-                <RadzenTextBox @bind-Value=@huiVienHienTai.TenHuiVien Name="TenHuiVien" @onkeydown="ThemHuiVienMoi"
-                               style="display: block;" />
+            <RadzenStack Orientation="Orientation.Vertical" Visible=@themHuiVienMoi Style="width:80%">
+                <RadzenTextBox @bind-Value=@huiVienHienTai.TenHuiVien Name="TenHuiVien" 
+                                style="display: block;" />
                 <RadzenRequiredValidator Component="TenHuiVien" Text="Yêu cầu nhập tên hụi viên"
                                          Popup=@isInvalid Style="position: absolute" />
             </RadzenStack>
-            <RadzenStack Orientation="Orientation.Vertical" Visible=@themHuiVienDaTonTai>
-                <RadzenAutoComplete Name="TenHuiVienAutocomplete" style="display: block;" Change="@(arg=>ChonHuiVienDaTonTai(arg))"
-                                 Data=@danhSachHuiVien TextProperty="DisplayName" LoadData=@OnLoadHuiVienData />
+           
+            <RadzenStack Orientation="Orientation.Vertical" Visible=@themHuiVienDaTonTai Style="width:80%">
+                <RadzenAutoComplete Name="TenHuiVienAutocomplete" style="display: block;" 
+                                Change="@(arg=>ChonHuiVienDaTonTai(arg))"
+                                Data=@danhSachHuiVien TextProperty="DisplayName" LoadData=@OnLoadHuiVienData />
             <RadzenRequiredValidator Component="TenHuiVienAutocomplete" Text="Yêu cầu chọn tên hụi viên"
                                      Popup=@isInvalid Style="position: absolute" />
             </RadzenStack>
@@ -33,27 +35,32 @@
          </RadzenStack>
     </RadzenColumn>
 </RadzenRow>
-
+<RadzenStack Orientation="Orientation.Horizontal"
+             JustifyContent="JustifyContent.End" Wrap="FlexWrap.Wrap" class="rz-p-2">
+    <RadzenButton Visible=@themHuiVienMoi ButtonStyle="ButtonStyle.Primary" Variant="Variant.Text" 
+                  Text="Tạo và thêm vào danh sách" Click="@ThemVaoDanhSachHuiVien" Icon="add" />
+</RadzenStack>
 <RadzenDataGrid TItem="HuiVienThamGiaDto" Data=@danhSachHuiVienThamGia PagerPosition=@pagerPosition Count=@totalItems
                 AllowPaging="true" AllowSorting="true" PageSize="10" ShowPagingSummary="true" Style="max-height:400px">
     <EmptyTemplate>
         <p style="color: lightgrey; font-size: 18px; text-align: center; margin: 2rem;">@Const.EmptyTable</p>
     </EmptyTemplate>
     <Columns>
-        <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Property="Index" Title="Stt" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Property="Index" Title="#" TextAlign="TextAlign.Center">
             <Template>
                 @(danhSachHuiVienThamGia.ToList().IndexOf(context) + 1)
             </Template>
         </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Property="MaHuiVien" Title="Mã hụi viên" />
-        <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Property="TenHuiVien" Title="Tên hụi viên" />
-        <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Property="SoCThamGia" Title="Số C tham gia" Type=typeof(int) />
         <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Title="Thao tác" TextAlign="TextAlign.Center">
             <Template Context="data">
                 <RadzenButton ButtonStyle="ButtonStyle.Danger" Variant="Variant.Flat" Shade="Shade.Lighter" Icon="delete" title="Xóa"
                               Click=@(args => XoaHuiVienDaChon(data)) />
             </Template>
         </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Property="MaHuiVien" Title="Mã hụi viên" />
+        <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Property="TenHuiVien" Title="Tên hụi viên" />
+        <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Property="SoCThamGia" Title="Số C tham gia" Type=typeof(int) />
+        
     </Columns>
 </RadzenDataGrid>
 <RadzenStack Orientation="Orientation.Horizontal"
