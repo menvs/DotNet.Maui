@@ -1,4 +1,3 @@
-QlHui.App/QlHui.App/obj
-QlHui.App/QlHui.App/bin
-QlHui.App/publish.bat
-QlHui.App/.vs
+/obj
+/bin
+/.vs
