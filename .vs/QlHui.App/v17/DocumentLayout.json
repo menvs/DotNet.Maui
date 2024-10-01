@@ -1,0 +1,542 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|d:\\projects\\personal\\dotnet.maui.qlhuiapp\\qlhui.app\\qlhui.app\\pages\\qlhuivien\\chitiettheohuivien.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|solutionrelative:qlhui.app\\pages\\qlhuivien\\chitiettheohuivien.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|d:\\projects\\personal\\dotnet.maui.qlhuiapp\\qlhui.app\\qlhui.app\\pages\\qldayhui\\chitietdayhui.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|solutionrelative:qlhui.app\\pages\\qldayhui\\chitietdayhui.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|d:\\projects\\personal\\dotnet.maui.qlhuiapp\\qlhui.app\\qlhui.app\\pages\\qldayhui\\timkiemdayhui.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|solutionrelative:qlhui.app\\pages\\qldayhui\\timkiemdayhui.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|d:\\projects\\personal\\dotnet.maui.qlhuiapp\\qlhui.app\\qlhui.app\\pages\\qlhuivien\\timkiemhuivien.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|solutionrelative:qlhui.app\\pages\\qlhuivien\\timkiemhuivien.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|d:\\projects\\personal\\dotnet.maui.qlhuiapp\\qlhui.app\\qlhui.app\\pages\\qldayhui\\themhuivienvaodayhui.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|solutionrelative:qlhui.app\\pages\\qldayhui\\themhuivienvaodayhui.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|d:\\projects\\personal\\dotnet.maui.qlhuiapp\\qlhui.app\\qlhui.app\\pages\\qldayhui\\thutien.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|solutionrelative:qlhui.app\\pages\\qldayhui\\thutien.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|d:\\projects\\personal\\dotnet.maui.qlhuiapp\\qlhui.app\\qlhui.app\\pages\\qldayhui\\bohui.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|solutionrelative:qlhui.app\\pages\\qldayhui\\bohui.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|d:\\projects\\personal\\dotnet.maui.qlhuiapp\\qlhui.app\\qlhui.app\\data\\models\\dtos\\huivienthamgiadto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|solutionrelative:qlhui.app\\data\\models\\dtos\\huivienthamgiadto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|d:\\projects\\personal\\dotnet.maui.qlhuiapp\\qlhui.app\\qlhui.app\\data\\models\\entities\\huivienthamgiaentity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|solutionrelative:qlhui.app\\data\\models\\entities\\huivienthamgiaentity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|d:\\projects\\personal\\dotnet.maui.qlhuiapp\\qlhui.app\\qlhui.app\\data\\utils\\utils.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|solutionrelative:qlhui.app\\data\\utils\\utils.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\vosim\\AppData\\Local\\SourceServer\\77e0dd951e4398eefa04594a09ced45877e6d4e0376d6365d800bc568d905f98\\QlHui.App\\QlHui.App\\Pages\\QlDayHui\\ChiTietDayHui.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|d:\\projects\\personal\\dotnet.maui.qlhuiapp\\qlhui.app\\qlhui.app\\shared\\mainlayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|solutionrelative:qlhui.app\\shared\\mainlayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|d:\\projects\\personal\\dotnet.maui.qlhuiapp\\qlhui.app\\qlhui.app\\shared\\notificationbase.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|solutionrelative:qlhui.app\\shared\\notificationbase.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|d:\\projects\\personal\\dotnet.maui.qlhuiapp\\qlhui.app\\qlhui.app\\pages\\qldayhui\\doinguoithamgia.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|solutionrelative:qlhui.app\\pages\\qldayhui\\doinguoithamgia.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|d:\\projects\\personal\\dotnet.maui.qlhuiapp\\qlhui.app\\qlhui.app\\pages\\qldayhui\\dayhui.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|solutionrelative:qlhui.app\\pages\\qldayhui\\dayhui.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|d:\\projects\\personal\\dotnet.maui.qlhuiapp\\qlhui.app\\qlhui.app\\mauiprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|solutionrelative:qlhui.app\\mauiprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\vosim\\.nuget\\packages\\communitytoolkit.maui\\9.1.0\\ReadMe.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|d:\\projects\\personal\\dotnet.maui.qlhuiapp\\qlhui.app\\qlhui.app\\main.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|solutionrelative:qlhui.app\\main.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|d:\\projects\\personal\\dotnet.maui.qlhuiapp\\qlhui.app\\qlhui.app\\wwwroot\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|solutionrelative:qlhui.app\\wwwroot\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|d:\\projects\\personal\\dotnet.maui.qlhuiapp\\qlhui.app\\qlhui.app\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|solutionrelative:qlhui.app\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|d:\\projects\\personal\\dotnet.maui.qlhuiapp\\qlhui.app\\qlhui.app\\mainpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|solutionrelative:qlhui.app\\mainpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|d:\\projects\\personal\\dotnet.maui.qlhuiapp\\qlhui.app\\qlhui.app\\pages\\qldayhui\\huivienbase.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|solutionrelative:qlhui.app\\pages\\qldayhui\\huivienbase.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|d:\\projects\\personal\\dotnet.maui.qlhuiapp\\qlhui.app\\qlhui.app\\pages\\qldayhui\\lichsudonghui.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|solutionrelative:qlhui.app\\pages\\qldayhui\\lichsudonghui.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|d:\\projects\\personal\\dotnet.maui.qlhuiapp\\qlhui.app\\qlhui.app\\pages\\qldayhui\\quanlydayhui.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|solutionrelative:qlhui.app\\pages\\qldayhui\\quanlydayhui.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|d:\\projects\\personal\\dotnet.maui.qlhuiapp\\qlhui.app\\qlhui.app\\qlhui.app.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|solutionrelative:qlhui.app\\qlhui.app.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|d:\\projects\\personal\\dotnet.maui.qlhuiapp\\qlhui.app\\qlhui.app\\resources\\appicon\\appiconfg.svg||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|solutionrelative:qlhui.app\\resources\\appicon\\appiconfg.svg||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|d:\\projects\\personal\\dotnet.maui.qlhuiapp\\qlhui.app\\qlhui.app\\_imports.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|solutionrelative:qlhui.app\\_imports.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|d:\\projects\\personal\\dotnet.maui.qlhuiapp\\qlhui.app\\qlhui.app\\data\\models\\dtos\\searchresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|solutionrelative:qlhui.app\\data\\models\\dtos\\searchresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|d:\\projects\\personal\\dotnet.maui.qlhuiapp\\qlhui.app\\qlhui.app\\data\\models\\dtos\\alertoption.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|solutionrelative:qlhui.app\\data\\models\\dtos\\alertoption.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|d:\\projects\\personal\\dotnet.maui.qlhuiapp\\qlhui.app\\qlhui.app\\data\\models\\dtos\\tinhtientheohuiviendto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|solutionrelative:qlhui.app\\data\\models\\dtos\\tinhtientheohuiviendto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|d:\\projects\\personal\\dotnet.maui.qlhuiapp\\qlhui.app\\qlhui.app\\data\\models\\dtos\\timkiemhuivienautocompletedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|solutionrelative:qlhui.app\\data\\models\\dtos\\timkiemhuivienautocompletedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|d:\\projects\\personal\\dotnet.maui.qlhuiapp\\qlhui.app\\qlhui.app\\data\\models\\dtos\\qldayhuisearchcriteria.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3F7FB7DB-38BC-4101-96E8-D11ADF7F725A}|QlHui.App\\QlHui.App.csproj|solutionrelative:qlhui.app\\data\\models\\dtos\\qldayhuisearchcriteria.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 10,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "TimKiemHuiVien.razor",
+              "DocumentMoniker": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Pages\\QlHuiVien\\TimKiemHuiVien.razor",
+              "RelativeDocumentMoniker": "QlHui.App\\Pages\\QlHuiVien\\TimKiemHuiVien.razor",
+              "ToolTip": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Pages\\QlHuiVien\\TimKiemHuiVien.razor",
+              "RelativeToolTip": "QlHui.App\\Pages\\QlHuiVien\\TimKiemHuiVien.razor",
+              "ViewState": "AQIAAAkAAAAAAAAAAAAAADQAAACGAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-09-25T10:14:26.146Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "TimKiemDayHui.razor",
+              "DocumentMoniker": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Pages\\QlDayHui\\TimKiemDayHui.razor",
+              "RelativeDocumentMoniker": "QlHui.App\\Pages\\QlDayHui\\TimKiemDayHui.razor",
+              "ToolTip": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Pages\\QlDayHui\\TimKiemDayHui.razor",
+              "RelativeToolTip": "QlHui.App\\Pages\\QlDayHui\\TimKiemDayHui.razor",
+              "ViewState": "AQIAABIAAAAAAAAAAAAAAC4AAACDAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-09-25T10:38:32.208Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{6324226f-61b6-4f28-92ee-18d4b5fe1e48}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{57d563b6-44a5-47df-85be-f4199ad6b651}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ChiTietDayHui.razor",
+              "DocumentMoniker": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Pages\\QlDayHui\\ChiTietDayHui.razor",
+              "RelativeDocumentMoniker": "QlHui.App\\Pages\\QlDayHui\\ChiTietDayHui.razor",
+              "ToolTip": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Pages\\QlDayHui\\ChiTietDayHui.razor",
+              "RelativeToolTip": "QlHui.App\\Pages\\QlDayHui\\ChiTietDayHui.razor",
+              "ViewState": "AQIAAKAAAAAAAAAAAAAAAF8AAABIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-09-27T10:35:40.284Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "HuiVienThamGiaEntity.cs",
+              "DocumentMoniker": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Data\\Models\\Entities\\HuiVienThamGiaEntity.cs",
+              "RelativeDocumentMoniker": "QlHui.App\\Data\\Models\\Entities\\HuiVienThamGiaEntity.cs",
+              "ToolTip": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Data\\Models\\Entities\\HuiVienThamGiaEntity.cs",
+              "RelativeToolTip": "QlHui.App\\Data\\Models\\Entities\\HuiVienThamGiaEntity.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAuwBIAAAArAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-01T07:32:01.12Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ThuTien.razor",
+              "DocumentMoniker": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Pages\\QlDayHui\\ThuTien.razor",
+              "RelativeDocumentMoniker": "QlHui.App\\Pages\\QlDayHui\\ThuTien.razor",
+              "ToolTip": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Pages\\QlDayHui\\ThuTien.razor",
+              "RelativeToolTip": "QlHui.App\\Pages\\QlDayHui\\ThuTien.razor",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABEAAAAzAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-09-25T10:37:52.321Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ThemHuiVienVaoDayHui.razor",
+              "DocumentMoniker": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Pages\\QlDayHui\\ThemHuiVienVaoDayHui.razor",
+              "RelativeDocumentMoniker": "QlHui.App\\Pages\\QlDayHui\\ThemHuiVienVaoDayHui.razor",
+              "ToolTip": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Pages\\QlDayHui\\ThemHuiVienVaoDayHui.razor",
+              "RelativeToolTip": "QlHui.App\\Pages\\QlDayHui\\ThemHuiVienVaoDayHui.razor",
+              "ViewState": "AQIAACQAAAAAAAAAAAAAACMAAAATAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-09-25T10:53:18.888Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ChiTietTheoHuiVien.razor",
+              "DocumentMoniker": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Pages\\QlHuiVien\\ChiTietTheoHuiVien.razor",
+              "RelativeDocumentMoniker": "QlHui.App\\Pages\\QlHuiVien\\ChiTietTheoHuiVien.razor",
+              "ToolTip": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Pages\\QlHuiVien\\ChiTietTheoHuiVien.razor",
+              "RelativeToolTip": "QlHui.App\\Pages\\QlHuiVien\\ChiTietTheoHuiVien.razor",
+              "ViewState": "AQIAABQAAAAAAAAAAAAswB4AAAA6AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-09-25T10:38:01.114Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "BoHui.razor",
+              "DocumentMoniker": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Pages\\QlDayHui\\BoHui.razor",
+              "RelativeDocumentMoniker": "QlHui.App\\Pages\\QlDayHui\\BoHui.razor",
+              "ToolTip": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Pages\\QlDayHui\\BoHui.razor",
+              "RelativeToolTip": "QlHui.App\\Pages\\QlDayHui\\BoHui.razor",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABAAAAASAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-09-27T10:34:36.664Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "HuiVienThamGiaDto.cs",
+              "DocumentMoniker": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Data\\Models\\Dtos\\HuiVienThamGiaDto.cs",
+              "RelativeDocumentMoniker": "QlHui.App\\Data\\Models\\Dtos\\HuiVienThamGiaDto.cs",
+              "ToolTip": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Data\\Models\\Dtos\\HuiVienThamGiaDto.cs",
+              "RelativeToolTip": "QlHui.App\\Data\\Models\\Dtos\\HuiVienThamGiaDto.cs",
+              "ViewState": "AQIAABAAAAAAAAAAAAAcwDMAAAAqAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-01T07:27:19.937Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Utils.cs",
+              "DocumentMoniker": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Data\\Utils\\Utils.cs",
+              "RelativeDocumentMoniker": "QlHui.App\\Data\\Utils\\Utils.cs",
+              "ToolTip": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Data\\Utils\\Utils.cs",
+              "RelativeToolTip": "QlHui.App\\Data\\Utils\\Utils.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAqwB8AAAB8AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-27T10:36:17.167Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "ReadMe.txt",
+              "DocumentMoniker": "C:\\Users\\vosim\\.nuget\\packages\\communitytoolkit.maui\\9.1.0\\ReadMe.txt",
+              "ToolTip": "C:\\Users\\vosim\\.nuget\\packages\\communitytoolkit.maui\\9.1.0\\ReadMe.txt",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABEAAAADAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2024-09-30T15:03:41.172Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "NotificationBase.razor",
+              "DocumentMoniker": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Shared\\NotificationBase.razor",
+              "RelativeDocumentMoniker": "QlHui.App\\Shared\\NotificationBase.razor",
+              "ToolTip": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Shared\\NotificationBase.razor",
+              "RelativeToolTip": "QlHui.App\\Shared\\NotificationBase.razor",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABwAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-09-25T10:57:15.523Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "MainLayout.razor",
+              "DocumentMoniker": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Shared\\MainLayout.razor",
+              "RelativeDocumentMoniker": "QlHui.App\\Shared\\MainLayout.razor",
+              "ToolTip": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Shared\\MainLayout.razor",
+              "RelativeToolTip": "QlHui.App\\Shared\\MainLayout.razor",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAACAAAAA2AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-09-30T06:56:05.895Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "ChiTietDayHui.razor",
+              "DocumentMoniker": "C:\\Users\\vosim\\AppData\\Local\\SourceServer\\77e0dd951e4398eefa04594a09ced45877e6d4e0376d6365d800bc568d905f98\\QlHui.App\\QlHui.App\\Pages\\QlDayHui\\ChiTietDayHui.razor",
+              "ToolTip": "C:\\Users\\vosim\\AppData\\Local\\SourceServer\\77e0dd951e4398eefa04594a09ced45877e6d4e0376d6365d800bc568d905f98\\QlHui.App\\QlHui.App\\Pages\\QlDayHui\\ChiTietDayHui.razor [Read Only]",
+              "ViewState": "AQIAAPABAAAAAAAAAAAjwAYCAAA3AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-10-01T05:16:15.275Z",
+              "EditorCaption": " [Read Only]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "DoiNguoiThamGia.razor",
+              "DocumentMoniker": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Pages\\QlDayHui\\DoiNguoiThamGia.razor",
+              "RelativeDocumentMoniker": "QlHui.App\\Pages\\QlDayHui\\DoiNguoiThamGia.razor",
+              "ToolTip": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Pages\\QlDayHui\\DoiNguoiThamGia.razor",
+              "RelativeToolTip": "QlHui.App\\Pages\\QlDayHui\\DoiNguoiThamGia.razor",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAACUAAAAdAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-09-27T10:36:53.29Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "DayHui.razor",
+              "DocumentMoniker": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Pages\\QlDayHui\\DayHui.razor",
+              "RelativeDocumentMoniker": "QlHui.App\\Pages\\QlDayHui\\DayHui.razor",
+              "ToolTip": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Pages\\QlDayHui\\DayHui.razor",
+              "RelativeToolTip": "QlHui.App\\Pages\\QlDayHui\\DayHui.razor",
+              "ViewState": "AQIAABUAAAAAAAAAAAAAACoAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-09-27T11:28:19.867Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "Main.razor",
+              "DocumentMoniker": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Main.razor",
+              "RelativeDocumentMoniker": "QlHui.App\\Main.razor",
+              "ToolTip": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Main.razor",
+              "RelativeToolTip": "QlHui.App\\Main.razor",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-09-25T10:15:36.469Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "MauiProgram.cs",
+              "DocumentMoniker": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\MauiProgram.cs",
+              "RelativeDocumentMoniker": "QlHui.App\\MauiProgram.cs",
+              "ToolTip": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\MauiProgram.cs",
+              "RelativeToolTip": "QlHui.App\\MauiProgram.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABoAAABNAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-27T10:37:45.477Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "App.xaml",
+              "DocumentMoniker": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\App.xaml",
+              "RelativeDocumentMoniker": "QlHui.App\\App.xaml",
+              "ToolTip": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\App.xaml",
+              "RelativeToolTip": "QlHui.App\\App.xaml",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAAbAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-09-27T14:15:53.594Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "index.html",
+              "DocumentMoniker": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\wwwroot\\index.html",
+              "RelativeDocumentMoniker": "QlHui.App\\wwwroot\\index.html",
+              "ToolTip": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\wwwroot\\index.html",
+              "RelativeToolTip": "QlHui.App\\wwwroot\\index.html",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABwAAAAsAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2024-09-25T10:10:58.489Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "HuiVienBase.razor",
+              "DocumentMoniker": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Pages\\QlDayHui\\HuiVienBase.razor",
+              "RelativeDocumentMoniker": "QlHui.App\\Pages\\QlDayHui\\HuiVienBase.razor",
+              "ToolTip": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Pages\\QlDayHui\\HuiVienBase.razor",
+              "RelativeToolTip": "QlHui.App\\Pages\\QlDayHui\\HuiVienBase.razor",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-09-27T13:47:44.486Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "MainPage.xaml",
+              "DocumentMoniker": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\MainPage.xaml",
+              "RelativeDocumentMoniker": "QlHui.App\\MainPage.xaml",
+              "ToolTip": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\MainPage.xaml",
+              "RelativeToolTip": "QlHui.App\\MainPage.xaml",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-09-27T14:15:50.263Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "QuanLyDayHui.razor",
+              "DocumentMoniker": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Pages\\QlDayHui\\QuanLyDayHui.razor",
+              "RelativeDocumentMoniker": "QlHui.App\\Pages\\QlDayHui\\QuanLyDayHui.razor",
+              "ToolTip": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Pages\\QlDayHui\\QuanLyDayHui.razor",
+              "RelativeToolTip": "QlHui.App\\Pages\\QlDayHui\\QuanLyDayHui.razor",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-09-27T13:47:36.521Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "LichSuDongHui.razor",
+              "DocumentMoniker": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Pages\\QlDayHui\\LichSuDongHui.razor",
+              "RelativeDocumentMoniker": "QlHui.App\\Pages\\QlDayHui\\LichSuDongHui.razor",
+              "ToolTip": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Pages\\QlDayHui\\LichSuDongHui.razor",
+              "RelativeToolTip": "QlHui.App\\Pages\\QlDayHui\\LichSuDongHui.razor",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAB0AAAAOAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-09-27T11:04:43.627Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "appiconfg.svg",
+              "DocumentMoniker": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Resources\\AppIcon\\appiconfg.svg",
+              "RelativeDocumentMoniker": "QlHui.App\\Resources\\AppIcon\\appiconfg.svg",
+              "ToolTip": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Resources\\AppIcon\\appiconfg.svg",
+              "RelativeToolTip": "QlHui.App\\Resources\\AppIcon\\appiconfg.svg",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAAGAAAA",
+              "Icon": "00000000-0000-0000-0000-000000000000.000000|iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAT2SURBVEhLtVZ9bBNlHH7uev24dutGyzpG91XZQAaywRwoyARBhUQJ4HAhQ000DKf/yLboP4Z/xJgQJwgBImwJ6uYfzKmIkmim4EwkRFjHhhsCA7fC2LotW7f1u3fn\u002B769knaDhJj4pM/93rv7vc/zfl/xv0JRFE4tJqClpeUICVW0THJoYHF6OY5HKyoq3mIvHwbEgNR5ODidTqW5uVlpamqijZoBXo33BanPKFPKpCzLpExIoyxBkiTcvHkTZWVl9FlVfX39DJP7GlBRFgl9ISLkcSI8eBzS7UIE2mdj6lcRvj8KoAT67uWWl5dTw6qDBw8mmMyYA/Our4SaEmM4MmcBIPVjfdZJFCRdhjh4A3IoAo3tdcj8YvCaAIJ/H0Jr6ENs27YN4XAYwWAQDQ0NMJlMR3fu3MnmJMFgTvW3jjRLSn2RY/Yzzy1Lx2rLPswNN2D8dw3OK1vRjbUwZ5TgjVW5EHgOw5\u002Bno8fRDJfLxcRDoRByc3MxMDCAyspKpi0wZYI51d/l2FKTTj9bujh/Q54HK/QVSBpvRd\u002BFNehctAddwuO4MTSFW3/dxt2xKex5cRF0WRtQXLyMifoDfogGEenp6WhsbFRV1Tmgw2JNTT6xvvSx\u002BeWPunSl\u002Bq1IutaKC6dLsVf6GE0XU\u002BF2jSPbZsbCJQ50eHh88H03tPmvQjQakZmZifx5\u002BbDb7TCS\u002B9i8UDADqzXlhYU5tryNeW6hiN8BbWcXLndshG37D/hsexHqNuejMEnCUHc/zDot0uxpcLr96OWX0RVBFMgK42QqxTDDINkobN5SLFieFCs5obcHl50rUfTmGeRYjSwpw2zAaysyMTY\u002BiRReC17QQDAZ8XX7AHvPQPesKkyXcQxsDrJn6UtWW/eLxonz6Ol7BfusuzF2\u002BALCZJ3T1kQpk\u002BEwIaABRK0GilaLK3dGmCjrA7nEVkx8D5jBrhUXszPlLzlX61KcW/kRlhhs0Ur0JbmwsmokBcm\u002B8AJh0kopIoG2lSMJHMli\u002BQQJBoq3YLV37JDoOatXTq06zY1pZiu/nbnEyZEwzaQ/VpVVIqTdp/dU8AmHhYmzE43lRZFo4BvapLk7qjkl7Q65pVRdKCRNCiGv\u002BafqdQgTEybAUqMtjN5Tw\u002BiQsKfqM04dpHgDXpkYfcpzVT/xs1Q2fL1/lB48JlvOXNR\u002B003G2IMIOYO8ZAd3353AOyc7sfZAG9Z80oZ1n7ah2XmHiVBBKh4TTuiBz8UV6FLkRmeHZ7FuFLOSjQajPS8bwYkp7D3bh\u002BFhD0SdBmZzEhwL8lEyn4d7ZAKTvb3YUpjBWs9mgIjGZBMM5AAky6bw29k1UzZ9IPLLlQ7ZYZ\u002BXY0pPS4ajaCEeUVdfiEyoa8QDz9AoImOj2P9SITTkuLin\u002BgDwHI8f3V/gvf66l91Z6HyeG7/aPtjVgZ72q/iz/Roudf2DK5030Nt1HZ5b/ZgV9uJweRHybCZmHG236hILcT3gOUF5l9Niw\u002B0DUE6kvt/WaKw8s1wcOrfKboLFPwntyCCylACWWwXUPJ2D\u002Bh1LkW2JHgfRKVXBRKPC8Qb3BflwXCRJSjAYUAKUAUq/EvBT\u002Blj0k\u002Bj3Efq9ii8uUtTV1d1zeNAHp5hGnU4PPaWe0gC9gVJk0UCiQSQ0GCHGRbU\u002BixQJvYzh2LFjR0hSFU2kZJtLLU8nxfQywdHa2tqH/xPw3wH8C2\u002BS5E7KNyxKAAAAAElFTkSuQmCC",
+              "WhenOpened": "2024-09-27T13:38:07.601Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "QlHui.App.csproj",
+              "DocumentMoniker": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\QlHui.App.csproj",
+              "RelativeDocumentMoniker": "QlHui.App\\QlHui.App.csproj",
+              "ToolTip": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\QlHui.App.csproj",
+              "RelativeToolTip": "QlHui.App\\QlHui.App.csproj",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAgwA0AAAA0AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2024-09-27T13:37:59.037Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "_Imports.razor",
+              "DocumentMoniker": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\_Imports.razor",
+              "RelativeDocumentMoniker": "QlHui.App\\_Imports.razor",
+              "ToolTip": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\_Imports.razor",
+              "RelativeToolTip": "QlHui.App\\_Imports.razor",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-09-27T12:02:51.099Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "SearchResult.cs",
+              "DocumentMoniker": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Data\\Models\\Dtos\\SearchResult.cs",
+              "RelativeDocumentMoniker": "QlHui.App\\Data\\Models\\Dtos\\SearchResult.cs",
+              "ToolTip": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Data\\Models\\Dtos\\SearchResult.cs",
+              "RelativeToolTip": "QlHui.App\\Data\\Models\\Dtos\\SearchResult.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-25T11:06:25.529Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "AlertOption.cs",
+              "DocumentMoniker": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Data\\Models\\Dtos\\AlertOption.cs",
+              "RelativeDocumentMoniker": "QlHui.App\\Data\\Models\\Dtos\\AlertOption.cs",
+              "ToolTip": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Data\\Models\\Dtos\\AlertOption.cs",
+              "RelativeToolTip": "QlHui.App\\Data\\Models\\Dtos\\AlertOption.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABQAAAAjAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-25T11:06:43.101Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "QLDayHuiSearchCriteria.cs",
+              "DocumentMoniker": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Data\\Models\\Dtos\\QLDayHuiSearchCriteria.cs",
+              "RelativeDocumentMoniker": "QlHui.App\\Data\\Models\\Dtos\\QLDayHuiSearchCriteria.cs",
+              "ToolTip": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Data\\Models\\Dtos\\QLDayHuiSearchCriteria.cs",
+              "RelativeToolTip": "QlHui.App\\Data\\Models\\Dtos\\QLDayHuiSearchCriteria.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-25T11:06:24.257Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "TimKiemHuiVienAutocompleteDto.cs",
+              "DocumentMoniker": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Data\\Models\\Dtos\\TimKiemHuiVienAutocompleteDto.cs",
+              "RelativeDocumentMoniker": "QlHui.App\\Data\\Models\\Dtos\\TimKiemHuiVienAutocompleteDto.cs",
+              "ToolTip": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Data\\Models\\Dtos\\TimKiemHuiVienAutocompleteDto.cs",
+              "RelativeToolTip": "QlHui.App\\Data\\Models\\Dtos\\TimKiemHuiVienAutocompleteDto.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-25T11:06:27.156Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "TinhTienTheoHuiVienDto.cs",
+              "DocumentMoniker": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Data\\Models\\Dtos\\TinhTienTheoHuiVienDto.cs",
+              "RelativeDocumentMoniker": "QlHui.App\\Data\\Models\\Dtos\\TinhTienTheoHuiVienDto.cs",
+              "ToolTip": "D:\\Projects\\Personal\\DotNet.Maui.QlHuiApp\\QlHui.App\\QlHui.App\\Data\\Models\\Dtos\\TinhTienTheoHuiVienDto.cs",
+              "RelativeToolTip": "QlHui.App\\Data\\Models\\Dtos\\TinhTienTheoHuiVienDto.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAAArAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-25T11:06:28.29Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

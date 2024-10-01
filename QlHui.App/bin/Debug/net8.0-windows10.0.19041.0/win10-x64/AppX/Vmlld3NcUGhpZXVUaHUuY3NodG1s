@@ -1,0 +1,125 @@
+﻿@model QlHui.App.Data.Models.Config.PhieuThuConfigModel;
+<style>
+    .content table, .content th, .content td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        font-size: 22px;
+        padding: 5px;
+    }
+
+    .signature table, .signature th, .signature td {
+        border: none;
+        border-collapse: collapse;
+        font-size: 22px;
+        padding: 5px;
+        text-align:center;
+    }
+
+    .highlight_red{
+        color:red;
+        font-weight:bold;
+        font-size: 30px !important
+    }
+    .align_end {
+        text-align: end;
+    }
+
+    .SongChet {
+        color: cornflowerblue;
+        font-weight: bold;
+    }
+</style>
+
+<div style="text-align: center;">
+    <h1 style="color:darkblue;font-weight:bold">Chủ hụi: @Model.OwnerInfo.Name</h1>
+    <h2>SĐT: @Model.OwnerInfo.PhoneNumber</h2>
+    <h2>@Model.OwnerInfo.BankName - <span style="color:red;font-weight:bold">@Model.OwnerInfo.BankAccountNumber</span> - @Model.OwnerInfo.Name</h2>
+</div>
+<hr/>
+<h1 style="text-align: center;">GIẤY GIAO HỤI</h1>
+<div class="content">
+    <h2>1. THÔNG TIN HỤI</h2>
+    <table style="width:100%;">
+            <tr>
+                <td width="50%">Ngày mở:</td>
+                <td width="50%" class="align_end">@Model.NgayMo</td>
+            </tr>
+            <tr>
+                <td width="50%">Dây hụi:</td>
+                <td width="50%" class="align_end">@Model.DayHui</td>
+            </tr>
+            <tr>
+                <td width="50%">Số phần:</td>
+                <td width="50%" class="align_end">@Model.SoPhan</td>
+            </tr>
+            <tr>
+                <td width="50%">Khui:</td>
+                <td width="50%" class="align_end">@Model.Khui</td>
+            </tr>
+            <!-- Additional rows... -->
+        </table>
+    <h2>2. THANH TOÁN</h2>
+    <table style="width:100%;">
+            <tr>
+            <td width="50%">Hụi viên:</td>
+            <td width="50%" class="align_end highlight_red">@Model.HuiVien</td>
+            </tr>
+            <tr>
+            <td width="50%">Ngày hốt:</td>
+            <td width="50%"  class="align_end">@Model.NgayHot</td>
+            </tr>
+            <tr>
+            <td width="50%">Ngày giao:</td>
+            <td width="50%" class="align_end">@Model.NgayGiao</td>
+            </tr>
+            <tr>
+            <td width="50%">Thăm kêu:</td>
+            <td width="50%" class="align_end">@Model.ThamKeu</td>
+            </tr>
+            <tr>
+            <td width="50%">Số kỳ:</td>
+            <td width="50%" class="align_end" style="font-weight:bold">@Model.SoKy</td>
+            </tr>
+            <tr>
+            <td colspan="2" class="SongChet">@Model.Song</td>
+            </tr>
+            <tr>
+            <td colspan="2" class="SongChet"> @Model.Chet</td>
+            </tr>
+            <tr>
+            <td width="50%">Tiền hụi (Sống + Chết):</td>
+            <td width="50%" class="align_end" style="font-weight:bold">@Model.TienHui</td>
+            </tr>
+            <tr>
+            <td width="50%">- Trừ thảo: </td>
+            <td width="50%" class="align_end">@Model.TruThao</td>
+            </tr>
+            <tr>
+            <td width="50%">- Trừ khác: </td>
+            <td width="50%" class="align_end">@Model.TruKhac</td>
+            </tr>
+            <tr>
+            <td width="50%" style="font-weight:bold;">Còn giao:</td>
+            <td width="50%" class="align_end highlight_red">@Model.ConGiao</td>
+            </tr>
+            <!-- Additional rows... -->
+        </table>
+    <h2>Còn lại @Model.SoPhanConLai phần là mãn hụi</h2>
+    <hr />
+    <p style="font-weight:bold;color:red;font-size:22px;">Tôi đã đọc, kiểm đếm và nhận đủ số tiền giao hụi trên trong tình trạng hoàn toàn tỉnh táo, không bị ép buộc, phải đóng lại hoàn thành dây hụi cho đến mãn dây. Mọi phát sinh về sau tôi xin chịu trách nhiệm trước pháp luật.</p>
+</div>
+<div class="signature">
+    <table style="width:100%;">
+        <tr>
+            <td width="50%">BÊN NHẬN</td>
+            <td width="50%">BÊN GIAO</td>
+        </tr>
+        <tr style="font-weight:bold;">
+            <td width="50%">@Model.HuiVien</td>
+            <td width="50%">@Model.OwnerInfo.Name</td>
+        </tr>
+    </table>
+</div>
+
+
+

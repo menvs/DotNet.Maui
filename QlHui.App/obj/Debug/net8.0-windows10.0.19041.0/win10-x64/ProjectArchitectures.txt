@@ -1,0 +1,1 @@
+D:\Projects\Personal\DotNet.Maui.QlHuiApp\QlHui.App\QlHui.App\QlHui.App.csproj;x64
