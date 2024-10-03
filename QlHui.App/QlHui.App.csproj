@@ -13,7 +13,7 @@
     <!-- Display name -->
     <ApplicationTitle>Quản lý hụi</ApplicationTitle>
     <!-- App Identifier -->
-    <ApplicationId>com.companyname.qlhui.app</ApplicationId>
+    <ApplicationId>vsm.qlhui.app</ApplicationId>
     <ApplicationIdGuid>3F198C3E-1610-474F-B95F-DD24356EEEED</ApplicationIdGuid>
     <!-- Versions -->
     <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
@@ -24,16 +24,16 @@
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
     <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
-    <GenerateAppInstallerFile>True</GenerateAppInstallerFile>
+    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
-    <PackageCertificateThumbprint>A39741393AF3B6D2FA734A80DE2AC677ED37A958</PackageCertificateThumbprint>
-    <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
+    <PackageCertificateThumbprint>158ED400BCBD46B3A47D0296EF7DF13F22971EEB</PackageCertificateThumbprint>
+    <AppxPackageSigningTimestampDigestAlgorithm>SHA384</AppxPackageSigningTimestampDigestAlgorithm>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
     <AppInstallerUri>C:\\qlhui-app</AppInstallerUri>
     <HoursBetweenUpdateChecks>24</HoursBetweenUpdateChecks>
-    <AppxPackageDir>D:\my-stuff\My Project\ql-hui\2.SourceCode\QlHui.App\publish\</AppxPackageDir>
+    <AppxPackageDir>D:\Projects\Personal\DotNet.Maui.QlHuiApp\Installation\PublishApp\</AppxPackageDir>
   </PropertyGroup>
   <ItemGroup>
     <!-- App Icon -->

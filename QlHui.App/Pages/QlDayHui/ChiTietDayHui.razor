@@ -88,16 +88,16 @@
         <RadzenDataGridColumn TItem="HuiVienThamGiaDto" Title="Thao tác" TextAlign="TextAlign.Center" Width="250px" MinWidth="100px" Frozen="true">
             <Template Context="data">
                 <RadzenButton ButtonStyle="ButtonStyle.Secondary" Text="Bỏ hụi" Icon="payments"
-                              Variant="Variant.Outlined"Shade="Shade.Light"  Click=@(arg=>BoHui(data))
+                              Variant="Variant.Outlined" Shade="Shade.Default" Click=@(arg=>BoHui(data))
                               Visible=@(data.DaBoHui!=true && coTheBoHui) Size="ButtonSize.Small"/>
 
                 <RadzenButton ButtonStyle="ButtonStyle.Dark" Text="Giao tiền"
-                              Variant="Variant.Outlined" Shade="Shade.Light"
+                              Variant="Variant.Outlined" Shade="Shade.Default"
                               Click="@(args=>TraTien(data))" Icon="paid" Size="ButtonSize.Small"
                               Visible=@(data.TrangThai==(int)TrangThaiDongHui.CHUA_TRA && data.PhaiTra.GetValueOrDefault()>0)/>
 
                 <RadzenButton ButtonStyle="ButtonStyle.Warning" Text="Thu tiền"
-                              Variant="Variant.Outlined" Shade="Shade.Light"
+                              Variant="Variant.Outlined" Shade="Shade.Default"
                               Click="@(args=>ThuTien(data))" Icon="price_check" Size="ButtonSize.Small"
                               Visible=@(data.TrangThai==(int)TrangThaiDongHui.CHUA_THU && data.TongPhaiThu.GetValueOrDefault()>0) />
 
